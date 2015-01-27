@@ -1,47 +1,109 @@
 """
 Atomic: a set of useful python utilities that don't fit anywhere else
-author: Niru Maheswaranathan
 04:11 PM Mar 24, 2014
+
 """
+
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter1d
 from progressbar import ProgressBar
 
-def nrm(x):
+def norms(x, order=2):
     """
-    Mean subtract (center) and normalize a set of filters. If a matrix is given, each column is centered and normalized.
+    Normalize a set of filters according to the given norm.
+    If a matrix is given, each column is centered and normalized.
+
+    Parameters
+    ----------
+    x : array_like
+        The array (or matrix) to be normalized.
+
+    order : {non-zero int, inf, -inf, 'fro'}, optional
+        Order of the norm to use when normalizing the input. Default is 2.
+
+    Returns
+    -------
+    xn : array_like
+        The input array scaled to have unit norm columns.
+
+    Notes
+    -----
+    For values of ``ord <= 0``, the result is, strictly speaking, not a
+    mathematical 'norm', but it may still be useful for various numerical
+    purposes.
+
+    The following norms can be calculated:
+
+    =====  ==========================
+    ord    norm for vectors
+    =====  ==========================
+    None   2-norm
+    inf    max(abs(x))
+    -inf   min(abs(x))
+    0      sum(x != 0)
+    other  sum(abs(x)**ord)**(1./ord)
+    =====  ==========================
+
     """
 
-    y = x - np.mean(x, axis=0)
-    return y / np.linalg.norm(y, axis=0)
+    return x / np.linalg.norm(x, axis=0, ord=order)
 
-def smooth(x,sigma):
+def smooth(x, sigma):
     """
-    smooths a 1D signal
+    Smooths a 1D signal with a gaussian filter
 
-    smooth(x,sigma)
-    """
-    return gaussian_filter1d(x,sigma,axis=0)
+    Parameters
+    ----------
+    x : array_like
+        The array to be smoothed
 
-def sfthr(x,thr):
-    """
-    soft thresholding function
+    sigma : float
+        The width of the gaussian filter
 
-    sfthr(x,thr)
+    Returns
+    -------
+    xs : array_like
+        A smoothed version of the input signal
+
     """
-    return np.sign(x)*np.maximum(np.abs(x)-thr,0)
+
+    return gaussian_filter1d(x, sigma, axis=0)
+
+def sfthr(x,threshold):
+    """
+    Soft thresholding function
+
+    Parameters
+    ----------
+    x : array_like
+        The input array to the soft thresholding function
+
+    threshold : float
+        The threshold of the function
+
+    Returns
+    -------
+    y : array_like
+        The output of the soft thresholding function
+
+    """
+
+    return np.sign(x) * np.maximum(np.abs(x) - threshold, 0)
 
 def dprime(mu1,mu2,var1,var2):
     """
-    return the d' metric:
+    Return the d' metric given the mean and variance of two distributions
 
     d' = mu1-mu2 / sqrt(0.5* (var1 + var2))
+
     """
-    return (mu1-mu2) / np.sqrt(0.5*(var1+var2))
+
+    return (mu1 - mu2) / np.sqrt(0.5 * (var1 + var2))
 
 def sq(x):
     """
-    reshape vector to a square image
+    Reshape vector to a square image
+
     """
     return x.reshape(int(np.sqrt(x.size)),-1)
 
@@ -70,10 +132,10 @@ def sice(data, method='admm', params=None):
             params = dict()
 
         # parameters / options
-        rho     = params['rho'] if 'rho' in params else 1           # ADMM momentum term
-        lmbda   = params['lambda'] if 'lambda' in params else 0.2   # sparsity penalty
-        numiter = params['numiter'] if 'numiter' in params else 100 # number of ADMM iterations
-        tol     = params['tol'] if 'tol' in params else 1e-6        # tolerance for convergence
+        rho     = params['rho'] if 'rho' in params else 1            # ADMM momentum term
+        lmbda   = params['lambda'] if 'lambda' in params else 0.2    # sparsity penalty
+        numiter = params['numiter'] if 'numiter' in params else 100  # number of ADMM iterations
+        tol     = params['tol'] if 'tol' in params else 1e-6         # tolerance for convergence
 
         # initialize
         emp_cov = np.cov(data.T)
@@ -81,29 +143,29 @@ def sice(data, method='admm', params=None):
         # progress bar
         pb = ProgressBar(numiter)
 
+        # initial values of variables
+        inv_cov_x = np.linalg.inv(emp_cov)
+        inv_cov_z = np.zeros_like(inv_cov_x)
+        dual_err = np.zeros(inv_cov_x.shape)
+
         # run ADMM
         for itr in range(numiter):
 
             # update
-            pb.animate(itr+1)
+            pb.animate(itr + 1)
 
             if itr > 0:
-                # X-update
-                lambdas, Q = np.linalg.eig(rho * (Z-U))     # eigendecomposition of rho*(Z-U)
-                x_diag = np.diag((lambdas + np.sqrt(lambdas**2 + 4*rho)) / 2 * rho)
-                X = Q.dot(x_diag.dot(Q.T))
+                # inv_cov_x-update
+                lambdas, eigenvectors = np.linalg.eig(rho * (inv_cov_z - dual_err))
+                x_diag = np.diag((lambdas + np.sqrt(lambdas ** 2 + 4 * rho)) / 2 * rho)
+                inv_cov_x = eigenvectors.dot(x_diag.dot(eigenvectors.T))
 
-            else:
-                # initial value
-                X = np.linalg.inv(emp_cov)
-                U = np.zeros(X.shape)
+            # inv_cov_z-update
+            inv_cov_z = sfthr(inv_cov_x + dual_err, lmbda / rho)
 
-            # Z-update
-            Z = sfthr(X+U, lmbda / rho)
-
-            # U-update (consensus)
-            err = X - Z
-            U += err
+            # dual_err-update (consensus)
+            err = inv_cov_x - inv_cov_z
+            dual_err += err
 
             # check if tolerance is reached
             if np.linalg.norm(err) < tol:
@@ -111,7 +173,7 @@ def sice(data, method='admm', params=None):
                 break
 
         # return estimate
-        return np.linalg.inv(X)
+        return np.linalg.inv(inv_cov_x)
 
     elif method == 'graphlasso':
         model = GraphLassoCV()
