@@ -1,12 +1,30 @@
-from __future__ import print_function
-import sys, time
-
 """
 Python progress bar
 01:25 AM Jan 15, 2014
+
 """
 
-class ProgressBar:
+from __future__ import print_function
+import sys
+
+class ProgressBar(object):
+    """
+    ProgressBar class. Used to create a progress bar in a python terminal or iPython session
+    that can be updated each iteration of a computationally expensive analysis procedure, which
+    is often easier to read and follow than dumping print statements.
+
+    Attributes
+    ----------
+    iterations : int
+        The maximum number of iterations for this progress bar
+
+    Methods
+    -------
+    animate(iter)
+        Update the progress bar with the current iteration
+
+    """
+
     def __init__(self, iterations):
         self.iterations = iterations
         self.prog_bar = '[]'

@@ -1,8 +1,8 @@
 """
-a raised cosine basis (Keat 2001, Pillow 2005 / 2008)
-author: Niru Maheswaranathan
+A raised cosine basis (Keat 2001, Pillow 2005 / 2008)
 09:51 PM Feb 17, 2014
 """
+
 import numpy as np
 from scipy.linalg import orth
 
@@ -10,16 +10,25 @@ def makeRcosBasis(tau, numBases, bias=0.2):
     """
     Makes a raised cosine bases (useful for temporal filters)
 
-    input
-    -----
-    tau         the time vector along which the bases are generated
-    numBases    the number of bases to generate. should be smaller than the length of tau
-    bias        a parameter that can make the time scaling more linear (as bias => Inf) or more skewed (as bias => 0) [default is 0.2]
+    Parameters
+    ----------
+    tau : array_like
+        the time vector along which the bases are generated
 
-    output
-    ------
-    Phi         the generated basis vectors
-    PhiOrth     the same basis vectors, but orthogonalized
+    numBases : int
+        the number of bases to generate. should be smaller than the length of tau
+
+    bias : float
+        a parameter that can make the time scaling more linear (as bias => Inf)
+        or more skewed (as bias => 0) [default is 0.2]
+
+    Returns
+    -------
+    Phi : array_like
+        the generated basis vectors
+
+    PhiOrth : array_like
+        the same basis vectors, but orthogonalized
 
     """
 
@@ -43,7 +52,23 @@ def makeRcosBasis(tau, numBases, bias=0.2):
 
 def rcos(x, c, dc):
     """
-    The raised cosine function:
+    The raised cosine function
+
+    Parameters
+    ----------
+    x : array_like
+        Input array to the raised cosine function
+
+    c : array_like
+        The center(s) of the raised cosine function
+
+    dc : array_like
+        The spread (width) of the function
+
+    Notes
+    -----
+    The raised cosine function is:
+
     f(x) = 0.5 * cos(u + 1)
 
     where u is:
