@@ -8,6 +8,7 @@ import seaborn as sns
 from functools import wraps
 import numpy as np
 
+
 def create_figure(f):
     """
     Function decorator for creating a new figure
@@ -20,6 +21,7 @@ def create_figure(f):
         return f(*args, **kwds)
 
     return makefig_wrapper
+
 
 @create_figure
 def image(img, symmetric=True, colormap='seismic'):
@@ -62,6 +64,45 @@ def image(img, symmetric=True, colormap='seismic'):
     plt.show()
     plt.draw()
 
+
+@create_figure
+def hist2d(x, y, bins=None, range=None, cmap='hot'):
+    """
+    Function for visualizing a 2D histogram by binning given data
+
+    Parameters
+    ----------
+    x : array_like
+        The x-value of the data points to bin
+
+    y : array_like
+        The y-value of the data points to bin
+
+    bins : array_like, optional
+        Either the number of bins to use in each dimension, or the actual bin edges to use
+
+    colormap : string
+        A matplotlib colormap to use when generating the plot
+
+    """
+
+    # parse inputs
+    if range is None:
+        range = np.array([[np.min(x), np.max(x)], [np.min(y), np.max(y)]])
+
+    if bins is None:
+        bins = 25
+
+    # compute the histogram
+    counts, xedges, yedges = np.histogram2d(x, y, bins=bins, normed=True, range=range)
+
+    # generate the plot
+    plt.pcolor(xedges, yedges, counts.T, cmap=cmap)
+    plt.xlim(xedges[0],xedges[-1])
+    plt.ylim(yedges[0],yedges[-1])
+    setfontsize()
+
+
 def setfontsize(size=18):
     """
     Sets the font size of the x- and y- tick labels of the current axes
@@ -76,10 +117,3 @@ def setfontsize(size=18):
     ax = plt.gca()
     ax.set_xticklabels(ax.get_xticks(), fontsize=size)
     ax.set_yticklabels(ax.get_yticks(), fontsize=size)
-
-def closeall():
-    """
-    Close all open figure windows
-
-    """
-    plt.close('all')
