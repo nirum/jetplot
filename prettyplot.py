@@ -3,10 +3,15 @@ PrettyPlot: Utilities for making nice and readable plots using matplotlib
 
 """
 
+# imports
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from functools import wraps
 import numpy as np
+
+# exports
+__all__ = ['create_figure', 'image', 'hist', 'hist2d', 'errorplot', 'setfontsize', 'figsize']
 
 
 def create_figure(f):
@@ -23,7 +28,6 @@ def create_figure(f):
     return makefig_wrapper
 
 
-@create_figure
 def image(img, symmetric=True, colormap='seismic'):
     """
     Visualize a matrix as an image
@@ -65,6 +69,18 @@ def image(img, symmetric=True, colormap='seismic'):
     plt.draw()
 
 
+def hist(*args, **kwargs):
+    """
+    Wrapper for matplotlib.hist function
+
+    """
+
+    kwargs.pop('alpha', None)
+    kwargs.pop('histtype', None)
+    kwargs.pop('normed', None)
+    return plt.hist(*args, histtype='stepfilled', alpha=0.85, normed=True, **kwargs)
+
+
 @create_figure
 def hist2d(x, y, bins=None, range=None, cmap='hot'):
     """
@@ -103,6 +119,19 @@ def hist2d(x, y, bins=None, range=None, cmap='hot'):
     setfontsize()
 
 
+def errorplot(x, y, ye, color='k'):
+    """
+    Plot a line with error bars
+
+    """
+
+    plt.plot(x, y, '-', color=color)
+    plt.plot(x, y+ye, '+')
+    plt.plot(x, y-ye, '+')
+    for i, xi in enumerate(x):
+        plt.plot(np.array([xi,xi]), np.array([y[i]-ye[i], y[i]+ye[i]]), '-', color=color, linewidth=4)
+
+
 def setfontsize(size=18):
     """
     Sets the font size of the x- and y- tick labels of the current axes
@@ -117,3 +146,23 @@ def setfontsize(size=18):
     ax = plt.gca()
     ax.set_xticklabels(ax.get_xticks(), fontsize=size)
     ax.set_yticklabels(ax.get_yticks(), fontsize=size)
+
+
+def figsize(sizex, sizey):
+    """
+    Set the figure size
+
+    Convenience wrapper that sets
+    matplotlib.rcParams['figure.figsize'] = [sizex, sizey]
+
+    Parameters
+    ----------
+    sizex : float
+        figure width
+
+    sizey : float
+        figure height
+
+    """
+
+    matplotlib.rcParams['figure.figsize'] = [sizex, sizey]
