@@ -166,3 +166,12 @@ def figsize(sizex, sizey):
     """
 
     matplotlib.rcParams['figure.figsize'] = [sizex, sizey]
+
+
+def ca():
+    """
+    Close all open figures
+
+    """
+
+    plt.close('all')
