@@ -81,6 +81,18 @@ def hist(*args, **kwargs):
     return plt.hist(*args, histtype='stepfilled', alpha=0.85, normed=True, **kwargs)
 
 
+def loghist(*args, **kwargs):
+    """
+    Wrapper for matplotlib.hist function, with log transformed colorscale
+
+    """
+
+    kwargs.pop('alpha', None)
+    kwargs.pop('histtype', None)
+    kwargs.pop('normed', None)
+    return plt.hist(*args, histtype='stepfilled', alpha=0.85, norm=LogNorm(), normed=True, **kwargs)
+    
+
 @create_figure
 def hist2d(x, y, bins=None, range=None, cmap='hot'):
     """
