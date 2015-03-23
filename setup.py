@@ -11,9 +11,9 @@ except IOError:
 
 install_requires = [i.strip() for i in open("requirements.txt").readlines()]
 
-modules = map(lambda f: f[:-3],
+modules = list(map(lambda f: f[:-3],
               filter(lambda f: f.endswith('.py') & ~(f == 'setup.py'),
-                     os.listdir('.')))
+                     os.listdir('.'))))
 
 setup(name='utils',
       version='0.1.0',
