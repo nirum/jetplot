@@ -1,4 +1,4 @@
-## python-utils
+## Jetpack
 
 Collection of miscellaneous shared utils for Python / Numpy / Scipy
 

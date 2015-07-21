@@ -7,9 +7,22 @@ Utils: common ipython / python utilities
 import numpy as np
 import time
 from functools import wraps
+from contextlib import contextmanager
 
 # exports
-__all__ = ['profile', 'hrtime']
+__all__ = ['profile', 'hrtime', 'stopwatch']
+
+
+@contextmanager
+def stopwatch(label):
+    start = time.time()
+
+    try:
+        yield
+
+    finally:
+        end = time.time()
+        print('[Stopwatch] %s: %s' % (label, hrtime(end-start)))
 
 
 def profile(f):

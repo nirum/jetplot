@@ -91,7 +91,7 @@ def loghist(*args, **kwargs):
     kwargs.pop('histtype', None)
     kwargs.pop('normed', None)
     return plt.hist(*args, histtype='stepfilled', alpha=0.85, norm=LogNorm(), normed=True, **kwargs)
-    
+
 
 @create_figure
 def hist2d(x, y, bins=None, range=None, cmap='hot'):
@@ -131,17 +131,25 @@ def hist2d(x, y, bins=None, range=None, cmap='hot'):
     setfontsize()
 
 
-def errorplot(x, y, ye, color='k'):
+def errorplot(x, y, ye, color='k', ax=None, xscale='linear'):
     """
     Plot a line with error bars
 
     """
 
-    plt.plot(x, y, '-', color=color)
-    plt.plot(x, y+ye, '+')
-    plt.plot(x, y-ye, '+')
+    if ax is None:
+        ax = plt.gca()
+
+    ax.plot(x, y, '-', color=color)
+    ax.plot(x, y+ye, '+')
+    ax.plot(x, y-ye, '+')
     for i, xi in enumerate(x):
-        plt.plot(np.array([xi,xi]), np.array([y[i]-ye[i], y[i]+ye[i]]), '-', color=color, linewidth=4)
+        ax.plot(np.array([xi, xi]), np.array([y[i]-ye[i], y[i]+ye[i]]), '-',
+                color=color, linewidth=4)
+
+    ax.set_xscale(xscale)
+
+    return ax
 
 
 def setfontsize(size=18):
