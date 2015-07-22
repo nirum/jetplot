@@ -89,7 +89,7 @@ def peakdet(v, delta, x=None):
     return np.array(maxtab), np.array(mintab)
 
 
-def smooth(x, sigma):
+def smooth(x, sigma=1.0):
     """
     Smooths a 1D signal with a gaussian filter
 
@@ -98,8 +98,8 @@ def smooth(x, sigma):
     x : array_like
         The array to be smoothed
 
-    sigma : float
-        The width of the gaussian filter
+    sigma : float, optional
+    The width of the gaussian filter (Default: 1.0)
 
     Returns
     -------
