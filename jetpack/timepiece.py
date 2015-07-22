@@ -1,51 +1,26 @@
 """
-Utils: common ipython / python utilities
-
+Timepiece: tools for dealing with time
 """
 
-# imports
 import numpy as np
 import time
 from functools import wraps
-from contextlib import contextmanager
 
 # exports
-__all__ = ['profile', 'hrtime', 'stopwatch']
+__all__ = ['hrtime', 'stopwatch']
 
 
-@contextmanager
-def stopwatch(label):
-    start = time.time()
+def stopwatch(fun):
+    """Profiling the runtime of a function"""
 
-    try:
-        yield
-
-    finally:
-        end = time.time()
-        print('[Stopwatch] %s: %s' % (label, hrtime(end-start)))
-
-
-def profile(f):
-    """
-    Function decorator for profiling a function
-
-    Measures the runtime of the given function
-
-    Parameters
-    ----------
-    f : function
-        The function to be profiled
-
-    """
-    @wraps(f)
-    def profile_wrapper(*args, **kwds):
+    @wraps(fun)
+    def wrapper(*args, **kwargs):
         start = time.time()
-        res = f(*args, **kwds)
-        print("Runtime: " + hrtime(time.time() - start))
+        res = fun(*args, **kwargs)
+        end = time.time()
+        print('[Stopwatch] %s: %s' % (fun.__name__, hrtime(end-start)))
 
-        return res
-
-    return profile_wrapper
+    return wrapper
 
 
 def hrtime(t):

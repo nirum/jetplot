@@ -1,7 +1,6 @@
+from setuptools import setup, find_packages
 import os
-from setuptools import setup
-
-version = '0.1.0'
+import jetpack
 
 here = os.path.abspath(os.path.dirname(__file__))
 try:
@@ -11,16 +10,13 @@ except IOError:
 
 install_requires = [i.strip() for i in open("requirements.txt").readlines()]
 
-modules = list(map(lambda f: f[:-3],
-              filter(lambda f: f.endswith('.py') & ~(f == 'setup.py'),
-                     os.listdir('.'))))
-
-setup(name='utils',
-      version='0.1.0',
+setup(name='jetpack',
+      version=jetpack.__version__,
       author='Niru Maheswaranathan',
       author_email='nirum@stanford.edu',
-      requires = install_requires,
-      license='MIT',
+      url='https://github.com/nirum/jetpack.git',
+      requires=[req.strip() for req in open("requirements.txt").readlines()],
       long_description=README,
-      py_modules = modules
- )
+      packages=find_packages(),
+      license='LICENSE.md'
+      )
