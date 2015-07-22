@@ -8,11 +8,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from functools import wraps
 
-__all__ = ['plotdefaults',  'image', 'hist', 'hist2d', 'errorplot',
+__all__ = ['plotwrapper',  'image', 'hist', 'hist2d', 'errorplot',
            'setfontsize']
 
 
-def plotdefaults(fun):
+def plotwrapper(fun):
     """
     Decorator that adds sane plotting defaults to the kwargs of a function
     """
@@ -20,15 +20,21 @@ def plotdefaults(fun):
     @wraps(fun)
     def wrapper(*args, **kwargs):
 
-        if 'ax' not in kwargs:
-            kwargs['ax'] = plt.gca()
+        if 'fig' not in kwargs:
+            kwargs['fig'] = plt.figure()
 
-        return fun(*args, **kwargs)
+        if 'ax' not in kwargs:
+            kwargs['ax'] = kwargs['fig'].add_subplot(111)
+
+        res = fun(*args, **kwargs)
+        plt.show()
+        plt.draw()
+        return res
 
     return wrapper
 
 
-@plotdefaults
+@plotwrapper
 def image(img, symmetric=True, colormap='seismic', **kwargs):
     """
     Visualize a matrix as an image
@@ -68,7 +74,7 @@ def image(img, symmetric=True, colormap='seismic', **kwargs):
     plt.draw()
 
 
-@plotdefaults
+@plotwrapper
 def hist(*args, **kwargs):
     """
     Wrapper for matplotlib.hist function
@@ -79,12 +85,13 @@ def hist(*args, **kwargs):
     kwargs.pop('alpha', None)
     kwargs.pop('histtype', None)
     kwargs.pop('normed', None)
+    ax = kwargs.pop('ax')
 
-    return kwargs['ax'].hist(*args, histtype='stepfilled', alpha=0.85,
-                             normed=True, **kwargs)
+    return ax.hist(*args, histtype='stepfilled', alpha=0.85,
+                   normed=True, **kwargs)
 
 
-@plotdefaults
+@plotwrapper
 def hist2d(x, y, bins=None, range=None, cmap='hot', **kwargs):
     """
     Function for visualizing a 2D histogram by binning given data
@@ -121,10 +128,11 @@ def hist2d(x, y, bins=None, range=None, cmap='hot', **kwargs):
     ax.pcolor(xe, ye, cnt.T, cmap=cmap)
     ax.set_xlim(xe[0], xe[-1])
     ax.set_ylim(ye[0], ye[-1])
+    ax.set_aspect('equal')
     setfontsize()
 
 
-@plotdefaults
+@plotwrapper
 def errorplot(x, y, ye, color='k', xscale='linear', **kwargs):
     """
     Plot a line with error bars
@@ -144,7 +152,7 @@ def errorplot(x, y, ye, color='k', xscale='linear', **kwargs):
     return ax
 
 
-@plotdefaults
+@plotwrapper
 def setfontsize(size=18, **kwargs):
     """
     Sets the font size of the x- and y- tick labels of the current axes
