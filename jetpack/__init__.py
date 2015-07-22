@@ -12,8 +12,4 @@ from . timepiece import *
 from . signals import *
 from . plot import *
 
-__all__ = [
-    timepiece.__all__ +
-    signals.__all__ +
-    plot.__all__
-    ]
+__all__ = timepiece.__all__ + signals.__all__ + plot.__all__
