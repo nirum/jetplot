@@ -30,5 +30,5 @@ def csv(filename, data, headers):
     assert data.shape[1] == len(headers), \
         "The array must have the same number of columns as the headers input"
 
-    np.savetxt(filename + '.csv', data, delimiter=',',
+    np.savetxt(filename, data, delimiter=',',
                header=','.join(headers), comments='')
