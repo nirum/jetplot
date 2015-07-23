@@ -7,7 +7,7 @@ import numpy as np
 __all__ = ['csv']
 
 
-def csv(filename, data, headers):
+def csv(filename, data, headers, fmt='%g'):
     """
     Write a numpy array to a CSV file with the given headers
 
@@ -22,6 +22,9 @@ def csv(filename, data, headers):
     headers : list
         List of strings corresponding to the column headers
 
+    fmt : string, optional
+        A format string for how to encode the data (Default: '%g')
+
     """
 
     if not filename.endswith('.csv'):
@@ -30,5 +33,5 @@ def csv(filename, data, headers):
     assert data.shape[1] == len(headers), \
         "The array must have the same number of columns as the headers input"
 
-    np.savetxt(filename, data, delimiter=',',
+    np.savetxt(filename, data, delimiter=',', fmt=fmt,
                header=','.join(headers), comments='')
