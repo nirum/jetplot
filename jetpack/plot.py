@@ -136,14 +136,14 @@ def hist2d(x, y, bins=None, range=None, cmap='hot', **kwargs):
 
 
 @plotwrapper
-def errorplot(x, y, ye, color='k', xscale='linear', **kwargs):
+def errorplot(x, y, ye, color='k', xscale='linear', fmt='-', **kwargs):
     """
     Plot a line with error bars
 
     """
 
     ax = kwargs['ax']
-    ax.plot(x, y, '-', color=color)
+    ax.plot(x, y, fmt, color=color)
     ax.plot(x, y+ye, '+')
     ax.plot(x, y-ye, '+')
     for i, xi in enumerate(x):
