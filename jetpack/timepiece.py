@@ -41,7 +41,7 @@ def hrtime(t):
 
     try:
         t = float(t)
-    except ValueError, TypeError:
+    except (ValueError, TypeError):
         print("Input must be numeric")
 
     # weeks
