@@ -187,3 +187,10 @@ def sq(x):
         print('Error: the input dimensions are inconsistent with a square')
 
     return X
+
+
+def arr(x):
+    """
+    Converts a generator to a numpy array
+    """
+    return np.array(list(x))

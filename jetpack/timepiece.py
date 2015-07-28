@@ -18,7 +18,7 @@ def stopwatch(fun):
         start = time.time()
         res = fun(*args, **kwargs)
         end = time.time()
-        print('[Stopwatch] %s: %s' % (fun.__name__, hrtime(end-start)))
+        print('[%s] %s' % (fun.__name__, hrtime(end-start)))
 
     return wrapper
 

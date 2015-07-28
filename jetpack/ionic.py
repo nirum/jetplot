@@ -1,10 +1,13 @@
 """
-IO utilities
+IO and display utilities
 """
 
 import numpy as np
+import pandas as pd
+from functools import partial
+from numbers import Number
 
-__all__ = ['csv']
+__all__ = ['csv', 'as_percent']
 
 
 def csv(filename, data, headers, fmt='%g'):
@@ -35,3 +38,13 @@ def csv(filename, data, headers, fmt='%g'):
 
     np.savetxt(filename, data, delimiter=',', fmt=fmt,
                header=','.join(headers), comments='')
+
+
+def as_percent(x, precision='0.2'):
+    """
+    Convert number to percentage string.
+    """
+    if isinstance(x, Number):
+        return "{{:{}%}}".format(precision).format(x)
+    else:
+        raise TypeError("Numeric type required")
