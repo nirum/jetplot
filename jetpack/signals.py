@@ -6,7 +6,7 @@ import sys
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter1d
 
-__all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sq']
+__all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sq', 'arr']
 
 
 def peakdet(v, delta, x=None):
