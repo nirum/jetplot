@@ -5,6 +5,7 @@ Timepiece: tools for dealing with time
 import numpy as np
 import time
 from functools import wraps
+from .ionic import unicodes
 
 # exports
 __all__ = ['hrtime', 'stopwatch']
@@ -17,8 +18,9 @@ def stopwatch(fun):
     def wrapper(*args, **kwargs):
         start = time.time()
         res = fun(*args, **kwargs)
-        end = time.time()
-        print('[%s] %s' % (fun.__name__, hrtime(end-start)))
+        runtime = time.time() - start
+        print('[%s] %s' % (fun.__name__, hrtime(runtime)))
+        return res, runtime
 
     return wrapper
 
@@ -62,22 +64,22 @@ def hrtime(t):
     # minutes
     elif t >= 60:
         minutes = np.floor(t / 60.)
-        timestr = "{:0.0f} minutes, ".format(minutes) + hrtime(t % 60)
+        timestr = "{:0.0f} min., ".format(minutes) + hrtime(t % 60)
 
     # seconds
     elif (t >= 1) | (t == 0):
-        timestr = "{:g} seconds".format(t)
+        timestr = "{:g} s".format(t)
 
     # milliseconds
     elif t >= 1e-3:
-        timestr = "{:g} milliseconds".format(t*1e3)
+        timestr = "{:g} ms".format(t*1e3)
 
     # microseconds
     elif t >= 1e-6:
-        timestr = "{:g} microseconds".format(t*1e6)
+        timestr = "{:g} {}s".format(t*1e6, unicodes['mu'])
 
     # nanoseconds or smaller
     else:
-        timestr = "{:g} nanoseconds".format(t*1e9)
+        timestr = "{:g} ns".format(t*1e9)
 
     return timestr
