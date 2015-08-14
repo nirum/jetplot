@@ -76,7 +76,7 @@ def hrtime(t):
 
     # microseconds
     elif t >= 1e-6:
-        timestr = "{:g} {}s".format(t*1e6, unicodes['mu'])
+        timestr = u"{:g} {}s".format(t*1e6, unicodes['mu'])
 
     # nanoseconds or smaller
     else:
