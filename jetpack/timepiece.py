@@ -8,21 +8,34 @@ from functools import wraps
 from .ionic import unicodes
 
 # exports
-__all__ = ['hrtime', 'stopwatch']
+__all__ = ['hrtime', 'Stopwatch']
 
 
-def stopwatch(fun):
-    """Profiling the runtime of a function"""
+class Stopwatch():
+    def __init__(self, name=''):
+        self.name = name
+        self.start = time.time()
 
-    @wraps(fun)
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        res = fun(*args, **kwargs)
-        runtime = time.time() - start
-        print('[%s] %s' % (fun.__name__, hrtime(runtime)))
-        return res, runtime
+    def __str__(self):
+        return u'\u231a  Stopwatch for: ' + self.name
 
-    return wrapper
+    @property
+    def elapsed(self):
+        return time.time() - self.start
+
+    def checkpoint(self, name=''):
+        print("{timer} {checkpoint} took {elapsed}".format(
+            timer=self.name,
+            checkpoint=name,
+            elapsed=hrtime(self.elapsed),
+        ).strip())
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.checkpoint(u'Finished! \u2714')
+        pass
 
 
 def hrtime(t):
