@@ -15,26 +15,33 @@ class Stopwatch():
     def __init__(self, name=''):
         self.name = name
         self.start = time.time()
+        self.absolute_start = time.time()
 
     def __str__(self):
         return u'\u231a  Stopwatch for: ' + self.name
 
     @property
     def elapsed(self):
-        return time.time() - self.start
+        current = time.time()
+        elapsed = current - self.start
+        self.start = time.time()
+        return elapsed
 
     def checkpoint(self, name=''):
         print("{timer} {checkpoint} took {elapsed}".format(
-            timer=self.name,
-            checkpoint=name,
-            elapsed=hrtime(self.elapsed),
+            timer = self.name,
+            checkpoint = name,
+            elapsed = hrtime(self.elapsed),
         ).strip())
 
     def __enter__(self):
         return self
 
     def __exit__(self, type, value, traceback):
-        self.checkpoint(u'Finished! \u2714')
+        print(u'{timer} Finished! \u2714\nTotal elapsed time: {total}'.format(
+            timer=self.name,
+            total=hrtime(time.time() - self.absolute_start)
+        ))
         pass
 
 
