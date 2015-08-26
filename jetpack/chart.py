@@ -1,4 +1,7 @@
 """
+Chart
+-----
+
 Tools for making nice and readable plots using matplotlib
 
 """

@@ -10,9 +10,9 @@ __version__ = '0.0.2'
 
 from . timepiece import *
 from . signals import *
-from . plot import *
+from . chart import *
 from . ionic import *
 from . capsules import *
 
-__all__ = timepiece.__all__ + signals.__all__ + plot.__all__ + \
+__all__ = timepiece.__all__ + signals.__all__ + chart.__all__ + \
     ionic.__all__ + capsules.__all__

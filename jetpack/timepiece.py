@@ -1,5 +1,9 @@
 """
-Timepiece: tools for dealing with time
+Timepiece
+---------
+
+Tools for dealing with time
+
 """
 
 import numpy as np

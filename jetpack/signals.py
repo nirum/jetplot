@@ -1,5 +1,9 @@
 """
-Signals: tools for signal processing
+Signals
+-------
+
+Tools for signal processing
+
 """
 
 import sys
