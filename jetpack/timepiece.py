@@ -4,7 +4,6 @@ Timepiece: tools for dealing with time
 
 import numpy as np
 import time
-from functools import wraps
 from .ionic import unicodes
 
 # exports

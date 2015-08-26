@@ -88,7 +88,6 @@ def hist(*args, **kwargs):
 
     # get the axis and figure handles
     ax = kwargs.pop('ax')
-    fig = kwargs.pop('fig')
 
     return ax.hist(*args, histtype='stepfilled', alpha=0.85,
                    normed=True, **kwargs)

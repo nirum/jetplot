@@ -23,18 +23,22 @@ def peakdet(v, delta, x=None):
         The 1D signal in which we wish to find local optima
 
     delta : float
-        Optima are accepted if they are at least delta greater than neighboring values
+        Optima are accepted if they are at least delta greater than neighboring
+        values
 
     x : array_like, optional
-        Used to return the x-values of the optima. If None (default), indices into the `v` array are returned.
+        Used to return the x-values of the optima. If None (default), indices
+        into the `v` array are returned.
 
     Returns
     -------
     maxtab : array_like
-        (N x 2) array, where the first column are the maxima and the second column are the locations of those maxima.
+        (N x 2) array, where the first column are the maxima and the second
+        column are the locations of those maxima.
 
     mintab : array_like
-        (N x 2) array, where the first column are the minima and the second column are the locations of those minima.
+        (N x 2) array, where the first column are the minima and the second
+        column are the locations of those minima.
 
     Notes
     -----

@@ -12,5 +12,7 @@ from . timepiece import *
 from . signals import *
 from . plot import *
 from . ionic import *
+from . capsules import *
 
-__all__ = timepiece.__all__ + signals.__all__ + plot.__all__ + ionic.__all__
+__all__ = timepiece.__all__ + signals.__all__ + plot.__all__ + \
+    ionic.__all__ + capsules.__all__

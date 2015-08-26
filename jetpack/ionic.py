@@ -1,10 +1,11 @@
 """
+Ionic
+-----
+
 IO and display utilities
 """
 
 import numpy as np
-import pandas as pd
-from functools import partial
 from numbers import Number
 
 __all__ = ['csv', 'as_percent', 'unicodes']
