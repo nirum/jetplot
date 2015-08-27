@@ -6,7 +6,7 @@ Jetpack is a set of useful utility functions for python
 
 """
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 
 from . timepiece import *
