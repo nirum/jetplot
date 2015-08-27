@@ -14,17 +14,17 @@ __all__ = ['FuzzyDict']
 
 class FuzzyDict(MutableMapping):
 
-    def __init__(self, thr=0.6, *args, **kwargs):
+    def __init__(self, threshold=0.6, *args, **kwargs):
         """
         Parameters
         ----------
-        thr : float, optional
+        threshold : float, optional
             A number between 0 and 1 (default: 0.6). Higher values indicate
             more stringent matching behavior (fewer matches)
 
         """
         self.store = dict()
-        self.threshold = thr
+        self.threshold = threshold
         self.update(dict(*args, **kwargs))
 
     def lookup(self, key):
