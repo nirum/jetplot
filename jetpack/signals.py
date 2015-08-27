@@ -188,13 +188,10 @@ def sq(x):
 
     """
 
-    try:
-        X = x.reshape(int(np.sqrt(x.size)), -1)
+    if np.sqrt(x.size)**2 != x.size:
+        raise ValueError('Error: the input size is inconsistent with a square')
 
-    except ValueError:
-        print('Error: the input dimensions are inconsistent with a square')
-
-    return X
+    return x.reshape(int(np.sqrt(x.size)), -1)
 
 
 def arr(x):

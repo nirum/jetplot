@@ -45,7 +45,6 @@ class Stopwatch():
             timer=self.name,
             total=hrtime(time.time() - self.absolute_start)
         ))
-        pass
 
 
 def hrtime(t):
@@ -67,7 +66,7 @@ def hrtime(t):
     try:
         t = float(t)
     except (ValueError, TypeError):
-        print("Input must be numeric")
+        raise ValueError("Input must be numeric")
 
     # weeks
     if t >= 7*60*60*24:
