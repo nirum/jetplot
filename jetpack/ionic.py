@@ -32,6 +32,8 @@ def csv(filename, data, headers, fmt='%g'):
 
     """
 
+    assert data.ndim == 2, "Data must be a matrix (have two dimensions)"
+
     if not filename.endswith('.csv'):
         filename += '.csv'
 

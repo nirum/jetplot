@@ -3,10 +3,13 @@ Capsules
 --------
 
 Custom containers for data
+
 """
 
 from difflib import get_close_matches
 from collections import MutableMapping
+
+__all__ = ['FuzzyDict']
 
 
 class FuzzyDict(MutableMapping):
