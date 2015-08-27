@@ -14,7 +14,7 @@ before_install:
   - pip install six>=1.3
 
 install:
-  - travis_retry conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy
+  - travis_retry conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy matplotlib
   - travis_retry pip install -r requirements-dev.txt
   - travis_retry python setup.py install
 
