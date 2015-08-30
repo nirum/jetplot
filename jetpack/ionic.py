@@ -12,7 +12,7 @@ from numbers import Number
 __all__ = ['csv', 'as_percent', 'unicodes']
 
 
-def csv(filename, data, headers, fmt='%g'):
+def csv(filename, data, headers=None, fmt='%g'):
     """
     Write a numpy array to a CSV file with the given headers
 
@@ -24,8 +24,8 @@ def csv(filename, data, headers, fmt='%g'):
     data : array_like
         A numpy array (matrix) containing the data to write
 
-    headers : list
-        List of strings corresponding to the column headers
+    headers : list, optional
+        List of strings corresponding to the column headers (Default: None)
 
     fmt : string, optional
         A format string for how to encode the data (Default: '%g')
@@ -37,11 +37,17 @@ def csv(filename, data, headers, fmt='%g'):
     if not filename.endswith('.csv'):
         filename += '.csv'
 
-    assert data.shape[1] == len(headers), \
-        "The array must have the same number of columns as the headers input"
+    if headers:
 
-    np.savetxt(filename, data, delimiter=',', fmt=fmt,
-               header=','.join(headers), comments='')
+        assert data.shape[1] == len(headers), \
+            "Data must have the same number of columns as the headers"
+
+        hdr=','.join(headers)
+
+    else:
+        hdr=''
+
+    np.savetxt(filename, data, delimiter=',', fmt=fmt, header=hdr, comments='')
 
 
 def as_percent(x, precision='0.2'):
