@@ -23,15 +23,20 @@ def plotwrapper(fun):
     @wraps(fun)
     def wrapper(*args, **kwargs):
 
-        if 'fig' not in kwargs:
-            kwargs['fig'] = plt.figure()
-
         if 'ax' not in kwargs:
+
+            if 'fig' not in kwargs:
+                kwargs['fig'] = plt.figure()
+
             kwargs['ax'] = kwargs['fig'].add_subplot(111)
+
+        else:
+
+            if 'fig' not in kwargs:
+                kwargs['fig'] = kwargs['ax'].get_figure()
 
         res = fun(*args, **kwargs)
         plt.show()
-        plt.draw()
         return res
 
     return wrapper
@@ -71,6 +76,10 @@ def image(img, symmetric=True, colormap='seismic', **kwargs):
     # make the image
     kwargs['ax'].imshow(img, cmap=colormap, interpolation=None,
                         vmin=vmin, vmax=vmax, aspect='equal')
+
+    # clear ticks
+    noticks(ax=kwargs['ax'])
+    noticks(kwargs['ax'])
 
     # display
     plt.show()
@@ -172,3 +181,16 @@ def setfontsize(size=18, **kwargs):
     ax = kwargs['ax']
     ax.set_xticklabels(ax.get_xticks(), fontsize=size)
     ax.set_yticklabels(ax.get_yticks(), fontsize=size)
+
+
+def noticks(ax=None):
+    """
+    Clears tick marks (useful for images)
+    """
+
+    if ax is None:
+        ax = plt.gca()
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+    plt.draw()
