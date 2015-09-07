@@ -10,7 +10,7 @@ import sys
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter1d
 
-__all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sq', 'arr']
+__all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr']
 
 
 def peakdet(v, delta, x=None):
@@ -180,6 +180,30 @@ def sfthr(x, threshold):
     """
 
     return np.sign(x) * np.maximum(np.abs(x) - threshold, 0)
+
+
+def sfrct(x, threshold):
+    """
+    Soft rectification function
+
+    y = log(1 + exp(x - threshold))
+
+    Parameters
+    ----------
+    x : array_like
+        The input array to the soft thresholding function
+
+    threshold : float
+        The threshold of the function
+
+    Returns
+    -------
+    y : array_like
+        The output of the soft thresholding function
+
+    """
+
+    return np.log1p(np.exp(x - threshold))
 
 
 def sq(x):
