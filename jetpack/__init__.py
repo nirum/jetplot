@@ -14,7 +14,6 @@ from .signals import *
 from .chart import *
 from .ionic import *
 from .capsules import *
-from .tensor import *
 
 __all__ = timepiece.__all__ + signals.__all__ + chart.__all__ + \
-    ionic.__all__ + capsules.__all__ + tensor.__all__
+    ionic.__all__ + capsules.__all__
