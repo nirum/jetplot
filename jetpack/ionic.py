@@ -80,6 +80,7 @@ unicodes = {
     'x': u'\u2718',
     'star': u'\u272F',
     'arrow': u'\u279B',
+    'pm': u'\u00B1',
     'gradient': u'\u2206',
     'nabla': u'\u2207',
     'in': u'\u2208',
