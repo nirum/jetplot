@@ -9,9 +9,10 @@ Tools for dealing with time
 import numpy as np
 import time
 from .ionic import unicodes
+from functools import wraps
 
 # exports
-__all__ = ['hrtime', 'Stopwatch']
+__all__ = ['hrtime', 'Stopwatch', 'profile']
 
 
 class Stopwatch():
@@ -105,3 +106,22 @@ def hrtime(t):
         timestr = "{:g} ns".format(t*1e9)
 
     return timestr
+
+
+def profile(func):
+    calls = list()
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        nonlocal calls
+        tstart = time.time()
+        results = func(*args, **kwargs)
+        tstop = time.time()
+        calls.append(tstop-tstart)
+        return results
+
+    wrapper.calls = calls
+    wrapper.mean = lambda: np.mean(calls)
+    wrapper.serr = lambda: np.std(calls) / np.sqrt(len(calls))
+    wrapper.summary = lambda: print('Runtimes: {} {} {}'.format(
+        hrtime(wrapper.mean()), unicodes['pm'], hrtime(wrapper.serr())))
+    return wrapper
