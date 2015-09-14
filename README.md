@@ -5,4 +5,6 @@
 
 Collection of miscellaneous shared utils for Python / Numpy / Scipy
 
+**works on Python 3 only**
+
 curated by Niru Maheswaranathan (`nirum@stanford.edu`)
