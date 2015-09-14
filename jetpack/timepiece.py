@@ -7,6 +7,7 @@ Tools for dealing with time
 """
 
 import numpy as np
+import sys
 import time
 from .ionic import unicodes
 from functools import wraps
@@ -108,20 +109,22 @@ def hrtime(t):
     return timestr
 
 
-def profile(func):
-    calls = list()
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        nonlocal calls
-        tstart = time.time()
-        results = func(*args, **kwargs)
-        tstop = time.time()
-        calls.append(tstop-tstart)
-        return results
+# python 3 only
+if sys.version_info > (3,0):
+    def profile(func):
+        calls = list()
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            nonlocal calls
+            tstart = time.time()
+            results = func(*args, **kwargs)
+            tstop = time.time()
+            calls.append(tstop-tstart)
+            return results
 
-    wrapper.calls = calls
-    wrapper.mean = lambda: np.mean(calls)
-    wrapper.serr = lambda: np.std(calls) / np.sqrt(len(calls))
-    wrapper.summary = lambda: print('Runtimes: {} {} {}'.format(
-        hrtime(wrapper.mean()), unicodes['pm'], hrtime(wrapper.serr())))
-    return wrapper
+        wrapper.calls = calls
+        wrapper.mean = lambda: np.mean(calls)
+        wrapper.serr = lambda: np.std(calls) / np.sqrt(len(calls))
+        wrapper.summary = lambda: print('Runtimes: {} {} {}'.format(
+            hrtime(wrapper.mean()), unicodes['pm'], hrtime(wrapper.serr())))
+        return wrapper
