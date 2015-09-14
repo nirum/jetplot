@@ -25,10 +25,10 @@ def csv(filename, data, headers=None, fmt='%g'):
         A numpy array (matrix) containing the data to write
 
     headers : list, optional
-        List of strings corresponding to the column headers (Default: None)
+        List of strings corresponding to the column headers (default: None)
 
     fmt : string, optional
-        A format string for how to encode the data (Default: '%g')
+        A format string for how to encode the data (default: '%g')
 
     """
 

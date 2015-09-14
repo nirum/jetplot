@@ -43,7 +43,7 @@ def plotwrapper(fun):
 
 
 @plotwrapper
-def image(img, symmetric=True, colormap='seismic', **kwargs):
+def image(img, symmetric=True, cmap='seismic', **kwargs):
     """
     Visualize a matrix as an image
 
@@ -54,10 +54,10 @@ def image(img, symmetric=True, colormap='seismic', **kwargs):
 
     symmetric : boolean, optional
         Whether or not to scale the colormap range so that it is symmetric
-        about the image mean (Default: true).
+        about the image mean (default: true).
 
-    colormap : string, optional
-        A matplotlib colormap to use (Default: 'seismic').
+    cmap : string, optional
+        A matplotlib colormap to use (default: 'seismic').
 
     ax : matplotlib axes handle, optional
         A handle to a matplotlib axes to use for plotting
@@ -74,7 +74,7 @@ def image(img, symmetric=True, colormap='seismic', **kwargs):
     vmin, vmax = (-abs_max, abs_max) if symmetric else (img_min, img_max)
 
     # make the image
-    kwargs['ax'].imshow(img, cmap=colormap, interpolation=None,
+    kwargs['ax'].imshow(img, cmap=cmap, interpolation=None,
                         vmin=vmin, vmax=vmax, aspect='equal')
 
     # clear ticks
@@ -122,7 +122,7 @@ def hist2d(x, y, bins=None, range=None, cmap='hot', **kwargs):
         Either the number of bins to use in each dimension, or the actual bin
         edges to use
 
-    colormap : string
+    cmap : string
         A matplotlib colormap to use when generating the plot
 
     """

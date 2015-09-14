@@ -107,7 +107,7 @@ def smooth(x, sigma=1.0):
         The array to be smoothed
 
     sigma : float, optional
-    The width of the gaussian filter (Default: 1.0)
+    The width of the gaussian filter (default: 1.0)
 
     Returns
     -------
@@ -130,7 +130,7 @@ def norms(x, order=2):
         The array (or matrix) to be normalized.
 
     order : {non-zero int, inf, -inf, 'fro'}, optional
-        Order of the norm to use when normalizing the input. Default is 2.
+        Order of the norm to use when normalizing the input. (default: 2)
 
     Returns
     -------
