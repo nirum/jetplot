@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from functools import wraps
 
 __all__ = ['plotwrapper',  'image', 'hist', 'hist2d', 'errorplot',
-           'setfontsize', 'noticks', 'nospines']
+           'setfontsize', 'noticks', 'nospines', 'breathe']
 
 
 def plotwrapper(fun):
