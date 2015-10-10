@@ -108,7 +108,6 @@ def image(img, symmetric=True, cmap='seismic', **kwargs):
 
     # clear ticks
     noticks(ax=kwargs['ax'])
-    noticks(kwargs['ax'])
 
     # display
     plt.show()
