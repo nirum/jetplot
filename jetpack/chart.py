@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from functools import wraps
 
 __all__ = ['plotwrapper',  'image', 'hist', 'hist2d', 'errorplot',
-           'setfontsize']
+           'setfontsize', 'noticks', 'nospines']
 
 
 def plotwrapper(fun):
@@ -37,6 +37,35 @@ def plotwrapper(fun):
 
         res = fun(*args, **kwargs)
         plt.show()
+        plt.draw()
+        return res
+
+    return wrapper
+
+
+def axwrapper(fun):
+    """
+    Decorator that adds axis arguments
+    """
+
+    @wraps(fun)
+    def wrapper(*args, **kwargs):
+
+        if 'ax' not in kwargs:
+
+            if 'fig' not in kwargs:
+                kwargs['fig'] = plt.gcf()
+
+            kwargs['ax'] = plt.gca()
+
+        else:
+
+            if 'fig' not in kwargs:
+                kwargs['fig'] = kwargs['ax'].get_figure()
+
+        res = fun(*args, **kwargs)
+        plt.show()
+        plt.draw()
         return res
 
     return wrapper
@@ -183,14 +212,58 @@ def setfontsize(size=18, **kwargs):
     ax.set_yticklabels(ax.get_yticks(), fontsize=size)
 
 
-def noticks(ax=None):
+@axwrapper
+def noticks(**kwargs):
     """
     Clears tick marks (useful for images)
     """
 
-    if ax is None:
-        ax = plt.gca()
-
+    ax = kwargs['ax']
     ax.set_xticks([])
     ax.set_yticks([])
-    plt.draw()
+    return ax
+
+
+@axwrapper
+def nospines(**kwargs):
+    """
+    Hides the top and rightmost axis spines
+    """
+
+    ax = kwargs['ax']
+
+    # disable spines
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+
+    # disable ticks
+    ax.yaxis.set_ticks_position('left')
+    ax.xaxis.set_ticks_position('bottom')
+
+    return ax
+
+
+@axwrapper
+def breathe(factor=0.05, **kwargs):
+    ax = kwargs['ax']
+
+    if ax.spines['bottom'].get_bounds():
+        xa, xb = ax.spines['bottom'].get_bounds()
+    else:
+        xa, xb = ax.get_xlim()
+
+    xrng = xb - xa
+    ax.set_xlim(xa - factor * xrng, xb + factor * xrng)
+    ax.spines['bottom'].set_bounds(xa, xb)
+
+    if ax.spines['left'].get_bounds():
+        ya, yb = ax.spines['left'].get_bounds()
+    else:
+        ya, yb = ax.get_ylim()
+
+    yrng = yb - ya
+    ax.set_ylim(ya - factor * yrng, yb + factor * yrng)
+    ax.spines['left'].set_bounds(ya, yb)
+
+    nospines(**kwargs)
+    return ax
