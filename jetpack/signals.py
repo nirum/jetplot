@@ -9,8 +9,10 @@ Tools for signal processing
 import sys
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter1d
+from scipy.linalg import sqrtm, inv
 
-__all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr']
+__all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
+           'whiten']
 
 
 def peakdet(v, delta, x=None):
@@ -204,6 +206,26 @@ def sfrct(x, threshold):
     """
 
     return np.log1p(np.exp(x - threshold))
+
+
+def whiten(X):
+    """
+    Whitens an (N x M) matrix consisting of M samples of N-dimensional vectors
+
+    Parameters
+    ----------
+    X : array_like
+        Matrix where each column is a sample from an N-dimensional distribution
+
+    Returns
+    -------
+    W : array_like
+        Matrix where the columns are whitened version of the input vectors
+
+    """
+
+    return inv(sqrtm(np.cov(X))).dot(X)
+
 
 
 def sq(x):
