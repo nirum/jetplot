@@ -72,7 +72,7 @@ def axwrapper(fun):
 
 
 @plotwrapper
-def image(img, symmetric=True, cmap='seismic', **kwargs):
+def image(img, mode='div', center=True, cmap=None, aspect='equal', **kwargs):
     """
     Visualize a matrix as an image
 
@@ -81,30 +81,46 @@ def image(img, symmetric=True, cmap='seismic', **kwargs):
     img : array_like
         The matrix to visualize
 
-    symmetric : boolean, optional
-        Whether or not to scale the colormap range so that it is symmetric
-        about the image mean (default: true).
+    mode : string, optional
+        Either 'div' for a diverging image or 'seq' for sequential (default: 'div')
+
+    center : boolean, optional
+        Whether or not to mean-subtract the image
 
     cmap : string, optional
-        A matplotlib colormap to use (default: 'seismic').
+        A matplotlib colormap to use (default: 'seismic' for 'div', 'gray' for 'seq')
+
+    aspect : string, optional
+        Same as in plt.imshow, either 'equal' or 'auto'
 
     ax : matplotlib axes handle, optional
         A handle to a matplotlib axes to use for plotting
 
     """
 
-    # image mean
-    mu = np.mean(img)
+    # subtract off image mean
+    if center:
+        img -= np.mean(img)
 
     # image bounds
-    img_min = np.min(img - mu)
-    img_max = np.max(img - mu)
-    abs_max = np.max(np.abs(img - mu))
-    vmin, vmax = (-abs_max, abs_max) if symmetric else (img_min, img_max)
+    img_min = np.min(img)
+    img_max = np.max(img)
+    abs_max = np.max(np.abs(img))
+
+    if mode == 'div':
+        vmin, vmax = (-abs_max, abs_max)
+        if cmap is None:
+            cmap = 'seismic'
+    elif mode == 'seq':
+        vmin, vmax = (img_min, img_max)
+        if cmap is None:
+            cmap = 'gray'
+    else:
+        raise ValueError("Unrecognized mode: '" + mode + "'")
 
     # make the image
     kwargs['ax'].imshow(img, cmap=cmap, interpolation=None,
-                        vmin=vmin, vmax=vmax, aspect='equal')
+                        vmin=vmin, vmax=vmax, aspect=aspect)
 
     # clear ticks
     noticks(ax=kwargs['ax'])
