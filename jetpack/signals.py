@@ -9,10 +9,7 @@ Tools for signal processing
 import sys
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter1d
-try:
-    from scipy.linalg import sqrtm, inv
-except ImportError:
-    print('scipy not found. jetpack.signals.whiten will not work')
+from scipy.linalg import sqrtm, inv
 
 __all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
            'whiten']
