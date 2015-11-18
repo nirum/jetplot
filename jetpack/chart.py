@@ -72,7 +72,7 @@ def axwrapper(fun):
 
 
 @plotwrapper
-def image(img, mode='div', center=True, cmap=None, aspect='equal', **kwargs):
+def image(img, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None, **kwargs):
     """
     Visualize a matrix as an image
 
@@ -108,11 +108,17 @@ def image(img, mode='div', center=True, cmap=None, aspect='equal', **kwargs):
     abs_max = np.max(np.abs(img))
 
     if mode == 'div':
-        vmin, vmax = (-abs_max, abs_max)
+        if vmin is None:
+            vmin = -abs_max
+        if vmax is None:
+            vmax = abs_max
         if cmap is None:
             cmap = 'seismic'
     elif mode == 'seq':
-        vmin, vmax = (img_min, img_max)
+        if vmin is None:
+            vmin = img_max
+        if vmax is None:
+            vmax = img_max
         if cmap is None:
             cmap = 'gray'
     else:
