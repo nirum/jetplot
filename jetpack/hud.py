@@ -20,6 +20,17 @@ __all__ = ['HUD']
 class HUD:
 
     def __init__(self):
+        """
+        Starts a HUD server for displaying remote graphics
+
+        Usage:
+            >>> hud = HUD()
+            >>> hud.plot(my_data)
+            >>> hud.imshow(my_image)
+
+        Then, point your browser to `http://localhost:8000` to view the graphics
+
+        """
 
         # Generate a temporary directory
         self.path = tempfile.mkdtemp(prefix='hud_')
