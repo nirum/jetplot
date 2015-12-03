@@ -6,10 +6,12 @@ IO and display utilities
 
 """
 
+import sys
 import numpy as np
 from numbers import Number
+from contextlib import contextmanager
 
-__all__ = ['csv', 'as_percent', 'unicodes']
+__all__ = ['csv', 'as_percent', 'notify', 'unicodes']
 
 
 def csv(filename, data, headers=None, fmt='%g'):
@@ -58,6 +60,33 @@ def as_percent(x, precision='0.2'):
         return "{{:{}%}}".format(precision).format(x)
     else:
         raise TypeError("Numeric type required")
+
+
+@contextmanager
+def notify(title='Loading'):
+    """
+    Context manager for printing messages of the form 'Loading... Done.'
+
+    Parameters
+    ----------
+    title : string
+        A message / title to print (Default: 'Loading')
+
+    Usage
+    -----
+    with notify('Working'):
+        # do long running task
+        time.sleep(0.5)
+    >>> -> Working... Done.
+
+    """
+
+    print(unicodes['arrow'] + '  ' + title + '... ', end='')
+    sys.stdout.flush()
+    try:
+        yield
+    finally:
+        print('Done! ' + unicodes['check'])
 
 
 unicodes = {
