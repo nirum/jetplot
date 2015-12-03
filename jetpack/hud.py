@@ -32,6 +32,8 @@ class HUD:
 
         """
 
+        plt.switch_backend('agg')
+
         # Generate a temporary directory
         self.path = tempfile.mkdtemp(prefix='hud_')
 
