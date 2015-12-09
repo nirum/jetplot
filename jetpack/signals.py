@@ -12,7 +12,7 @@ from scipy.ndimage.filters import gaussian_filter1d
 from scipy.linalg import sqrtm, inv
 
 __all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
-           'whiten', 'subspace']
+           'whiten', 'canoncorr']
 
 
 def peakdet(v, delta, x=None):
@@ -162,7 +162,7 @@ def norms(x, order=2):
     return x / np.linalg.norm(x, axis=0, ord=order)
 
 
-def subspace(X, Y):
+def canoncorr(X, Y):
     """
     canonical correlation between two subspaces
     (computed via the QR decomposition)
