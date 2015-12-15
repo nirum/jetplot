@@ -91,6 +91,8 @@ def notify(title='Loading'):
 
 unicodes = {
     'mu': u'\u03BC',
+    'degrees': u'\u00B0',
+    'micro': u'\u00B5',
     'lambda': u'\u03BB',
     'gamma': u'\u03B3',
     'pi': u'\u03C0',
@@ -117,6 +119,7 @@ unicodes = {
     'forall': u'\u2200',
     'not_in': u'\u2209',
     'int': u'\u222B',
+    'grad': u'\u2202',
     'partial': u'\u2202',
     'sqrt': u'\u221A',
     'geq': u'\u2265',
@@ -126,5 +129,10 @@ unicodes = {
     'infty': u'\u221E',
     'cdot': u'\u2219',
     'Sigma': u'\u2211',
-    'prod': u'\u220F'
+    'sum': u'\u2211',
+    'prod': u'\u220F',
+    'cloud': u'\u2601',
+    'umbrella': u'\u2602',
+    'snowflake': u'\u2600',
+    'dollar': u'\u0024',
 }
