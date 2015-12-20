@@ -137,6 +137,42 @@ def image(img, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vm
 
 
 @plotwrapper
+def corrplot(C, cmap=None, cmap_range=(0,1), cbar=True, fontsize=14, **kwargs):
+    """
+    Plots values in a correlation matrix
+
+    """
+
+    ax = kwargs['ax']
+    n = len(C)
+
+    # defaults
+    if cmap is None:
+        if min(cmap_range) >= 0:
+            cmap = "viridis"
+        elif max(cmap_range) <= 0:
+            cmap = "RdBu"
+        else:
+            cmap = "gray"
+
+    # remove values
+    rr, cc = np.triu_indices(n, k=1)
+    C[rr, cc] = np.nan
+
+    img = ax.matshow(C, cmap=cmap, vmin=cmap_range[0], vmax=cmap_range[0])
+
+    if cbar:
+        plt.colorbar(img, shrink=0.75)
+
+    for j in range(n):
+        for i in range(j+1,n):
+            ax.text(i, j, '{:0.2f}'.format(C[i,j]), fontsize=fontsize,
+                    fontdict={'ha': 'center', 'va': 'center'})
+
+    noticks(ax=ax)
+
+
+@plotwrapper
 def hist(*args, **kwargs):
     """
     Wrapper for matplotlib.hist function
