@@ -45,7 +45,8 @@ def plotwrapper(fun):
 
 def axwrapper(fun):
     """
-    Decorator that adds axis arguments
+    Decorator that adds axis arguments, used for functions that modify
+    and existing plot (this decorator will never create a new plot)
     """
 
     @wraps(fun)
@@ -137,7 +138,7 @@ def image(img, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vm
 
 
 @plotwrapper
-def corrplot(C, cmap=None, cmap_range=(0,1), cbar=True, fontsize=14, **kwargs):
+def corrplot(C, cmap=None, cmap_range=(0.,1.), cbar=True, fontsize=14, **kwargs):
     """
     Plots values in a correlation matrix
 
@@ -149,7 +150,7 @@ def corrplot(C, cmap=None, cmap_range=(0,1), cbar=True, fontsize=14, **kwargs):
     # defaults
     if cmap is None:
         if min(cmap_range) >= 0:
-            cmap = "viridis"
+            cmap = "OrRd"
         elif max(cmap_range) <= 0:
             cmap = "RdBu"
         else:
@@ -159,10 +160,11 @@ def corrplot(C, cmap=None, cmap_range=(0,1), cbar=True, fontsize=14, **kwargs):
     rr, cc = np.triu_indices(n, k=1)
     C[rr, cc] = np.nan
 
-    img = ax.matshow(C, cmap=cmap, vmin=cmap_range[0], vmax=cmap_range[0])
+    vmin, vmax = cmap_range
+    img = ax.imshow(C, cmap=cmap, vmin=vmin, vmax=vmax, aspect='equal')
 
     if cbar:
-        plt.colorbar(img, shrink=0.75)
+        plt.colorbar(img) #, shrink=0.75)
 
     for j in range(n):
         for i in range(j+1,n):
