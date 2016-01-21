@@ -73,7 +73,7 @@ def axwrapper(fun):
 
 
 @plotwrapper
-def image(img, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None, **kwargs):
+def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None, **kwargs):
     """
     Visualize a matrix as an image
 
@@ -98,6 +98,9 @@ def image(img, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vm
         A handle to a matplotlib axes to use for plotting
 
     """
+
+    # work with a copy of the original image data
+    img = data.copy()
 
     # subtract off image mean
     if center:
