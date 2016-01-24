@@ -8,11 +8,18 @@ Custom containers for data
 
 from difflib import get_close_matches
 from collections import MutableMapping
+from functools import partial
 
-__all__ = ['FuzzyDict']
+__all__ = ['FuzzyDict', 'Wrap']
 
 
 class FuzzyDict(MutableMapping):
+    """
+    A fuzzy dictionary (robust wrt spelling errors)
+
+    Lookups are compared to existing keys, if the new key is close enough
+    to an existing entry, that entry is recalled
+    """
 
     def __init__(self, threshold=0.6, *args, **kwargs):
         """
@@ -53,3 +60,55 @@ class FuzzyDict(MutableMapping):
 
     def __len__(self):
         return len(self.store)
+
+
+class Wrap:
+    """
+    A wrapper class for pipeline processing
+
+    Usage
+    -----
+    >> x = np.random.randn(100)
+    >> Wrap(x) | (smooth, sigma=2.0) | plot
+
+    """
+
+    def __init__(self, payload):
+        self.payload = payload
+
+    def __or__(self, other):
+
+        # function and arguments
+        if type(other) is tuple:
+
+            assert callable(other[0]), "First argument of the tuple must be callable"
+            args = []
+            kwargs = []
+
+            if len(other) == 2:
+                if type(other[1]) is dict:
+                    kwargs = other[1]
+
+                elif type(other[1]) is list:
+                    args == other[1]
+
+                else:
+                    raise ValueError("Could not parse arguments " + str(other[1]))
+
+            elif len(other) == 3:
+                args = other[1]
+                kwargs = other[2]
+
+            else:
+                args = other[1:]
+
+            fun = partial(other[0], *args, **kwargs)
+
+        # just a function
+        elif callable(other):
+            fun = other
+
+        else:
+            raise ValueError("Not callable: " + str(other))
+
+        return Wrap(fun(self.payload))
