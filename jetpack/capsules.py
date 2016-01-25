@@ -10,7 +10,7 @@ from difflib import get_close_matches
 from collections import MutableMapping
 from functools import partial
 
-__all__ = ['FuzzyDict', 'Wrap']
+__all__ = ['FuzzyDict', 'pipe']
 
 
 class FuzzyDict(MutableMapping):
@@ -62,14 +62,14 @@ class FuzzyDict(MutableMapping):
         return len(self.store)
 
 
-class Wrap:
+class pipe:
     """
     A wrapper class for pipeline processing
 
     Usage
     -----
     >> x = np.random.randn(100)
-    >> Wrap(x) | (smooth, sigma=2.0) | plot
+    >> pipe(x) | (smooth, sigma=2.0) | plot
 
     """
 
@@ -111,4 +111,4 @@ class Wrap:
         else:
             raise ValueError("Not callable: " + str(other))
 
-        return Wrap(fun(self.payload))
+        return pipe(fun(self.payload))
