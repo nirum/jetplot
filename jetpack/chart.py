@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from functools import wraps
 
-__all__ = ['plotwrapper',  'image', 'hist', 'hist2d', 'errorplot',
+__all__ = ['plotwrapper', 'image', 'hist', 'hist2d', 'errorplot',
            'setfontsize', 'noticks', 'nospines', 'breathe']
 
 
@@ -120,7 +120,7 @@ def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, v
             cmap = 'seismic'
     elif mode == 'seq':
         if vmin is None:
-            vmin = img_max
+            vmin = img_min
         if vmax is None:
             vmax = img_max
         if cmap is None:
@@ -141,7 +141,7 @@ def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, v
 
 
 @plotwrapper
-def corrplot(C, cmap=None, cmap_range=(0.,1.), cbar=True, fontsize=14, **kwargs):
+def corrplot(C, cmap=None, cmap_range=(0.0, 1.0), cbar=True, fontsize=14, **kwargs):
     """
     Plots values in a correlation matrix
 
@@ -167,11 +167,11 @@ def corrplot(C, cmap=None, cmap_range=(0.,1.), cbar=True, fontsize=14, **kwargs)
     img = ax.imshow(C, cmap=cmap, vmin=vmin, vmax=vmax, aspect='equal')
 
     if cbar:
-        plt.colorbar(img) #, shrink=0.75)
+        plt.colorbar(img)
 
     for j in range(n):
-        for i in range(j+1,n):
-            ax.text(i, j, '{:0.2f}'.format(C[i,j]), fontsize=fontsize,
+        for i in range(j + 1, n):
+            ax.text(i, j, '{:0.2f}'.format(C[i, j]), fontsize=fontsize,
                     fontdict={'ha': 'center', 'va': 'center'})
 
     noticks(ax=ax)
@@ -246,10 +246,10 @@ def errorplot(x, y, ye, color='k', xscale='linear', fmt='-', **kwargs):
 
     ax = kwargs['ax']
     ax.plot(x, y, fmt, color=color)
-    ax.plot(x, y+ye, '+')
-    ax.plot(x, y-ye, '+')
+    ax.plot(x, y + ye, '+')
+    ax.plot(x, y - ye, '+')
     for i, xi in enumerate(x):
-        ax.plot(np.array([xi, xi]), np.array([y[i]-ye[i], y[i]+ye[i]]), '-',
+        ax.plot(np.array([xi, xi]), np.array([y[i] - ye[i], y[i] + ye[i]]), '-',
                 color=color, linewidth=4)
 
     ax.set_xscale(xscale)
