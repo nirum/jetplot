@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from functools import wraps
 
-__all__ = ['plotwrapper', 'image', 'hist', 'hist2d', 'errorplot',
+__all__ = ['plotwrapper', 'image', 'hist', 'hist2d', 'errorplot', 'random_slice',
            'setfontsize', 'noticks', 'nospines', 'breathe']
 
 
@@ -191,6 +191,7 @@ def hist(*args, **kwargs):
 
     # get the axis and figure handles
     ax = kwargs.pop('ax')
+    kwargs.pop('fig')
 
     return ax.hist(*args, histtype='stepfilled', alpha=0.85,
                    normed=True, **kwargs)
@@ -239,10 +240,7 @@ def hist2d(x, y, bins=None, range=None, cmap='hot', **kwargs):
 
 @plotwrapper
 def errorplot(x, y, ye, color='k', xscale='linear', fmt='-', **kwargs):
-    """
-    Plot a line with error bars
-
-    """
+    """Plot a line with error bars"""
 
     ax = kwargs['ax']
     ax.plot(x, y, fmt, color=color)
@@ -253,6 +251,40 @@ def errorplot(x, y, ye, color='k', xscale='linear', fmt='-', **kwargs):
                 color=color, linewidth=4)
 
     ax.set_xscale(xscale)
+
+    return ax
+
+
+@plotwrapper
+def random_slice(x, y=None, n=0.1, **kwargs):
+    """Plots a random continuous slice of y vs x"""
+
+    # assume the amount is a fraction
+    if type(n) is float:
+        num_samples = np.ceil(n * x.size)
+
+    # assume the amount is the number of desired samples
+    elif type(n) is int:
+        num_samples = n
+
+    else:
+        raise ValueError('n must be a float or an int')
+
+    assert num_samples <= x.size, "Your value of n is too large (not enough samples)"
+
+    # generate the random slice
+    start_idx = np.random.randint(x.size - num_samples)
+    inds = slice(start_idx, start_idx + num_samples)
+
+    ax = kwargs.pop('ax')
+    kwargs.pop('fig')
+    if y is None:
+        ax.plot(x[inds], **kwargs)
+        ax.set_xlim(0, num_samples)
+
+    else:
+        ax.plot(x[inds], y[inds], **kwargs)
+        ax.set_xlim(x[inds][0], x[inds][-1])
 
     return ax
 
