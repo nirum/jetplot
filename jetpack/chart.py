@@ -239,7 +239,8 @@ def hist2d(x, y, bins=None, range=None, cmap='hot', **kwargs):
 
 
 @plotwrapper
-def errorplot(x, y, ye, method='patch', color='k', xscale='linear', fmt='-', **kwargs):
+def errorplot(x, y, ye, method='patch', color='k', xscale='linear', fmt='-',
+              patch_alpha=0.2, **kwargs):
     """Plot a line with error bars"""
 
     ax = kwargs['ax']
@@ -253,7 +254,7 @@ def errorplot(x, y, ye, method='patch', color='k', xscale='linear', fmt='-', **k
                     color=color, linewidth=4)
 
     elif method is 'patch':
-        ax.fill_between(x, y - ye, y + ye, color=color, alpha=0.4, interpolate=True)
+        ax.fill_between(x, y - ye, y + ye, color=color, alpha=patch_alpha, interpolate=True)
         ax.plot(x, y, fmt, color=color)
 
     else:
