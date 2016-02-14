@@ -35,10 +35,10 @@ def plotwrapper(fun):
             if 'fig' not in kwargs:
                 kwargs['fig'] = kwargs['ax'].get_figure()
 
-        res = fun(*args, **kwargs)
+        fun(*args, **kwargs)
         plt.show()
         plt.draw()
-        return res
+        return kwargs['ax']
 
     return wrapper
 
@@ -64,10 +64,10 @@ def axwrapper(fun):
             if 'fig' not in kwargs:
                 kwargs['fig'] = kwargs['ax'].get_figure()
 
-        res = fun(*args, **kwargs)
+        fun(*args, **kwargs)
         plt.show()
         plt.draw()
-        return res
+        return kwargs['ax']
 
     return wrapper
 
@@ -239,20 +239,27 @@ def hist2d(x, y, bins=None, range=None, cmap='hot', **kwargs):
 
 
 @plotwrapper
-def errorplot(x, y, ye, color='k', xscale='linear', fmt='-', **kwargs):
+def errorplot(x, y, ye, method='patch', color='k', xscale='linear', fmt='-', **kwargs):
     """Plot a line with error bars"""
 
     ax = kwargs['ax']
-    ax.plot(x, y, fmt, color=color)
-    ax.plot(x, y + ye, '+')
-    ax.plot(x, y - ye, '+')
-    for i, xi in enumerate(x):
-        ax.plot(np.array([xi, xi]), np.array([y[i] - ye[i], y[i] + ye[i]]), '-',
-                color=color, linewidth=4)
+
+    if method is 'line':
+        ax.plot(x, y, fmt, color=color)
+        ax.plot(x, y + ye, '_')
+        ax.plot(x, y - ye, '_')
+        for i, xi in enumerate(x):
+            ax.plot(np.array([xi, xi]), np.array([y[i] - ye[i], y[i] + ye[i]]), '-',
+                    color=color, linewidth=4)
+
+    elif method is 'patch':
+        ax.fill_between(x, y - ye, y + ye, color=color, alpha=0.4, interpolate=True)
+        ax.plot(x, y, fmt, color=color)
+
+    else:
+        raise ValueError("Method must be 'line' or 'patch'")
 
     ax.set_xscale(xscale)
-
-    return ax
 
 
 @plotwrapper
@@ -286,8 +293,6 @@ def random_slice(x, y=None, n=0.1, **kwargs):
         ax.plot(x[inds], y[inds], **kwargs)
         ax.set_xlim(x[inds][0], x[inds][-1])
 
-    return ax
-
 
 @plotwrapper
 def setfontsize(size=18, **kwargs):
@@ -315,7 +320,6 @@ def noticks(**kwargs):
     ax = kwargs['ax']
     ax.set_xticks([])
     ax.set_yticks([])
-    return ax
 
 
 @axwrapper
@@ -333,8 +337,6 @@ def nospines(**kwargs):
     # disable ticks
     ax.yaxis.set_ticks_position('left')
     ax.xaxis.set_ticks_position('bottom')
-
-    return ax
 
 
 @axwrapper
@@ -360,4 +362,3 @@ def breathe(factor=0.05, **kwargs):
     ax.spines['left'].set_bounds(ya, yb)
 
     nospines(**kwargs)
-    return ax
