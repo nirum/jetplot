@@ -246,12 +246,12 @@ def errorplot(x, y, ye, method='patch', color='k', xscale='linear', fmt='-',
     ax = kwargs['ax']
 
     if method is 'line':
-        ax.plot(x, y, fmt, color=color)
-        ax.plot(x, y + ye, '_')
-        ax.plot(x, y - ye, '_')
+        ax.plot(x, y, fmt, color=color, linewidth=4)
+        ax.plot(x, y + ye, '_', ms=20, color=color)
+        ax.plot(x, y - ye, '_', ms=20, color=color)
         for i, xi in enumerate(x):
             ax.plot(np.array([xi, xi]), np.array([y[i] - ye[i], y[i] + ye[i]]), '-',
-                    color=color, linewidth=4)
+                    color=color, linewidth=2)
 
     elif method is 'patch':
         ax.fill_between(x, y - ye, y + ye, color=color, alpha=patch_alpha, interpolate=True)
