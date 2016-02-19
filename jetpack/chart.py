@@ -9,10 +9,11 @@ Tools for making nice and readable plots using matplotlib
 # imports
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from functools import wraps
 
 __all__ = ['plotwrapper', 'image', 'hist', 'hist2d', 'errorplot', 'random_slice',
-           'setfontsize', 'noticks', 'nospines', 'breathe']
+           'setfontsize', 'noticks', 'nospines', 'breathe', 'play']
 
 
 def plotwrapper(fun):
@@ -138,6 +139,33 @@ def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, v
     # display
     plt.show()
     plt.draw()
+
+
+def play(images, cmap='viridis', interval=50, clim=None, **kwargs):
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    noticks(ax=ax)
+
+    # set up the figure
+    plt.axis('equal')
+    img = ax.imshow(images[0])
+
+    # set up the colormap
+    img.set_cmap(cmap)
+    img.set_interpolation('nearest')
+    if clim is not None:
+        img.set_clim(clim)
+    else:
+        maxval = np.max(np.abs(images))
+        img.set_clim([-maxval, maxval])
+
+    def animate(im):
+        img.set_data(im)
+
+    anim = animation.FuncAnimation(fig, animate, images, interval=interval)
+    plt.show()
+    return anim
 
 
 @plotwrapper
