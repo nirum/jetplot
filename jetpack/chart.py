@@ -266,22 +266,30 @@ def hist2d(x, y, bins=None, range=None, cmap='hot', **kwargs):
 
 
 @plotwrapper
-def errorplot(x, y, ye, method='patch', color='k', xscale='linear', fmt='-',
-              patch_alpha=0.2, **kwargs):
+def errorplot(x, y, yerr, method='patch', color='k', xscale='linear', fmt='-',
+              alpha_fill=0.3, **kwargs):
     """Plot a line with error bars"""
 
     ax = kwargs['ax']
 
+    if np.isscalar(yerr) or len(yerr) == len(y):
+        ymin = y - yerr
+        ymax = y + yerr
+    elif len(yerr) == 2:
+        ymin, ymax = yerr
+    else:
+        raise ValueError('Invalid yerr value: ', yerr)
+
     if method is 'line':
         ax.plot(x, y, fmt, color=color, linewidth=4)
-        ax.plot(x, y + ye, '_', ms=20, color=color)
-        ax.plot(x, y - ye, '_', ms=20, color=color)
+        ax.plot(x, ymax, '_', ms=20, color=color)
+        ax.plot(x, ymin, '_', ms=20, color=color)
         for i, xi in enumerate(x):
-            ax.plot(np.array([xi, xi]), np.array([y[i] - ye[i], y[i] + ye[i]]), '-',
+            ax.plot(np.array([xi, xi]), np.array([ymin[i], ymax[i]]), '-',
                     color=color, linewidth=2)
 
     elif method is 'patch':
-        ax.fill_between(x, y - ye, y + ye, color=color, alpha=patch_alpha, interpolate=True)
+        ax.fill_between(x, ymin, ymax, color=color, alpha=alpha_fill, interpolate=True)
         ax.plot(x, y, fmt, color=color)
 
     else:
