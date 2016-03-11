@@ -15,7 +15,7 @@ before_install:
   - pip install -U pip
 install:
   - travis_wait travis_retry pip install -r requirements-dev.txt
-  - travis_retry python setup.py dev
+  - travis_retry python setup.py develop
 script:
   - nosetests --with-coverage --cover-package=jetpack --logging-level=INFO
 cache:
