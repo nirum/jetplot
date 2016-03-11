@@ -5,7 +5,7 @@ Signals
 Tools for signal processing
 
 """
-
+from __future__ import (absolute_import, division, print_function, unicode_literals)
 import sys
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter1d

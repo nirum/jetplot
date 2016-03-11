@@ -4,10 +4,10 @@ Tests for the capsules module
 """
 
 from jetpack.capsules import FuzzyDict
-import pytest
+from nose.tools import assert_raises
 
-@pytest.fixture
-def fruits():
+
+def generate_fruits():
     """Generates a FuzzyDict of fruits"""
     fruits = FuzzyDict(threshold=0.7)
     fruits['apple'] = 1
@@ -15,7 +15,11 @@ def fruits():
     fruits['pear'] = 3
     return fruits
 
-def test_fuzzydict(fruits):
+
+def test_fuzzydict():
+    """Tests the fuzzydict class"""
+
+    fruits = generate_fruits()
 
     # get set of keys
     keys = {'apple', 'banana', 'pear'}
@@ -46,10 +50,9 @@ def test_fuzzydict(fruits):
 
     # key not found
     for faulty_key in ('foo', 'bnnnaeaa', 'apeer', 'xyz'):
-        with pytest.raises(KeyError) as context:
+        with assert_raises(KeyError) as context:
             fruits[faulty_key]
-
-        assert 'Match not found for ' + faulty_key in str(context.value)
+            assert 'Match not found for ' + faulty_key in str(context.exception)
 
     # set a new key
     fruits['strawberry'] = 4
@@ -75,7 +78,6 @@ def test_fuzzydict(fruits):
     for key in fruits:
         assert key in {'apple', 'banana', 'strawberry'}
 
-    with pytest.raises(KeyError) as context:
+    with assert_raises(KeyError) as context:
         del fruits['orange']
-
-    assert 'Match not found for orange' in str(context.value)
+        assert 'Match not found for orange' in str(context.exception)

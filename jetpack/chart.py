@@ -5,8 +5,7 @@ Chart
 Tools for making nice and readable plots using matplotlib
 
 """
-
-# imports
+from __future__ import (absolute_import, division, print_function, unicode_literals)
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation

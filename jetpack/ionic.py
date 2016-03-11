@@ -5,13 +5,26 @@ Ionic
 IO and display utilities
 
 """
-
+from __future__ import (absolute_import, division, print_function, unicode_literals)
 import sys
 import numpy as np
 from numbers import Number
 from contextlib import contextmanager
 from emoji import emojize
-from pushover import Client
+
+try:
+    from pushover import Client
+except ImportError:
+    import warnings
+    warning = "pushover not installed, push() function disabled.\nUse 'pip install python-pushover' to install pushover."
+    warnings.warn(warning)
+
+    class Client(object):
+        def __init__(self):
+            pass
+
+        def send_message(self, *args, **kwargs):
+            warnings.warn(warning)
 
 __all__ = ['csv', 'as_percent', 'notify', 'unicodes', 'push', 'pem']
 

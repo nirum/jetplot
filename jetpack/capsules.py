@@ -5,7 +5,7 @@ Capsules
 Custom containers for data
 
 """
-
+from __future__ import (absolute_import, division, print_function, unicode_literals)
 from difflib import get_close_matches
 from collections import MutableMapping
 from functools import partial
