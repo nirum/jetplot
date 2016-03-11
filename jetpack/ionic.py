@@ -10,12 +10,11 @@ import sys
 import numpy as np
 from numbers import Number
 from contextlib import contextmanager
-from emoji import emojize
+import warnings
 
 try:
     from pushover import Client
 except ImportError:
-    import warnings
     warning = "pushover not installed, push() function disabled.\nUse 'pip install python-pushover' to install pushover."
     warnings.warn(warning)
 
@@ -25,6 +24,15 @@ except ImportError:
 
         def send_message(self, *args, **kwargs):
             warnings.warn(warning)
+
+try:
+    from emoji import emojize
+except ImportError:
+    warning = "emoji not installed, strings will not emojize automatically.\nUse 'pip install emoji' to get this feature."
+    warnings.warn(warning)
+
+    def emojize(x, *args, **kwargs):
+        return x
 
 __all__ = ['csv', 'as_percent', 'notify', 'unicodes', 'push', 'pem']
 

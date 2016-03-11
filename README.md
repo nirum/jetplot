@@ -7,7 +7,7 @@ Collection of miscellaneous shared utils for Python / Numpy / Scipy / Matplotlib
 
 ### Requirements
 - Python 3.3-3.5 or 2.7
-- `emoji`
+- `emoji` (_optional_)
 - `python-pushover` (_optional_)
 
 ### Contact
