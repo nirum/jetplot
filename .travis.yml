@@ -1,27 +1,26 @@
 language: python
+sudo: false
 python:
   - "2.7"
   - "3.3"
   - "3.4"
   - "3.5"
-
+addons:
+    apt:
+        packages:
+            - libblas-dev
+            - liblapack-dev
+            - gfortran
 before_install:
-  - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  - conda info -a
-
+  - pip install -U pip
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy matplotlib
-  - pip install -r requirements-dev.txt
-  - pip install python-pushover emoji
-  - python setup.py install
-
+  - travis_wait travis_retry pip install -r requirements-dev.txt
+  - travis_retry python setup.py dev
 script:
   - nosetests --with-coverage --cover-package=jetpack --logging-level=INFO
-
+cache:
+    - apt
+    - directories:
+        - $HOME/.cache/pip
 after_success:
   - coveralls
