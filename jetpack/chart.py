@@ -140,8 +140,8 @@ def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, v
     plt.draw()
 
 
-def play(images, cmap='viridis', interval=50, clim=None, **kwargs):
-
+def play(images, cmap='gray', interval=100, clim=None, **kwargs):
+    """Plays an animation of the given stack of images"""
     fig = plt.figure()
     ax = fig.add_subplot(111)
     noticks(ax=ax)
