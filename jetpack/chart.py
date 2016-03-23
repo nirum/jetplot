@@ -9,10 +9,10 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from functools import wraps
+from functools import wraps, partial
 
 __all__ = ['plotwrapper', 'image', 'hist', 'hist2d', 'errorplot', 'random_slice',
-           'setfontsize', 'noticks', 'nospines', 'breathe', 'play']
+           'setfontsize', 'noticks', 'nospines', 'breathe', 'play', 'imv']
 
 
 def plotwrapper(fun):
@@ -89,7 +89,7 @@ def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, v
         Whether or not to mean-subtract the image
 
     cmap : string, optional
-        A matplotlib colormap to use (default: 'seismic' for 'div', 'gray' for 'seq')
+        A matplotlib colormap to use (default: 'seismic' for 'div', 'viridis' for 'seq')
 
     aspect : string, optional
         Same as in plt.imshow, either 'equal' or 'auto'
@@ -124,7 +124,7 @@ def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, v
         if vmax is None:
             vmax = img_max
         if cmap is None:
-            cmap = 'gray'
+            cmap = 'viridis'
     else:
         raise ValueError("Unrecognized mode: '" + mode + "'")
 
@@ -184,7 +184,7 @@ def corrplot(C, cmap=None, cmap_range=(0.0, 1.0), cbar=True, fontsize=14, **kwar
         elif max(cmap_range) <= 0:
             cmap = "RdBu"
         else:
-            cmap = "gray"
+            cmap = "viridis"
 
     # remove values
     rr, cc = np.triu_indices(n, k=1)
@@ -398,3 +398,6 @@ def breathe(factor=0.05, **kwargs):
     ax.spines['left'].set_bounds(ya, yb)
 
     nospines(**kwargs)
+
+# helper functions
+imv = partial(image, mode='seq')
