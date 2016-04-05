@@ -12,7 +12,7 @@ from scipy.ndimage.filters import gaussian_filter1d
 from scipy.linalg import sqrtm, inv
 
 __all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
-           'whiten', 'canoncorr']
+           'whiten', 'canoncorr', 'xcorr']
 
 
 def peakdet(v, delta, x=None):
@@ -97,6 +97,39 @@ def peakdet(v, delta, x=None):
                 lookformax = True
 
     return np.array(maxtab), np.array(mintab)
+
+
+def xcorr(x, y, maxlag):
+    """Performs cross-correlation between two signals, up to a given lag
+
+    Parameters
+    ----------
+    x : TODO
+    y : TODO
+    maxlag : TODO
+
+    Returns
+    -------
+    TODO
+
+    """
+    assert type(maxlag) is int and maxlag > 0, \
+        "Maximum lag must be a positive integer"
+
+    # create the array of lags, and the correlations
+    lags = np.arange(-maxlag, maxlag + 1)
+    corr = np.zeros(len(lags))
+
+    # compute the correlation over the lagged arrays
+    for idx, lag in enumerate(lags):
+        if lag < 0:
+            corr[idx] = np.correlate(x[:lag], y[-lag:], mode='valid')[0]
+        elif lag > 0:
+            corr[idx] = np.correlate(x[lag:], y[:-lag], mode='valid')[0]
+        else:
+            corr[idx] = np.correlate(x[:lag], y[-lag:], mode='valid')[0]
+
+    return lags, corr
 
 
 def smooth(x, sigma=1.0):
