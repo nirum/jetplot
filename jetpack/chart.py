@@ -11,8 +11,9 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from functools import wraps, partial
 
-__all__ = ['plotwrapper', 'image', 'hist', 'hist2d', 'errorplot', 'random_slice',
-           'setfontsize', 'noticks', 'nospines', 'breathe', 'play', 'imv']
+__all__ = ['plotwrapper', 'image', 'hist', 'hist2d', 'errorplot',
+           'random_slice', 'setfontsize', 'noticks', 'nospines', 'breathe',
+           'play', 'imv']
 
 
 def plotwrapper(fun):
@@ -73,7 +74,7 @@ def axwrapper(fun):
 
 
 @plotwrapper
-def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None, **kwargs):
+def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None, cbar=False, **kwargs):
     """
     Visualize a matrix as an image
 
@@ -125,6 +126,10 @@ def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, v
             vmax = img_max
         if cmap is None:
             cmap = 'viridis'
+    elif mode == 'cov':
+        vmin, vmax, cmap, cbar = 0, 1, 'viridis', True
+    elif mode == 'cov':
+        vmin, vmax, cmap, cbar = -1, 1, 'seismic', True
     else:
         raise ValueError("Unrecognized mode: '" + mode + "'")
 
@@ -132,12 +137,12 @@ def image(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, v
     kwargs['ax'].imshow(img, cmap=cmap, interpolation=None,
                         vmin=vmin, vmax=vmax, aspect=aspect)
 
+    # colorbar
+    if cbar:
+        plt.colorbar()
+
     # clear ticks
     noticks(ax=kwargs['ax'])
-
-    # display
-    plt.show()
-    plt.draw()
 
 
 def play(images, cmap='gray', interval=100, clim=None, **kwargs):
