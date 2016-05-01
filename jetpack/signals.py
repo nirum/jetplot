@@ -132,7 +132,7 @@ def xcorr(x, y, maxlag):
     return lags, corr
 
 
-def smooth(x, sigma=1.0):
+def smooth(x, sigma=1.0, axis=0):
     """
     Smooths a 1D signal with a gaussian filter
 
@@ -148,10 +148,8 @@ def smooth(x, sigma=1.0):
     -------
     xs : array_like
         A smoothed version of the input signal
-
     """
-
-    return gaussian_filter1d(x, sigma, axis=0)
+    return gaussian_filter1d(x, sigma, axis=axis)
 
 
 def norms(x, order=2):
