@@ -5,7 +5,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import matplotlib.pyplot as plt
 from functools import wraps
 
-__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe']
+__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor']
 
 
 def plotwrapper(fun):
@@ -71,6 +71,8 @@ def setfontsize(size=18, **kwargs):
     ax.set_xticklabels(ax.get_xticks(), fontsize=size)
     ax.set_yticklabels(ax.get_yticks(), fontsize=size)
 
+    return ax
+
 
 @axwrapper
 def noticks(**kwargs):
@@ -99,6 +101,8 @@ def nospines(**kwargs):
     ax.yaxis.set_ticks_position('left')
     ax.xaxis.set_ticks_position('bottom')
 
+    return ax
+
 
 @axwrapper
 def breathe(factor=0.05, **kwargs):
@@ -123,3 +127,22 @@ def breathe(factor=0.05, **kwargs):
     ax.spines['left'].set_bounds(ya, yb)
 
     nospines(**kwargs)
+
+    return ax
+
+
+@axwrapper
+def setcolor(color='#444444', **kwargs):
+    ax = kwargs['ax']
+
+    # set the tick parameters
+    ax.tick_params(axis='x', colors=color)
+    ax.tick_params(axis='y', colors=color)
+
+    # set the label colors
+    ax.xaxis.label.set_color(color)
+    ax.yaxis.label.set_color(color)
+    ax.set_xlabel(ax.get_xlabel(), color=color)
+    ax.set_ylabel(ax.get_ylabel(), color=color)
+
+    return ax

@@ -105,7 +105,7 @@ def errorplot(x, y, yerr, method='patch', color='k', xscale='linear', fmt='-',
 
 
 @plotwrapper
-def img(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None, cbar=False, **kwargs):
+def img(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None, cbar=False, interpolation='none', **kwargs):
     """
     Visualize a matrix as an image
 
@@ -165,7 +165,7 @@ def img(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vma
         raise ValueError("Unrecognized mode: '" + mode + "'")
 
     # make the image
-    kwargs['ax'].imshow(img, cmap=cmap, interpolation=None,
+    kwargs['ax'].imshow(img, cmap=cmap, interpolation=interpolation,
                         vmin=vmin, vmax=vmax, aspect=aspect)
 
     # colorbar
@@ -238,6 +238,12 @@ def corrplot(C, cmap=None, cmap_range=(0.0, 1.0), cbar=True, fontsize=14, **kwar
                     fontdict={'ha': 'center', 'va': 'center'})
 
     noticks(ax=ax)
+
+
+@plotwrapper
+def bars(*dicts, **kwargs):
+    ax = kwargs['ax']
+    raise NotImplementedError
 
 
 # aliases

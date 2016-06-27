@@ -12,7 +12,7 @@ from scipy.ndimage.filters import gaussian_filter1d
 from scipy.linalg import sqrtm, inv
 
 __all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
-           'whiten', 'canoncorr', 'xcorr']
+           'whiten', 'canoncorr', 'xcorr', 'sqa']
 
 
 def peakdet(v, delta, x=None):
@@ -299,3 +299,8 @@ def arr(x):
     Converts a generator to a numpy array
     """
     return np.array(list(x))
+
+
+def sqa(x):
+    """Squeeze(array)"""
+    return np.squeeze(np.array(x))
