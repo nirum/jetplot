@@ -10,5 +10,6 @@ from .signals import *
 from .chart import *
 from .ionic import *
 from .capsules import *
+from .plots import *
 
 __version__ = '0.0.7'
