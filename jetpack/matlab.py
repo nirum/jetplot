@@ -40,7 +40,7 @@ def _mat_to_dict(obj):
 
     # recursive call to convert struct arrays
     elif isinstance(obj, np.ndarray):
-        np.array([_mat_to_dict(elem) for elem in obj])
+        return np.array([_mat_to_dict(elem) for elem in obj])
 
     # base case
     else:
