@@ -7,6 +7,7 @@ Tools for interfacing with Matlab
 """
 
 import scipy.io as spio
+import numpy as np
 
 def loadmat(filename):
     '''
@@ -16,29 +17,31 @@ def loadmat(filename):
     which are still mat-objects
     '''
     data = spio.loadmat(filename, struct_as_record=False, squeeze_me=True)
-    return _check_keys(data)
 
+    # convert to numpy
+    for key in data:
+        data[key] = _mat_to_dict(data[key])
 
-def _check_keys(d):
-    '''
-    checks if entries in dictionary are mat-objects. If yes
-    todict is called to change them to nested dictionaries
-    '''
-    for key in d:
-        if isinstance(d[key], spio.matlab.mio5_params.mat_struct):
-            d[key] = _todict(d[key])
-    return d
+    return data
 
+def _mat_to_dict(obj):
+    '''
+    A recursive function which constructs nested dictionaries from matlab
+    structs
+    '''
 
-def _todict(matobj):
-    '''
-    A recursive function which constructs from matobjects nested dictionaries
-    '''
-    dict = {}
-    for strg in matobj._fieldnames:
-        elem = matobj.__dict__[strg]
-        if isinstance(elem, spio.matlab.mio5_params.mat_struct):
-            dict[strg] = _todict(elem)
-        else:
-            dict[strg] = elem
-    return dict
+    # if obj is a struct, recursively construct dict
+    if isinstance(obj, spio.matlab.mio5_params.mat_struct):
+        dest = {}
+        for strg in obj._fieldnames:
+            elem = obj.__dict__[strg]
+            dest[strg] = _mat_to_dict(elem)
+        return dest
+
+    # recursive call to convert struct arrays
+    elif isinstance(obj, np.ndarray):
+        np.array([_mat_to_dict(elem) for elem in obj])
+
+    # base case
+    else:
+        return obj
