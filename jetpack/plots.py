@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import itertools as itr
 
 def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
-               scatter_kwargs=dict()):
+               scatter_kwargs=dict(), **fig_kwargs):
     """ Create a scatter plot matrix from the given data. 
         
         Note
@@ -34,7 +34,10 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
             matplotlib.pyplot.subplots call. Note: only relevant if axes=None.
         scatter_kwargs : dict (optional)
             A dictionary of keyword arguments to pass to the 
-            matplotlib.pyplot.scatter function calls. 
+            matplotlib.pyplot.scatter function calls.
+        **fig_kwargs
+            Additional keyword arguments are passed to the
+            matplotlib.pyplot.figure call.
     """
         
     try:
@@ -51,21 +54,21 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
         skwargs = subplots_kwargs.copy()
         
         #fig, axes = plt.subplots(M, M, **skwargs)
-        fig = plt.figure()
+        fig = plt.figure(**fig_kwargs)
         axes = np.empty((M,M), dtype=object)
         
         for i in range(M):
-            axes[i,i] = fig.add_subplot(M, M, 1+i*(M+1))
+            axes[i,i] = fig.add_subplot(M, M, 1+i*(M+1), **subplots_kwargs)
 
         for i,j in itr.product(range(M), range(M)):
             if i == j:
                 continue
             elif i > 0 and j > 0:
-                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j], sharey=axes[i,0])
+                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j], sharey=axes[i,0], **subplots_kwargs)
             elif i == 0 and j > 1:
-                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j], sharey=axes[0,1])
+                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j], sharey=axes[0,1], **subplots_kwargs)
             else:
-                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j])
+                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j], **subplots_kwargs)
     
     sc_kwargs = scatter_kwargs.copy()
     sc_kwargs["edgecolor"] = "none" if not "edgecolor" in sc_kwargs.keys() else sc_kwargs["edgecolor"]
