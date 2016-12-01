@@ -105,7 +105,7 @@ def nospines(**kwargs):
 
 
 @axwrapper
-def breathe(factor=0.05, **kwargs):
+def breathe(factor=0.05, direction='out', **kwargs):
     ax = kwargs['ax']
 
     if ax.spines['bottom'].get_bounds():
@@ -127,9 +127,18 @@ def breathe(factor=0.05, **kwargs):
     ax.spines['left'].set_bounds(ya, yb)
 
     nospines(**kwargs)
+    tickdir(direction=direction, **kwargs)
 
     return ax
 
+@axwrapper
+def tickdir(direction='out', **kwargs):
+    ax = kwargs['ax']
+
+    ax.xaxis.set_tick_params(direction=direction)
+    ax.yaxis.set_tick_params(direction=direction)
+
+    return ax
 
 @axwrapper
 def setcolor(color='#444444', **kwargs):
