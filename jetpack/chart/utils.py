@@ -117,7 +117,7 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
     return ax
 
 @axwrapper
-def minlabels(x=True, y=True, n_xticks=None, n_yticks=None, **kwargs):
+def minlabels(x=True, y=True, n_xticks=4, n_yticks=4, **kwargs):
     """
     Label only the first and last tick marks.
     """
@@ -125,12 +125,10 @@ def minlabels(x=True, y=True, n_xticks=None, n_yticks=None, **kwargs):
 
     if x:
         # get first and last tick
-        xt = ax.get_xticks()
-        xmin, xmax = xt[0], xt[-1]
+        xmin, xmax = ax.get_xlim()
 
         # reset tick marks
-        if n_xticks is not None:
-            xt = np.linspace(xmin, xmax, n_xticks)
+        xt = np.linspace(xmin, xmax, n_xticks)
 
         # update plot
         xlab = [str(xt[0]), *['' for _ in range(len(xt)-2)], str(xt[-1])]
@@ -139,12 +137,10 @@ def minlabels(x=True, y=True, n_xticks=None, n_yticks=None, **kwargs):
 
     if y:
         # get first and last tick
-        yt = ax.get_yticks()
-        ymin, ymax = yt[0], yt[-1]
+        ymin, ymax = ax.get_ylim()
 
         # reset tick marks
-        if n_yticks is not None:
-            yt = np.linspace(ymin, ymax, n_yticks)
+        yt = np.linspace(ymin, ymax, n_yticks)
 
         # update plot
         ylab = [str(yt[0]), *['' for _ in range(len(yt)-2)], str(yt[-1])]
