@@ -11,7 +11,8 @@ import matplotlib.pyplot as plt
 import itertools as itr
 
 def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
-               scatter_kwargs=dict(), **fig_kwargs):
+               scatter_kwargs=dict(), hist_kwargs=dict(color='gray'),
+               **fig_kwargs):
     """ Create a scatter plot matrix from the given data. 
         
         Note
@@ -71,7 +72,7 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
         for j in range(M):
             # make plot
             if i == j:
-                axes[i,i].hist(data[i])
+                axes[i,i].hist(data[i], **hist_kwargs)
                 axes[i,i].set_yticks([])
             else:
                 axes[i,j].scatter(data[j], data[i], **sc_kwargs)
