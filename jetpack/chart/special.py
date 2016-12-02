@@ -80,7 +80,7 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
             
             # ignore y-axes on histograms
             if i == j:
-                ymin[i,j], ymax[i,j] = np.nan(), np.nan()
+                ymin[i,j], ymax[i,j] = np.nan, np.nan
             else:
                 ymin[i,j], ymax[i,j] = axes[i,j].get_ylim()
     
@@ -91,37 +91,46 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
     y1_ = np.nanmax(ymax, axis=1)
 
     # Make a second pass over the plots to format axes
-    for i, y0 in enumerate(y0_):
-        for j, x0 in enumerate(x0_):
+    for i, (y0, y1) in enumerate(zip(y0_, y1_)):
+        for j, (x0, x1) in enumerate(zip(x0_, x1_)):
 
-            # set axis limits
+            # set x-axis limits
             axes[i,j].set_xlim([x0, x1])
-            axes[i,j].set_ylim([y0, y1])
-
+            
+            # don't change ylim for histograms
+            if i != j:
+                axes[i,j].set_ylim([y0, y1])
+                
             # set spine color
-            for spine in ax.spines.values():
+            for spine in axes[i,j].spines.values():
                 spine.set_color('gray')
 
-            # format left-most column
-            if (i > 0 and j == 0) or (i == 0 and j == M-1):
+            # y-axis formatting
+            axes[i,j].yaxis.set_tick_params(direction='out')
+            yt = axes[i,j].get_yticks()
+            if j == 0 and i > 0:
+                # format first column
                 axes[i,j].set_ylabel(labels[i])
-                yt = axes[i,j].get_yticks()
                 axes[i,j].set_yticks([yt[1], yt[-2]])
-                
-                # the top row is a special case
-                if j == M-1:
-                    axes[i,j].yaxis.set_ticks_position("right")
-                    axes[i,j].yaxis.set_label_position("right")
+                axes[i,j].yaxis.set_ticks_position('left')
+            elif i == 0 and j == M-1:    
+                # first row is special case
+                axes[i,j].yaxis.set_ticks_position('right')
+                axes[i,j].yaxis.set_label_position('right')
+                axes[i,j].set_ylabel(labels[i])
+                axes[i,j].set_yticks([yt[1], yt[-2]])
             else:
-                plt.yticks([])
+                axes[i,j].set_yticks([])
 
-            # last row
+            # x-axis formatting
+            axes[i,j].xaxis.set_tick_params(direction='out')
+            xt = axes[i,j].get_xticks()
             if i == M-1:
                 axes[i,j].set_xlabel(labels[j])
-                xt = axes[i,j].get_xticks()
+                axes[i,j].xaxis.set_ticks_position('bottom')
                 axes[i,j].set_xticks([xt[1], xt[-2]])
             else:
-                plt.setp(axes[i,j].get_xticklabels(), visible=False)
+                axes[i,j].set_xticks([])
 
     fig.subplots_adjust(hspace=0.0, wspace=0.0, left=0.08, bottom=0.08, top=0.9, right=0.9 )
     return fig, axes
