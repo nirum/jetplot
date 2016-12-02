@@ -115,9 +115,30 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
 
     return ax
 
+@axwrapper
+def minlabels(x=True, y=True, **kwargs):
+    """
+    Label only the first and last tick marks.
+    """
+    ax = kwargs['ax']
+
+    if x:
+        xt = ax.get_xticks()
+        xlab = [str(xt[0]), *['' for _ in range(len(xt)-2)], str(xt[-1])]
+        ax.set_xticklabels(xlab)
+
+    if y:
+        yt = ax.get_yticks()
+        ylab = [str(yt[0]), *['' for _ in range(len(yt)-2)], str(yt[-1])]
+        ax.set_yticklabels(ylab)
+
+    return ax
 
 @axwrapper
 def breathe(factor=0.05, direction='out', **kwargs):
+    """
+    Adds space between axes and plot
+    """
     ax = kwargs['ax']
 
     if ax.spines['bottom'].get_bounds():
