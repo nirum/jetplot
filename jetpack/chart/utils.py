@@ -127,11 +127,17 @@ def minlabels(x=True, y=True, n_xticks=4, n_yticks=4, **kwargs):
         # get first and last tick
         xmin, xmax = ax.get_xlim()
 
+        # remove decimals from labels
+        if xmin.is_integer():
+            xmin = int(xmin)
+        if xmax.is_integer():
+            xmax = int(xmax)
+
         # reset tick marks
         xt = np.linspace(xmin, xmax, n_xticks)
 
         # update plot
-        xlab = [str(xt[0]), *['' for _ in range(len(xt)-2)], str(xt[-1])]
+        xlab = [str(xmin), *['' for _ in range(len(xt)-2)], str(xmax)]
         ax.set_xticks(xt)
         ax.set_xticklabels(xlab)
 
@@ -142,8 +148,14 @@ def minlabels(x=True, y=True, n_xticks=4, n_yticks=4, **kwargs):
         # reset tick marks
         yt = np.linspace(ymin, ymax, n_yticks)
 
+        # remove decimals from labels
+        if ymin.is_integer():
+            ymin = int(ymin)
+        if ymax.is_integer():
+            ymax = int(ymax)
+
         # update plot
-        ylab = [str(yt[0]), *['' for _ in range(len(yt)-2)], str(yt[-1])]
+        ylab = [str(ymin), *['' for _ in range(len(yt)-2)], str(ymax)]
         ax.set_yticks(yt)
         ax.set_yticklabels(ylab)
 
