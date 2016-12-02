@@ -1,8 +1,8 @@
 """
-Plots
+Special
 -------
 
-Some standard routines for matplotlib plots
+Some canned routines for making specialized plots in matplotlib
 
 """
 
@@ -53,28 +53,20 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
     if axes == None:
         skwargs = subplots_kwargs.copy()
         
-        #fig, axes = plt.subplots(M, M, **skwargs)
-        fig = plt.figure(**fig_kwargs)
-        axes = np.empty((M,M), dtype=object)
-        
-        for i in range(M):
-            axes[i,i] = fig.add_subplot(M, M, 1+i*(M+1), **subplots_kwargs)
-
-        for i,j in itr.product(range(M), range(M)):
-            if i == j:
-                continue
-            elif i > 0 and j > 0:
-                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j], sharey=axes[i,0], **subplots_kwargs)
-            elif i == 0 and j > 1:
-                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j], sharey=axes[0,1], **subplots_kwargs)
-            else:
-                axes[i,j] = fig.add_subplot(M, M, 1+i*M+j, sharex=axes[j,j], **subplots_kwargs)
+    fig, axes = plt.subplots(M, M, **subplots_kwargs)
     
     sc_kwargs = scatter_kwargs.copy()
     sc_kwargs["edgecolor"] = "none" if not "edgecolor" in sc_kwargs.keys() else sc_kwargs["edgecolor"]
     sc_kwargs["c"] = "k" if not "c" in sc_kwargs.keys() else sc_kwargs["c"]
     sc_kwargs["s"] = 10 if not "s" in sc_kwargs.keys() else sc_kwargs["s"]
     
+    # Axes properties
+    xmin = np.empty((M,M))
+    xmax = np.empty((M,M))
+    ymin = np.empty((M,M))
+    ymax = np.empty((M,M))
+
+    # First, go through and make plots
     for i in range(M):
         for j in range(M):
             # make plot
@@ -83,17 +75,45 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
                 axes[i,i].set_yticks([])
             else:
                 axes[i,j].scatter(data[j], data[i], **sc_kwargs)
+
+            xmin[i,j], xmax[i,j] = axes[i,j].get_xlim()
             
-            # first column
+            # ignore y-axes on histograms
+            if i == j:
+                ymin[i,j], ymax[i,j] = np.nan(), np.nan()
+            else:
+                ymin[i,j], ymax[i,j] = axes[i,j].get_ylim()
+    
+    # get axes limits for each row/col
+    x0_ = np.min(xmin, axis=0)
+    x1_ = np.max(xmax, axis=0)
+    y0_ = np.nanmin(ymin, axis=1)
+    y1_ = np.nanmax(ymax, axis=1)
+
+    # Make a second pass over the plots to format axes
+    for i, y0 in enumerate(y0_):
+        for j, x0 in enumerate(x0_):
+
+            # set axis limits
+            axes[i,j].set_xlim([x0, x1])
+            axes[i,j].set_ylim([y0, y1])
+
+            # set spine color
+            for spine in ax.spines.values():
+                spine.set_color('gray')
+
+            # format left-most column
             if (i > 0 and j == 0) or (i == 0 and j == M-1):
                 axes[i,j].set_ylabel(labels[i])
                 yt = axes[i,j].get_yticks()
                 axes[i,j].set_yticks([yt[1], yt[-2]])
+                
+                # the top row is a special case
                 if j == M-1:
                     axes[i,j].yaxis.set_ticks_position("right")
                     axes[i,j].yaxis.set_label_position("right")
             else:
-                plt.setp(axes[i,j].get_yticklabels(), visible=False)
+                plt.yticks([])
 
             # last row
             if i == M-1:
@@ -102,6 +122,6 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
                 axes[i,j].set_xticks([xt[1], xt[-2]])
             else:
                 plt.setp(axes[i,j].get_xticklabels(), visible=False)
-    
+
     fig.subplots_adjust(hspace=0.0, wspace=0.0, left=0.08, bottom=0.08, top=0.9, right=0.9 )
     return fig, axes

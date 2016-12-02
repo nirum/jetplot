@@ -10,7 +10,6 @@ from .signals import *
 from .chart import *
 from .ionic import *
 from .capsules import *
-from .plots import plotmatrix
 from .matlab import loadmat
 
 __version__ = '0.0.7'
