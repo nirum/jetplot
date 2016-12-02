@@ -5,7 +5,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import matplotlib.pyplot as plt
 from functools import wraps
 
-__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor']
+__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir']
 
 
 def plotwrapper(fun):
@@ -25,8 +25,6 @@ def plotwrapper(fun):
                 kwargs['fig'] = kwargs['ax'].get_figure()
 
         fun(*args, **kwargs)
-        plt.show()
-        plt.draw()
         return kwargs['ax']
 
     return wrapper
@@ -48,8 +46,6 @@ def axwrapper(fun):
             if 'fig' not in kwargs:
                 kwargs['fig'] = kwargs['ax'].get_figure()
         fun(*args, **kwargs)
-        plt.show()
-        plt.draw()
         return kwargs['ax']
 
     return wrapper
@@ -86,20 +82,36 @@ def noticks(**kwargs):
 
 
 @axwrapper
-def nospines(**kwargs):
+def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
     """
-    Hides the top and rightmost axis spines
+    Hides the specified axis spines (by default, right and top spines)
     """
 
     ax = kwargs['ax']
 
-    # disable spines
-    ax.spines['right'].set_color('none')
-    ax.spines['top'].set_color('none')
+    # assemble args into dict
+    disabled = dict(left=left, right=right, top=top, bottom=bottom)
 
-    # disable ticks
-    ax.yaxis.set_ticks_position('left')
-    ax.xaxis.set_ticks_position('bottom')
+    # disable spines
+    for key in disabled:
+        if disabled[key]:
+            ax.spines[key].set_color('none')
+
+    # disable xticks
+    if disabled['top'] and disabled['bottom']:
+        ax.set_xticks([])
+    elif disabled['top']:
+        ax.xaxis.set_ticks_position('bottom')
+    elif disabled['bottom']:
+        ax.xaxis.set_ticks_position('top')
+
+    # disable yticks
+    if disabled['left'] and disabled['right']:
+        ax.set_yticks([])
+    elif disabled['left']:
+        ax.yaxis.set_ticks_position('right')
+    elif disabled['right']:
+        ax.yaxis.set_ticks_position('left')
 
     return ax
 
