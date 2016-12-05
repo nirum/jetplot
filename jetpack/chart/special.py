@@ -9,9 +9,22 @@ Some canned routines for making specialized plots in matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools as itr
+import warnings
 
-def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
-               scatter_kwargs=dict(), hist_kwargs=dict(color='gray'),
+DEFAULT_COLOR_CYCLE = [(0.4470588235294118, 0.6196078431372549, 0.807843137254902),
+                       (1.0, 0.6196078431372549, 0.2901960784313726),
+                       (0.403921568627451, 0.7490196078431373, 0.3607843137254902),
+                       (0.9294117647058824, 0.4, 0.36470588235294116),
+                       (0.6784313725490196, 0.5450980392156862, 0.788235294117647),
+                       (0.6588235294117647, 0.47058823529411764, 0.43137254901960786),
+                       (0.9294117647058824, 0.592156862745098, 0.792156862745098),
+                       (0.6352941176470588, 0.6352941176470588, 0.6352941176470588),
+                       (0.803921568627451, 0.8, 0.36470588235294116),
+                       (0.42745098039215684, 0.8, 0.8549019607843137)]
+
+def plotmatrix(data, labels=None, axes=None, categories=None,
+               subplots_kwargs=dict(), color_cycle=DEFAULT_COLOR_CYCLE,
+               scatter_kwargs=dict(), hist_kwargs=dict(),
                **fig_kwargs):
     """ Create a scatter plot matrix from the given data. 
         
@@ -50,17 +63,52 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
     
     if labels == None:
         labels = ['']*M
-    
-    if axes == None:
-        skwargs = subplots_kwargs.copy()
         
     fig, axes = plt.subplots(M, M, **subplots_kwargs)
+
+    # set color cycle
+    [ax.set_color_cycle(color_cycle) for ax in axes.ravel()]
     
+    # parse kwargs
+    def _reset_default(kwargs, key, val):
+        kwargs[key] = val if not key in kwargs.keys() else kwargs[key]
+
+    # set scatter kwargs defaults
     sc_kwargs = scatter_kwargs.copy()
-    sc_kwargs["edgecolor"] = "none" if not "edgecolor" in sc_kwargs.keys() else sc_kwargs["edgecolor"]
-    sc_kwargs["c"] = "k" if not "c" in sc_kwargs.keys() else sc_kwargs["c"]
-    sc_kwargs["s"] = 10 if not "s" in sc_kwargs.keys() else sc_kwargs["s"]
-    
+    _reset_default(sc_kwargs, "edgecolor", "none")
+    _reset_default(sc_kwargs, "s", 10)
+
+    # set hist kwargs defaults
+    h_kwargs = hist_kwargs.copy()
+    _reset_default(h_kwargs, "histtype", "bar")
+    _reset_default(h_kwargs, "stacked", True)
+    if categories is None:
+        _reset_default(h_kwargs, "color", "gray")
+
+    # determine how to color the points
+    if categories is not None:
+        # override user-specified colors if categories are given.
+        if "c" in sc_kwargs.keys():
+            warnings.warn('Specifying categories overrides color option in scatter_kwargs.')
+        
+        # check that categories are input correctly
+        if len(categories) != N:
+            raise ValueError('categories must be a list with data.shape[1] elements')
+        if isinstance(categories, list):
+            categories = np.array(categories)
+        # for cg in categories:
+        #     if not isinstance(cg, int):
+        #         raise ValueError('categories must be specified as a list of ints')
+        
+        # set the colors for the scatterplots
+        catset = np.array(list(set(categories)))
+        cols = [col for col, cg in zip(color_cycle, catset)]
+        sc_kwargs["c"] = [cols[np.where(catset==cg)[0]] for cg in categories]
+
+    else:
+        # black scatterpoints by default
+        _reset_default(sc_kwargs, "c", "k")
+
     # Axes properties
     xmin = np.empty((M,M))
     xmax = np.empty((M,M))
@@ -72,8 +120,11 @@ def plotmatrix(data, labels=None, axes=None, subplots_kwargs=dict(),
         for j in range(M):
             # make plot
             if i == j:
-                axes[i,i].hist(data[i], **hist_kwargs)
-                axes[i,i].set_yticks([])
+                if categories is not None:
+                    y = [data[i][categories == cg] for cg in set(categories)]
+                else:
+                    y = data[i]
+                axes[i,i].hist(y, **h_kwargs)
             else:
                 axes[i,j].scatter(data[j], data[i], **sc_kwargs)
 
