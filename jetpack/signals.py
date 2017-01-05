@@ -233,7 +233,7 @@ def canoncorr(X, Y):
     # singular values of the inner product between the orthogonalized spaces
     corr = np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
 
-    return qu @ X, corr, qv @ Y
+    return qu.dot(X), corr, qv.dot(Y)
 
 
 def sfthr(x, threshold):
