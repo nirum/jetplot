@@ -1,13 +1,13 @@
 """
 jetpack plots
 """
-from .utils import plotwrapper, noticks, setfontsize
+from .utils import plotwrapper, noticks, tickdir, setfontsize
 from functools import partial
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
-__all__ = ['hist', 'hist2d', 'errorplot', 'img', 'play', 'corrplot', 'imv']
+__all__ = ['hist', 'hist2d', 'errorplot', 'img', 'play', 'corrplot', 'imv', 'bars']
 
 
 @plotwrapper
@@ -239,12 +239,34 @@ def corrplot(C, cmap=None, cmap_range=(0.0, 1.0), cbar=True, fontsize=14, **kwar
 
     noticks(ax=ax)
 
-
 @plotwrapper
-def bars(*dicts, **kwargs):
-    ax = kwargs['ax']
-    raise NotImplementedError
+def bars(y, hspace=0.5, colors=None, **kwargs):
 
+    ax = kwargs['ax']
+
+    n_x, n_categories = y.shape
+    x_width = (1-hspace)
+    bar_width = x_width/n_categories
+
+    # compute left alignment for each bar
+    x = []
+    for c in range(n_categories):
+        l = 1 - x_width/2 + c*bar_width
+        x.append([l+i for i in range(n_x)])
+    x = np.array(x).T
+
+    if colors is None:
+        colors = [plt.cm.Dark2(i) for i in np.linspace(0, 1, n_categories)]
+
+    for c in range(n_categories):
+        plt.bar(x[:,c], y[:,c], color=colors[c], width=bar_width)
+
+    ax.set_xticks(range(1, n_x+1))
+
+    # Setting the x-axis and y-axis limits
+    plt.xlim((0, n_x+1))
+
+    tickdir(ax=ax)
 
 # aliases
 imv = partial(img, mode='seq')
