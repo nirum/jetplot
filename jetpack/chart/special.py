@@ -24,6 +24,7 @@ DEFAULT_COLOR_CYCLE = [(0.4470588235294118, 0.6196078431372549, 0.80784313725490
 
 def plotmatrix(data, labels=None, axes=None, categories=None,
                color_cycle=DEFAULT_COLOR_CYCLE,
+               tickpad=1, tickrotation=60,
                scatter_kw=dict(), hist_kw=dict(),
                **subplots_kw):
     """ Create a scatter plot matrix from the given data. 
@@ -43,6 +44,10 @@ def plotmatrix(data, labels=None, axes=None, categories=None,
         axes : matplotlib Axes array (optional)
             If you've already created the axes objects, pass this in to
             plot the data on that.
+        tickpad : int (optional)
+            number of axis tick marks to drop from either side
+        tickrotation : int, float (optional)
+            sets the rotation of the x-tick labels (60 degrees by default)
         scatter_kw : dict (optional)
             A dictionary of keyword arguments to pass to the 
             matplotlib.pyplot.scatter function calls.
@@ -101,7 +106,7 @@ def plotmatrix(data, labels=None, axes=None, categories=None,
         catset = np.array(list(set(categories)))
         cols = [col for col, cg in zip(color_cycle, catset)]
         sc_kw["c"] = [cols[np.where(catset==cg)[0]] for cg in categories]
-
+        h_kw["color"] = cols
     else:
         # black scatterpoints by default
         _reset_default(sc_kw, "c", "k")
@@ -157,27 +162,31 @@ def plotmatrix(data, labels=None, axes=None, categories=None,
             # y-axis formatting
             axes[i,j].yaxis.set_tick_params(direction='out')
             yt = axes[i,j].get_yticks()
+
             if j == 0 and i > 0:
                 # format first column
                 axes[i,j].set_ylabel(labels[i])
-                axes[i,j].set_yticks([yt[1], yt[-2]])
+                axes[i,j].set_yticks([yt[tickpad], yt[-(tickpad+1)]])
                 axes[i,j].yaxis.set_ticks_position('left')
             elif i == 0 and j == M-1:    
                 # first row is special case
                 axes[i,j].yaxis.set_ticks_position('right')
                 axes[i,j].yaxis.set_label_position('right')
                 axes[i,j].set_ylabel(labels[i])
-                axes[i,j].set_yticks([yt[1], yt[-2]])
+                axes[i,j].set_yticks([yt[tickpad], yt[-(tickpad+1)]])
             else:
                 axes[i,j].set_yticks([])
 
             # x-axis formatting
             axes[i,j].xaxis.set_tick_params(direction='out')
             xt = axes[i,j].get_xticks()
+
             if i == M-1:
                 axes[i,j].set_xlabel(labels[j])
                 axes[i,j].xaxis.set_ticks_position('bottom')
-                axes[i,j].set_xticks([xt[1], xt[-2]])
+                axes[i,j].set_xticks([xt[tickpad], xt[-(tickpad+1)]])
+                for tick in axes[i,j].get_xticklabels():
+                    tick.set_rotation(tickrotation)
             else:
                 axes[i,j].set_xticks([])
 
