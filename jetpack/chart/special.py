@@ -23,9 +23,9 @@ DEFAULT_COLOR_CYCLE = [(0.4470588235294118, 0.6196078431372549, 0.80784313725490
                        (0.42745098039215684, 0.8, 0.8549019607843137)]
 
 def plotmatrix(data, labels=None, axes=None, categories=None,
-               subplots_kwargs=dict(), color_cycle=DEFAULT_COLOR_CYCLE,
-               scatter_kwargs=dict(), hist_kwargs=dict(),
-               **fig_kwargs):
+               color_cycle=DEFAULT_COLOR_CYCLE,
+               scatter_kw=dict(), hist_kw=dict(),
+               **subplots_kw):
     """ Create a scatter plot matrix from the given data. 
         
         Note
@@ -43,15 +43,15 @@ def plotmatrix(data, labels=None, axes=None, categories=None,
         axes : matplotlib Axes array (optional)
             If you've already created the axes objects, pass this in to
             plot the data on that.
-        subplots_kwargs : dict (optional)
-            A dictionary of keyword arguments to pass to the 
-            matplotlib.pyplot.subplots call. Note: only relevant if axes=None.
-        scatter_kwargs : dict (optional)
+        scatter_kw : dict (optional)
             A dictionary of keyword arguments to pass to the 
             matplotlib.pyplot.scatter function calls.
-        **fig_kwargs
+        hist_kw : dict (optional)
+            A dictionary of keyword arguments to pass to the 
+            matplotlib.pyplot.hist function calls.
+        **subplots_kw
             Additional keyword arguments are passed to the
-            matplotlib.pyplot.figure call.
+            matplotlib.pyplot.subplots call.
     """
         
     try:
@@ -64,32 +64,29 @@ def plotmatrix(data, labels=None, axes=None, categories=None,
     if labels == None:
         labels = ['']*M
         
-    fig, axes = plt.subplots(M, M, **subplots_kwargs)
+    fig, axes = plt.subplots(M, M, **subplots_kw)
 
-    # set color cycle
-    [ax.set_color_cycle(color_cycle) for ax in axes.ravel()]
-    
-    # parse kwargs
-    def _reset_default(kwargs, key, val):
-        kwargs[key] = val if not key in kwargs.keys() else kwargs[key]
+    # parse keyword arguments
+    def _reset_default(kw, key, val):
+        kw[key] = val if not key in kw.keys() else kw[key]
 
-    # set scatter kwargs defaults
-    sc_kwargs = scatter_kwargs.copy()
-    _reset_default(sc_kwargs, "edgecolor", "none")
-    _reset_default(sc_kwargs, "s", 10)
+    # set scatter keyword defaults
+    sc_kw = scatter_kw.copy()
+    _reset_default(sc_kw, "edgecolor", "none")
+    _reset_default(sc_kw, "s", 10)
 
-    # set hist kwargs defaults
-    h_kwargs = hist_kwargs.copy()
-    _reset_default(h_kwargs, "histtype", "bar")
-    _reset_default(h_kwargs, "stacked", True)
+    # set hist keyword defaults
+    h_kw = hist_kw.copy()
+    _reset_default(h_kw, "histtype", "bar")
+    _reset_default(h_kw, "stacked", True)
     if categories is None:
-        _reset_default(h_kwargs, "color", "gray")
+        _reset_default(h_kw, "color", "gray")
 
     # determine how to color the points
     if categories is not None:
         # override user-specified colors if categories are given.
-        if "c" in sc_kwargs.keys():
-            warnings.warn('Specifying categories overrides color option in scatter_kwargs.')
+        if "c" in sc_kw.keys():
+            warnings.warn('Specifying categories overrides color option in scatter_kw.')
         
         # check that categories are input correctly
         if len(categories) != N:
@@ -103,11 +100,11 @@ def plotmatrix(data, labels=None, axes=None, categories=None,
         # set the colors for the scatterplots
         catset = np.array(list(set(categories)))
         cols = [col for col, cg in zip(color_cycle, catset)]
-        sc_kwargs["c"] = [cols[np.where(catset==cg)[0]] for cg in categories]
+        sc_kw["c"] = [cols[np.where(catset==cg)[0]] for cg in categories]
 
     else:
         # black scatterpoints by default
-        _reset_default(sc_kwargs, "c", "k")
+        _reset_default(sc_kw, "c", "k")
 
     # Axes properties
     xmin = np.empty((M,M))
@@ -124,9 +121,9 @@ def plotmatrix(data, labels=None, axes=None, categories=None,
                     y = [data[i][categories == cg] for cg in set(categories)]
                 else:
                     y = data[i]
-                axes[i,i].hist(y, **h_kwargs)
+                axes[i,i].hist(y, **h_kw)
             else:
-                axes[i,j].scatter(data[j], data[i], **sc_kwargs)
+                axes[i,j].scatter(data[j], data[i], **sc_kw)
 
             xmin[i,j], xmax[i,j] = axes[i,j].get_xlim()
             
@@ -184,5 +181,5 @@ def plotmatrix(data, labels=None, axes=None, categories=None,
             else:
                 axes[i,j].set_xticks([])
 
-    fig.subplots_adjust(hspace=0.0, wspace=0.0, left=0.08, bottom=0.08, top=0.9, right=0.9 )
+    fig.subplots_adjust(hspace=0.0, wspace=0.0, left=0.08, bottom=0.08, top=0.9, right=0.9)
     return fig, axes
