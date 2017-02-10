@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from functools import wraps
 import numpy as np
 
-__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir', 'minlabels']
+__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir', 'minlabels', 'categories_to_colors']
 
 
 def plotwrapper(fun):
@@ -215,3 +215,26 @@ def setcolor(color='#444444', **kwargs):
     ax.set_ylabel(ax.get_ylabel(), color=color)
 
     return ax
+
+
+def categories_to_colors(data, color_cycle=None):
+    if color_cycle is None:
+        color_cycle = [(0.45, 0.62, 0.81),
+                        (1.0, 0.62, 0.29),
+                        (0.4, 0.75, 0.36),
+                        (0.93, 0.4, 0.36),
+                        (0.67, 0.55, 0.79),
+                        (0.66, 0.47, 0.43),
+                        (0.93, 0.59, 0.79),
+                        (0.64, 0.64, 0.64),
+                        (0.80, 0.8, 0.36),
+                        (0.43, 0.8, 0.85)]
+
+    # list of unique values in the data vector
+    categories = np.array(list(set(data)))
+
+    if len(categories) > len(color_cycle):
+        raise ValueError('more categories than colors')
+
+    cat_to_col = {level: color for color, level in zip(color_cycle, categories)}
+    return [cat_to_col[item] for item in data]
