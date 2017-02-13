@@ -1,15 +1,18 @@
+# -*- coding: utf-8 -*-
 """
-Special
--------
+Stats
+-----
 
-Some canned routines for making specialized plots in matplotlib
-
+Some canned routines for statistical visualizations
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
 import itertools as itr
 import warnings
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+__all__ = ['paired_scatter']
 
 DEFAULT_COLOR_CYCLE = [(0.4470588235294118, 0.6196078431372549, 0.807843137254902),
                        (1.0, 0.6196078431372549, 0.2901960784313726),
@@ -22,7 +25,7 @@ DEFAULT_COLOR_CYCLE = [(0.4470588235294118, 0.6196078431372549, 0.80784313725490
                        (0.803921568627451, 0.8, 0.36470588235294116),
                        (0.42745098039215684, 0.8, 0.8549019607843137)]
 
-def plotmatrix(data, labels=None, axes=None, categories=None,
+def paired_scatter(data, labels=None, axes=None, categories=None,
                subplots_kwargs=dict(), color_cycle=DEFAULT_COLOR_CYCLE,
                scatter_kwargs=dict(), hist_kwargs=dict(),
                **fig_kwargs):
