@@ -2,7 +2,7 @@
 """
 Plots
 """
-from .utils import plotwrapper, noticks, set_tickdir, setfontsize
+from .utils import plotwrapper, noticks, tickdir, setfontsize
 from functools import partial
 import numpy as np
 import matplotlib.pyplot as plt
@@ -269,7 +269,7 @@ def bars(labels, data, color='#444444', width=0.7, err=None, ecolor='#111111',
 
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
-    set_tickdir('out', ax=ax)
+    tickdir('out', ax=ax)
 
     return ax
 

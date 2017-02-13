@@ -1,6 +1,6 @@
 """
 Data visualization tools
 """
-from .plots import *
 from .utils import *
-from .special import *
+from .plots import *
+from .stats import *

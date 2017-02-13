@@ -193,7 +193,7 @@ def breathe(factor=0.05, direction='out', **kwargs):
     return ax
 
 @axwrapper
-def tickdir(direction='out', **kwargs):
+def tickdir(direction, **kwargs):
     ax = kwargs['ax']
 
     ax.xaxis.set_tick_params(direction=direction)
