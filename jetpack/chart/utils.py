@@ -5,9 +5,8 @@ Utils
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 import matplotlib.pyplot as plt
 from functools import wraps
-import numpy as np
 
-__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir', 'minlabels']
+__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir']
 
 
 def plotwrapper(fun):
@@ -117,50 +116,6 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
 
     return ax
 
-@axwrapper
-def minlabels(x=True, y=True, n_xticks=4, n_yticks=4, **kwargs):
-    """
-    Label only the first and last tick marks.
-    """
-    ax = kwargs['ax']
-
-    if x:
-        # get first and last tick
-        xmin, xmax = ax.get_xlim()
-
-        # remove decimals from labels
-        if xmin.is_integer():
-            xmin = int(xmin)
-        if xmax.is_integer():
-            xmax = int(xmax)
-
-        # reset tick marks
-        xt = np.linspace(xmin, xmax, n_xticks)
-
-        # update plot
-        xlab = [str(xmin), *['' for _ in range(len(xt)-2)], str(xmax)]
-        ax.set_xticks(xt)
-        ax.set_xticklabels(xlab)
-
-    if y:
-        # get first and last tick
-        ymin, ymax = ax.get_ylim()
-
-        # reset tick marks
-        yt = np.linspace(ymin, ymax, n_yticks)
-
-        # remove decimals from labels
-        if ymin.is_integer():
-            ymin = int(ymin)
-        if ymax.is_integer():
-            ymax = int(ymax)
-
-        # update plot
-        ylab = [str(ymin), *['' for _ in range(len(yt)-2)], str(ymax)]
-        ax.set_yticks(yt)
-        ax.set_yticklabels(ylab)
-
-    return ax
 
 @axwrapper
 def breathe(factor=0.05, direction='out', **kwargs):
@@ -192,6 +147,7 @@ def breathe(factor=0.05, direction='out', **kwargs):
 
     return ax
 
+
 @axwrapper
 def tickdir(direction, **kwargs):
     ax = kwargs['ax']
@@ -200,6 +156,7 @@ def tickdir(direction, **kwargs):
     ax.yaxis.set_tick_params(direction=direction)
 
     return ax
+
 
 @axwrapper
 def setcolor(color='#444444', **kwargs):
