@@ -194,6 +194,13 @@ def norms(x, order=2):
     return x / np.linalg.norm(x, axis=0, ord=order)
 
 
+def stable_rank(X):
+    """Computes the stable rank of a matrix"""
+    assert X.ndim == 2, "X must be a matrix"
+    svals_sq = np.linalg.svd(X, compute_uv=False, full_matrices=False) ** 2
+    return svals_sq.sum() / svals_sq.max()
+
+
 def canoncorr(X, Y):
     """Canonical correlation between two subspaces.
 
