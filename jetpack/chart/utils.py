@@ -6,7 +6,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import matplotlib.pyplot as plt
 from functools import wraps
 
-__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir']
+__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir', 'get_bounds']
 
 
 def plotwrapper(fun):
@@ -118,26 +118,47 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
 
 
 @axwrapper
+def get_bounds(axis, **kwargs):
+    ax = kwargs['ax']
+
+    axis_map = {
+        "x": (ax.get_xticks, ax.get_xticklabels, ax.get_xlim, "bottom"),
+        "y": (ax.get_yticks, ax.get_yticklabels, ax.get_ylim, "left"),
+    }
+
+    # get functions
+    ticks, labels, limits, spine_key = axis_map[axis]
+
+    if ax.spines[spine_key].get_bounds():
+        return ax.spines[spine_key].get_bounds()
+    else:
+        lower, upper = None, None
+        for tick, label in zip(ticks(), labels()):
+            if label.get_text() != '':
+                if lower is None:
+                    lower = tick
+                else:
+                    upper = tick
+
+        if lower is None or upper is None:
+            return ax.get_xlim()
+
+    return lower, upper
+
+
+@axwrapper
 def breathe(factor=0.05, direction='out', **kwargs):
     """
     Adds space between axes and plot
     """
     ax = kwargs['ax']
 
-    if ax.spines['bottom'].get_bounds():
-        xa, xb = ax.spines['bottom'].get_bounds()
-    else:
-        xa, xb = ax.get_xlim()
-
+    xa, xb = get_bounds('x', ax=ax)
     xrng = xb - xa
     ax.set_xlim(xa - factor * xrng, xb + factor * xrng)
     ax.spines['bottom'].set_bounds(xa, xb)
 
-    if ax.spines['left'].get_bounds():
-        ya, yb = ax.spines['left'].get_bounds()
-    else:
-        ya, yb = ax.get_ylim()
-
+    ya, yb = get_bounds('y', ax=ax)
     yrng = yb - ya
     ax.set_ylim(ya - factor * yrng, yb + factor * yrng)
     ax.spines['left'].set_bounds(ya, yb)
