@@ -117,9 +117,9 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
     return ax
 
 
-@axwrapper
-def get_bounds(axis, **kwargs):
-    ax = kwargs['ax']
+def get_bounds(axis, ax=None):
+    if ax is None:
+        ax = plt.gca()
 
     axis_map = {
         "x": (ax.get_xticks, ax.get_xticklabels, ax.get_xlim, "bottom"),
@@ -141,7 +141,7 @@ def get_bounds(axis, **kwargs):
                     upper = tick
 
         if lower is None or upper is None:
-            return ax.get_xlim()
+            return limits()
 
     return lower, upper
 
