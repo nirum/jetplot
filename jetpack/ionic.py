@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Ionic
 -----
@@ -15,7 +16,8 @@ import warnings
 try:
     from pushover import Client
 except ImportError:
-    warning = "pushover not installed, push() function disabled.\nUse 'pip install python-pushover' to install pushover."
+    warning = """Pushover not installed, push() function disabled.
+                 Use 'pip install python-pushover' to install pushover."""
     warnings.warn(warning)
 
     class Client(object):
@@ -28,7 +30,8 @@ except ImportError:
 try:
     from emoji import emojize
 except ImportError:
-    warning = "emoji not installed, strings will not emojize automatically.\nUse 'pip install emoji' to get this feature."
+    warning = """Emoji not installed, strings will not emojize automatically.
+                 Use 'pip install emoji' to get this feature."""
     warnings.warn(warning)
 
     def emojize(x, *args, **kwargs):
@@ -67,10 +70,10 @@ def csv(filename, data, headers=None, fmt='%g'):
         assert data.shape[1] == len(headers), \
             "Data must have the same number of columns as the headers"
 
-        hdr=','.join(headers)
+        hdr = ','.join(headers)
 
     else:
-        hdr=''
+        hdr = ''
 
     np.savetxt(filename, data, delimiter=',', fmt=fmt, header=hdr, comments='')
 

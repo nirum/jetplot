@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import functools
 
 def id(x): return x

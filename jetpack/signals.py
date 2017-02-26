@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Signals
 -------
@@ -193,10 +194,15 @@ def norms(x, order=2):
     return x / np.linalg.norm(x, axis=0, ord=order)
 
 
+def stable_rank(X):
+    """Computes the stable rank of a matrix"""
+    assert X.ndim == 2, "X must be a matrix"
+    svals_sq = np.linalg.svd(X, compute_uv=False, full_matrices=False) ** 2
+    return svals_sq.sum() / svals_sq.max()
+
+
 def canoncorr(X, Y):
-    """
-    canonical correlation between two subspaces
-    (computed via the QR decomposition)
+    """Canonical correlation between two subspaces.
 
     Parameters
     ----------
@@ -205,16 +211,37 @@ def canoncorr(X, Y):
 
     Returns
     -------
+    u : array_like
+        The prinicpal vectors
+
     corr : array_like
         The magnitude of the overlap between each dimension of the subspace.
+        (cosine of the principal angles)
 
+    v : array_like
+        The prinicpal vectors
+
+    Notes
+    -----
+    The canonical correlation between subspaces generalizes the idea of the angle
+    between vectors to linear subspaces. It is defined as recursively finding unit
+    vectors in each subspace that are maximally correlated [1]_. Here, we compute
+    the principal vectors and angles via the QR decomposition [2]_.
+
+    References
+    ----------
+    .. [1] Angles between flats. (2016, August 4). In Wikipedia, The Free Encyclopedia.
+       https://en.wikipedia.org/w/index.php?title=Angles_between_flats
+    .. [2] Björck, Ȧke, and Gene H. Golub. "Numerical methods for computing angles
+       between linear subspaces." Mathematics of computation 27.123 (1973): 579-594.
     """
-
     # Orthogonalize each subspace
     qu, qv = np.linalg.qr(X)[0], np.linalg.qr(Y)[0]
 
     # singular values of the inner product between the orthogonalized spaces
-    return np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
+    corr = np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
+
+    return qu.dot(X), corr, qv.dot(Y)
 
 
 def sfthr(x, threshold):

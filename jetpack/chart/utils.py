@@ -1,12 +1,12 @@
+# -*- coding: utf-8 -*-
 """
 Utils
 """
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 import matplotlib.pyplot as plt
 from functools import wraps
-import numpy as np
 
-__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor',
+__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'get_bounds',
            'tickdir', 'minimal_xticks', 'minimal_yticks', 'categories_to_colors']
 
 def plotwrapper(fun):
@@ -166,8 +166,36 @@ def minimal_yticks(decimals=None, n_ticks=4, pad=True, **kwargs):
     # update plot
     ax.set_yticks(ticks)
     ax.set_yticklabels([str(t0), *['' for _ in range(len(ticks)-2)], str(t1)])
-
+    
     return ax
+
+def get_bounds(axis, ax=None):
+    if ax is None:
+        ax = plt.gca()
+
+    axis_map = {
+        "x": (ax.get_xticks, ax.get_xticklabels, ax.get_xlim, "bottom"),
+        "y": (ax.get_yticks, ax.get_yticklabels, ax.get_ylim, "left"),
+    }
+
+    # get functions
+    ticks, labels, limits, spine_key = axis_map[axis]
+
+    if ax.spines[spine_key].get_bounds():
+        return ax.spines[spine_key].get_bounds()
+    else:
+        lower, upper = None, None
+        for tick, label in zip(ticks(), labels()):
+            if label.get_text() != '':
+                if lower is None:
+                    lower = tick
+                else:
+                    upper = tick
+
+        if lower is None or upper is None:
+            return limits()
+
+    return lower, upper
 
 @axwrapper
 def breathe(factor=0.05, direction='out', **kwargs):
@@ -176,20 +204,12 @@ def breathe(factor=0.05, direction='out', **kwargs):
     """
     ax = kwargs['ax']
 
-    if ax.spines['bottom'].get_bounds():
-        xa, xb = ax.spines['bottom'].get_bounds()
-    else:
-        xa, xb = ax.get_xlim()
-
+    xa, xb = get_bounds('x', ax=ax)
     xrng = xb - xa
     ax.set_xlim(xa - factor * xrng, xb + factor * xrng)
     ax.spines['bottom'].set_bounds(xa, xb)
 
-    if ax.spines['left'].get_bounds():
-        ya, yb = ax.spines['left'].get_bounds()
-    else:
-        ya, yb = ax.get_ylim()
-
+    ya, yb = get_bounds('y', ax=ax)
     yrng = yb - ya
     ax.set_ylim(ya - factor * yrng, yb + factor * yrng)
     ax.spines['left'].set_bounds(ya, yb)
@@ -203,14 +223,16 @@ def breathe(factor=0.05, direction='out', **kwargs):
 
     return ax
 
+
 @axwrapper
-def tickdir(direction='out', **kwargs):
+def tickdir(direction, **kwargs):
     ax = kwargs['ax']
 
     ax.xaxis.set_tick_params(direction=direction)
     ax.yaxis.set_tick_params(direction=direction)
 
     return ax
+
 
 @axwrapper
 def setcolor(color='#444444', **kwargs):

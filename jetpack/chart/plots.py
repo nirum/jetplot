@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-jetpack plots
+Plots
 """
 from .utils import plotwrapper, noticks, tickdir, setfontsize
 from functools import partial
@@ -105,7 +106,8 @@ def errorplot(x, y, yerr, method='patch', color='k', xscale='linear', fmt='-',
 
 
 @plotwrapper
-def img(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None, cbar=False, interpolation='none', **kwargs):
+def img(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vmax=None,
+        cbar=False, interpolation='none', **kwargs):
     """
     Visualize a matrix as an image
 
@@ -128,9 +130,7 @@ def img(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vma
 
     ax : matplotlib axes handle, optional
         A handle to a matplotlib axes to use for plotting
-
     """
-
     # work with a copy of the original image data
     img = data.copy()
 
@@ -239,34 +239,40 @@ def corrplot(C, cmap=None, cmap_range=(0.0, 1.0), cbar=True, fontsize=14, **kwar
 
     noticks(ax=ax)
 
-@plotwrapper
-def bars(y, hspace=0.5, colors=None, **kwargs):
 
+@plotwrapper
+def bars(labels, data, color='#444444', width=0.7, err=None, ecolor='#111111',
+         capsize=5, capthick=2, **kwargs):
+    """Plots values as a bar chart
+    
+    Parameters
+    ----------
+    labels : list or iterable of text labels
+    data : list or iterable of numerical values to plot
+    color : color of the bars (default: #444444)
+    width : width of the bars (default: 0.7)
+    err : list or iterable of error bar values (default: None)
+    ecolor : color of the error bars (default: #111111)
+    """
     ax = kwargs['ax']
 
-    n_x, n_categories = y.shape
-    x_width = (1-hspace)
-    bar_width = x_width/n_categories
+    n = len(data)
+    x = np.arange(n) + width
+    if err is not None:
+        err = np.vstack((np.zeros_like(err), err))
 
-    # compute left alignment for each bar
-    x = []
-    for c in range(n_categories):
-        l = 1 - x_width/2 + c*bar_width
-        x.append([l+i for i in range(n_x)])
-    x = np.array(x).T
+    ax.bar(x, data, width, color=color)
 
-    if colors is None:
-        colors = [plt.cm.Dark2(i) for i in np.linspace(0, 1, n_categories)]
+    if err is not None:
+        caplines = ax.errorbar(x, data, err, capsize=capsize, capthick=capthick, fmt='.', marker=None, color=ecolor)[1]
+        caplines[0].set_markeredgewidth(0)
 
-    for c in range(n_categories):
-        plt.bar(x[:,c], y[:,c], color=colors[c], width=bar_width)
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    tickdir('out', ax=ax)
 
-    ax.set_xticks(range(1, n_x+1))
+    return ax
 
-    # Setting the x-axis and y-axis limits
-    plt.xlim((0, n_x+1))
-
-    tickdir(ax=ax)
 
 # aliases
 imv = partial(img, mode='seq')
