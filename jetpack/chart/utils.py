@@ -119,7 +119,7 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
 @axwrapper
 def minimal_xticks(decimals=None, n_ticks=4, pad=True, **kwargs):
     """
-    Label only the first and last tick marks.
+    Label only the first and last tick marks on the x axis.
     """
     ax = kwargs['ax']
 
@@ -252,6 +252,20 @@ def setcolor(color='#444444', **kwargs):
 
 
 def categories_to_colors(data, color_cycle=None):
+    """Map categorical data to a color palette.
+
+    Args
+    ----
+    data : array-like
+        1-dimensional ndarray or list of categorical data
+    color_cycle : array-like
+        list of colors for each category in data
+
+    Returns
+    -------
+    colors : list
+        list mapping each datapoint to a color in color_cycle
+    """
     if color_cycle is None:
         color_cycle = [(0.45, 0.62, 0.81),
                         (1.0, 0.62, 0.29),
