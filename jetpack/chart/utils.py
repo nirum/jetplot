@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from functools import wraps
 import numpy as np
 
-__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir', 'minlabels', 'categories_to_colors']
-
+__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor',
+           'tickdir', 'minimal_xticks', 'minimal_yticks', 'categories_to_colors']
 
 def plotwrapper(fun):
     """
@@ -117,47 +117,55 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
     return ax
 
 @axwrapper
-def minlabels(x=True, y=True, n_xticks=4, n_yticks=4, **kwargs):
+def minimal_xticks(decimals=None, n_ticks=4, pad=True, **kwargs):
     """
     Label only the first and last tick marks.
     """
     ax = kwargs['ax']
 
-    if x:
-        # get first and last tick
-        xmin, xmax = ax.get_xlim()
+    # get first and last tick
+    t0, t1 = ax.get_xlim()
 
-        # remove decimals from labels
-        if xmin.is_integer():
-            xmin = int(xmin)
-        if xmax.is_integer():
-            xmax = int(xmax)
+    # round limits
+    if decimals == 0:
+        t0, t1 = int(t0), int(t1)
+    elif decimals is not None:
+        padding = 10**(-decimals) if pad else 0.0
+        t0 = np.round(t0, decimals=decimals) - padding
+        t1 = np.round(t1, decimals=decimals) + padding
 
-        # reset tick marks
-        xt = np.linspace(xmin, xmax, n_xticks)
+    # reset tick marks
+    ticks = np.linspace(t0, t1, n_ticks)
 
-        # update plot
-        xlab = [str(xmin), *['' for _ in range(len(xt)-2)], str(xmax)]
-        ax.set_xticks(xt)
-        ax.set_xticklabels(xlab)
+    # update plot
+    ax.set_xticks(ticks)
+    ax.set_xticklabels([str(t0), *['' for _ in range(len(ticks)-2)], str(t1)])
 
-    if y:
-        # get first and last tick
-        ymin, ymax = ax.get_ylim()
+    return ax
 
-        # reset tick marks
-        yt = np.linspace(ymin, ymax, n_yticks)
+@axwrapper
+def minimal_yticks(decimals=None, n_ticks=4, pad=True, **kwargs):
+    """
+    Label only the first and last tick marks.
+    """
+    ax = kwargs['ax']
 
-        # remove decimals from labels
-        if ymin.is_integer():
-            ymin = int(ymin)
-        if ymax.is_integer():
-            ymax = int(ymax)
+    # get first and last tick
+    t0, t1 = ax.get_ylim()
 
-        # update plot
-        ylab = [str(ymin), *['' for _ in range(len(yt)-2)], str(ymax)]
-        ax.set_yticks(yt)
-        ax.set_yticklabels(ylab)
+    if decimals == 0:
+        t0, t1 = int(t0), int(t1)
+    elif decimals is not None:
+        padding = 10**(-decimals) if pad else 0.0
+        t0 = np.round(t0, decimals=decimals) - padding
+        t1 = np.round(t1, decimals=decimals) + padding
+
+    # reset tick marks
+    ticks = np.linspace(t0, t1, n_ticks)
+
+    # update plot
+    ax.set_yticks(ticks)
+    ax.set_yticklabels([str(t0), *['' for _ in range(len(ticks)-2)], str(t1)])
 
     return ax
 
@@ -185,6 +193,10 @@ def breathe(factor=0.05, direction='out', **kwargs):
     yrng = yb - ya
     ax.set_ylim(ya - factor * yrng, yb + factor * yrng)
     ax.spines['left'].set_bounds(ya, yb)
+
+    # drop x and y ticks outside of spine bounds
+    ax.set_xticks([t for t in filter(lambda x: x >= xa and x <= xb, ax.xaxis.get_ticklocs())])
+    ax.set_yticks([t for t in filter(lambda y: y >= ya and y <= yb, ax.yaxis.get_ticklocs())])
 
     nospines(**kwargs)
     tickdir(direction=direction, **kwargs)
