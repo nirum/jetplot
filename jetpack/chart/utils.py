@@ -5,6 +5,7 @@ Utils
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 import matplotlib.pyplot as plt
 from functools import wraps
+import numpy as np
 
 __all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'get_bounds',
            'tickdir', 'minimal_xticks', 'minimal_yticks', 'categories_to_colors']
@@ -279,7 +280,7 @@ def categories_to_colors(data, color_cycle=None):
                         (0.43, 0.8, 0.85)]
 
     # list of unique values in the data vector
-    categories = np.array(list(set(data)))
+    categories = np.sort(np.array(list(set(data))))
 
     if len(categories) > len(color_cycle):
         raise ValueError('more categories than colors')
