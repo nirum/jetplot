@@ -6,9 +6,10 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import matplotlib.pyplot as plt
 from functools import wraps
 import numpy as np
+from matplotlib.colors import LinearSegmentedColormap, colorConverter
 
 __all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'get_bounds',
-           'tickdir', 'minimal_xticks', 'minimal_yticks', 'categories_to_colors']
+           'tickdir', 'minimal_xticks', 'minimal_yticks', 'categories_to_colors', 'simple_cmap']
 
 def plotwrapper(fun):
     """
@@ -251,7 +252,6 @@ def setcolor(color='#444444', **kwargs):
 
     return ax
 
-
 def categories_to_colors(data, color_cycle=None):
     """Map categorical data to a color palette.
 
@@ -287,3 +287,29 @@ def categories_to_colors(data, color_cycle=None):
 
     cat_to_col = {level: color for color, level in zip(color_cycle, categories)}
     return [cat_to_col[item] for item in data]
+
+def simple_cmap(*colors, name='none'):
+    """Create a colormap from a sequence of rgb values.
+
+    cmap = simple_cmap((1,1,1), (1,0,0)) # white to red colormap
+    cmap = simple_cmap('w', 'r')         # white to red colormap
+    """
+
+    # check inputs
+    n_colors = len(colors)
+    if n_colors <= 1:
+        raise ValueError('Must specify at least two colors')
+
+    # make sure colors are specified as rgb
+    colors = [colorConverter.to_rgb(c) for c in colors]
+
+    # set up colormap
+    r, g, b = colors[0]
+    cdict = {'red': [(0.0, r, r)], 'green': [(0.0, g, g)], 'blue': [(0.0, b, b)]}
+    for i, (r, g, b) in enumerate(colors[1:]):
+        idx = (i+1) / (n_colors-1)
+        cdict['red'].append((idx, r, r))
+        cdict['green'].append((idx, b, b))
+        cdict['blue'].append((idx, g, g))
+
+    return LinearSegmentedColormap(name, {k: tuple(v) for k, v in cdict.items()})
