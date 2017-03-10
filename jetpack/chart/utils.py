@@ -200,7 +200,7 @@ def get_bounds(axis, ax=None):
     return lower, upper
 
 @axwrapper
-def breathe(factor=0.05, direction='out', **kwargs):
+def breathe(x_factor=0.05, y_factor=0.05, **kwargs):
     """
     Adds space between axes and plot
     """
@@ -208,12 +208,12 @@ def breathe(factor=0.05, direction='out', **kwargs):
 
     xa, xb = get_bounds('x', ax=ax)
     xrng = xb - xa
-    ax.set_xlim(xa - factor * xrng, xb + factor * xrng)
+    ax.set_xlim(xa - x_factor * xrng, xb + x_factor * xrng)
     ax.spines['bottom'].set_bounds(xa, xb)
 
     ya, yb = get_bounds('y', ax=ax)
     yrng = yb - ya
-    ax.set_ylim(ya - factor * yrng, yb + factor * yrng)
+    ax.set_ylim(ya - y_factor * yrng, yb + y_factor * yrng)
     ax.spines['left'].set_bounds(ya, yb)
 
     # drop x and y ticks outside of spine bounds
@@ -221,7 +221,6 @@ def breathe(factor=0.05, direction='out', **kwargs):
     ax.set_yticks([t for t in filter(lambda y: y >= ya and y <= yb, ax.yaxis.get_ticklocs())])
 
     nospines(**kwargs)
-    tickdir(direction=direction, **kwargs)
 
     return ax
 
