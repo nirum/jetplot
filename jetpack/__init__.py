@@ -10,6 +10,5 @@ from .signals import *
 from .chart import *
 from .ionic import *
 from .capsules import *
-from .matlab import loadmat
 
-__version__ = '0.0.7'
+__version__ = '0.0.8'
