@@ -206,19 +206,19 @@ def breathe(x_factor=0.05, y_factor=0.05, **kwargs):
     """
     ax = kwargs['ax']
 
-    xa, xb = get_bounds('x', ax=ax)
-    xrng = xb - xa
-    ax.set_xlim(xa - x_factor * xrng, xb + x_factor * xrng)
-    ax.spines['bottom'].set_bounds(xa, xb)
+    if x_factor is not None:
+        xa, xb = get_bounds('x', ax=ax)
+        xrng = xb - xa
+        ax.set_xlim(xa - x_factor * xrng, xb + x_factor * xrng)
+        ax.spines['bottom'].set_bounds(xa, xb)
+        ax.set_xticks([t for t in filter(lambda x: x >= xa and x <= xb, ax.xaxis.get_ticklocs())])
 
-    ya, yb = get_bounds('y', ax=ax)
-    yrng = yb - ya
-    ax.set_ylim(ya - y_factor * yrng, yb + y_factor * yrng)
-    ax.spines['left'].set_bounds(ya, yb)
-
-    # drop x and y ticks outside of spine bounds
-    ax.set_xticks([t for t in filter(lambda x: x >= xa and x <= xb, ax.xaxis.get_ticklocs())])
-    ax.set_yticks([t for t in filter(lambda y: y >= ya and y <= yb, ax.yaxis.get_ticklocs())])
+    if y_factor is not None:
+        ya, yb = get_bounds('y', ax=ax)
+        yrng = yb - ya
+        ax.set_ylim(ya - y_factor * yrng, yb + y_factor * yrng)
+        ax.spines['left'].set_bounds(ya, yb)
+        ax.set_yticks([t for t in filter(lambda y: y >= ya and y <= yb, ax.yaxis.get_ticklocs())])
 
     nospines(**kwargs)
 
