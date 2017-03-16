@@ -12,7 +12,7 @@ import numpy as np
 from scipy.ndimage.filters import gaussian_filter1d
 from scipy.linalg import sqrtm, inv
 
-__all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
+__all__ = ['peakdet', 'smooth', 'moving_average', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
            'whiten', 'canoncorr', 'xcorr', 'sqa']
 
 
@@ -152,6 +152,25 @@ def smooth(x, sigma=1.0, axis=0):
     """
     return gaussian_filter1d(x, sigma, axis=axis)
 
+def moving_average(x, N):
+    """
+    Moving average of a 1D signal with window size N
+
+    Parameters
+    ----------
+    x : array_like
+        The array to be smoothed
+
+    N : int
+        The width of the moving average window
+
+    Returns
+    -------
+    xs : array_like
+        The moving average of x
+    """
+    cs = np.cumsum(np.insert(x, 0, 0))
+    return (cs[N:] - cs[:-N]) / N
 
 def norms(x, order=2):
     """

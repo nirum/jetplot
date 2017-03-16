@@ -38,9 +38,9 @@ def _mat_to_dict(obj):
             dest[strg] = _mat_to_dict(elem)
         return dest
 
-    # # recursive call to convert struct arrays
-    # elif isinstance(obj, np.ndarray) and obj.dtype == spio.matlab.mio5_params.mat_struct:
-    #     return np.array([_mat_to_dict(elem) for elem in obj])
+    # recursive call to convert struct arrays
+    elif isinstance(obj, np.ndarray) and len(obj) > 0 and type(obj[0]) == spio.matlab.mio5_params.mat_struct:
+        return np.array([_mat_to_dict(elem) for elem in obj])
 
     # base case
     else:
