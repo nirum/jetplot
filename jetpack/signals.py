@@ -4,7 +4,6 @@ Signals
 -------
 
 Tools for signal processing
-
 """
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 import sys
@@ -13,7 +12,7 @@ from scipy.ndimage.filters import gaussian_filter1d
 from scipy.linalg import sqrtm, inv
 
 __all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
-           'whiten', 'canoncorr', 'xcorr', 'sqa']
+           'whiten', 'canoncorr', 'xcorr', 'sqa', 'sigmoid', 'softmax']
 
 
 def peakdet(v, delta, x=None):
@@ -239,9 +238,9 @@ def canoncorr(X, Y):
     qu, qv = np.linalg.qr(X)[0], np.linalg.qr(Y)[0]
 
     # singular values of the inner product between the orthogonalized spaces
-    corr = np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
+    return np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
 
-    return qu.dot(X), corr, qv.dot(Y)
+    # return qu.dot(X), corr, qv.dot(Y)
 
 
 def sfthr(x, threshold):
@@ -288,6 +287,45 @@ def sfrct(x, threshold):
     """
 
     return np.log1p(np.exp(x - threshold))
+
+
+def softmax(x):
+    """Numpy implementation of the softmax function
+
+    Parameters
+    ----------
+    x : array_like
+
+    Returns
+    -------
+    probabilities : array_like
+    """
+    xn = x - np.max(x)
+    z = np.exp(xn)
+    return z / np.sum(z)
+
+
+def sigmoid(x):
+    """Numerically stable sigmoid
+
+    Parameters
+    ----------
+    x : array_like
+
+    Returns
+    -------
+    y : array_like
+    """
+    y = np.zeros_like(x)
+
+    pos = x >= 0
+    z = np.exp(-x[pos])
+    y[pos] = 1 / (1 + z)
+
+    z = np.exp(x[~pos])
+    y[~pos] = z / (1 + z)
+
+    return y
 
 
 def whiten(X):
