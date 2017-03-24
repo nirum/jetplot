@@ -8,6 +8,7 @@ from functools import wraps
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, colorConverter
 from matplotlib.cm import get_cmap
+import matplotlib
 
 __all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'get_bounds',
            'tickdir', 'minimal_xticks', 'minimal_yticks', 'categories_to_colors',
@@ -310,8 +311,8 @@ def simple_cmap(*colors, name='none'):
     for i, (r, g, b) in enumerate(colors[1:]):
         idx = (i+1) / (n_colors-1)
         cdict['red'].append((idx, r, r))
-        cdict['green'].append((idx, b, b))
-        cdict['blue'].append((idx, g, g))
+        cdict['green'].append((idx, g, g))
+        cdict['blue'].append((idx, b, b))
 
     return LinearSegmentedColormap(name, {k: tuple(v) for k, v in cdict.items()})
 
