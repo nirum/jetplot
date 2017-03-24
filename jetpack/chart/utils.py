@@ -7,9 +7,11 @@ import matplotlib.pyplot as plt
 from functools import wraps
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, colorConverter
+from matplotlib.cm import get_cmap
 
 __all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'get_bounds',
-           'tickdir', 'minimal_xticks', 'minimal_yticks', 'categories_to_colors', 'simple_cmap']
+           'tickdir', 'minimal_xticks', 'minimal_yticks', 'categories_to_colors',
+           'simple_cmap', 'discretize_cmap']
 
 def plotwrapper(fun):
     """
@@ -312,3 +314,17 @@ def simple_cmap(*colors, name='none'):
         cdict['blue'].append((idx, g, g))
 
     return LinearSegmentedColormap(name, {k: tuple(v) for k, v in cdict.items()})
+
+def discretize_cmap(cmap, n=100):
+    """Sample a colormap at evenly spaced intervals
+
+    colors = discretize_cmap('jet', 100)
+    colors = discretize_cmap(matplotlib.cm.get_cmap('jet'), 100)
+    """
+
+    if isinstance(cmap, str):
+        cmap = get_cmap(cmap)
+    elif not isinstance(cmap, matplotlib.colors.LinearSegmentedColormap):
+        raise ValueError('Colormap not recognized.')
+
+    return [cmap(x) for x in np.linspace(0, 1, n)]
