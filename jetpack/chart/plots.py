@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
-__all__ = ['hist', 'hist2d', 'errorplot', 'img', 'play', 'corrplot', 'imv', 'bars']
+__all__ = ['hist', 'hist2d', 'errorplot', 'img', 'play', 'corrplot', 'imv', 'bars', 'colorbar']
 
 
 @plotwrapper
@@ -273,6 +273,38 @@ def bars(labels, data, color='#444444', width=0.7, err=None, ecolor='#111111',
 
     return ax
 
+
+@plotwrapper
+def colorbar(cmap, ticks, orientation='vertical', N=256, **kwargs):
+    """Plots a colorbar as an image.
+
+    Parameters
+    ----------
+    cmap : matplotlib colormap
+    ticks : value and labels of tick marks along colorbar
+    orientation : optional, whether colorbar is vertical or horizontal (default: 'vertical')
+    N : optional, number of increments in the colorbar image (default: 256)
+    """
+
+    ax = kwargs['ax']
+
+    if not orientation in ('vertical', 'horizontal'):
+        raise ValueError('Orientation not understood, must be one of {vertical, horizontal}')
+
+    base = np.linspace(0, 1, N)[None, :]
+
+    if orientation == 'vertical':
+        ax.imshow(base.T, aspect='auto', cmap=cmap)
+        ax.set_xticks([])
+        ax.set_yticks(np.linspace(0, N, len(ticks)))
+        ax.set_yticklabels(ticks[::-1])
+    elif orientation == 'horizontal':
+        ax.imshow(base, aspect='auto', cmap=cmap)
+        ax.set_xticks(np.linspace(0, N, len(ticks)))
+        ax.set_xticklabels(ticks)
+        ax.set_yticks([])
+
+    return ax
 
 # aliases
 imv = partial(img, mode='seq')
