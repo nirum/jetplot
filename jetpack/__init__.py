@@ -11,5 +11,6 @@ from .chart import *
 from .ionic import *
 from .capsules import *
 from .matlab import loadmat
+from .spatial import *
 
 __version__ = '0.0.7'
