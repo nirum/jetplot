@@ -152,7 +152,7 @@ def smooth(x, sigma=1.0, axis=0):
     """
     return gaussian_filter1d(x, sigma, axis=axis)
 
-def moving_average(x, N):
+def moving_average(x, N, pad=False):
     """
     Moving average of a 1D signal with window size N
 
@@ -164,11 +164,17 @@ def moving_average(x, N):
     N : int
         The width of the moving average window
 
+    pad : bool (optional)
+        if True, pad the result to match the length of x
+
     Returns
     -------
     xs : array_like
         The moving average of x
     """
+    if pad:
+        x = np.pad(x, int(N/2), 'edge')
+
     cs = np.cumsum(np.insert(x, 0, 0))
     return (cs[N:] - cs[:-N]) / N
 
