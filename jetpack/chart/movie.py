@@ -1,0 +1,21 @@
+# -*- coding: utf-8 -*-
+"""
+Visualization tools for animations
+"""
+from moviepy.video.io.bindings import mplfig_to_npimage
+import moviepy.editor as mpy
+
+def movieclip(makeframe, ax=None, **kwargs):
+
+    # grab figure and axes handles
+    fig = plt.gcf()
+    if ax is None:
+        ax = plt.gca()
+
+    # wrap makeframe function with mpltfig_to_npimage
+    def _makeframe(t):
+        makeframe(t, ax=ax)
+        return mplfig_to_npimage(fig)
+
+    # return clip
+    return mpy.VideoClip(_makeframe, **kwargs)
