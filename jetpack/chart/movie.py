@@ -16,7 +16,7 @@ def movieclip(makeframe, ax=None, **kwargs):
     # wrap makeframe function with mpltfig_to_npimage
     def _makeframe(t):
         makeframe(t, ax=ax)
-        return mplfig_to_npimage(fig)
+        return mplfig_to_npimage(plt.gcf())
 
     # return clip
     return mpy.VideoClip(_makeframe, **kwargs)
