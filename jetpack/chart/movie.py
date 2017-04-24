@@ -15,6 +15,7 @@ def movieclip(makeframe, ax=None, **kwargs):
 
     # wrap makeframe function with mpltfig_to_npimage
     def _makeframe(t):
+        print(t)
         makeframe(t, ax=ax)
         return mplfig_to_npimage(plt.gcf())
 
