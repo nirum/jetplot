@@ -4,6 +4,7 @@ Visualization tools for animations
 """
 from moviepy.video.io.bindings import mplfig_to_npimage
 import moviepy.editor as mpy
+import matplotlib.pyplot as plt
 
 def movieclip(makeframe, ax=None, **kwargs):
 
