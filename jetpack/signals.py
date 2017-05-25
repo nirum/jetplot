@@ -243,6 +243,12 @@ def canoncorr(X, Y):
     # return qu.dot(X), corr, qv.dot(Y)
 
 
+def softmax(x):
+    """numerically stable softmax"""
+    e_x = np.exp(x - x.max())
+    return e_x / e_x.sum()
+
+
 def sfthr(x, threshold):
     """
     Soft thresholding function
