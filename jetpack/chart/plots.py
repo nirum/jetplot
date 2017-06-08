@@ -165,12 +165,12 @@ def img(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vma
         raise ValueError("Unrecognized mode: '" + mode + "'")
 
     # make the image
-    kwargs['ax'].imshow(img, cmap=cmap, interpolation=interpolation,
-                        vmin=vmin, vmax=vmax, aspect=aspect)
+    im = kwargs['ax'].imshow(img, cmap=cmap, interpolation=interpolation,
+                             vmin=vmin, vmax=vmax, aspect=aspect)
 
     # colorbar
     if cbar:
-        plt.colorbar()
+        plt.colorbar(im)
 
     # clear ticks
     noticks(ax=kwargs['ax'])
