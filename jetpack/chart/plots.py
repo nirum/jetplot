@@ -2,7 +2,7 @@
 """
 Plots
 """
-from .utils import plotwrapper, noticks, tickdir, setfontsize
+from .utils import plotwrapper, noticks, tickdir, setfontsize, nospines
 from functools import partial
 import numpy as np
 import matplotlib.pyplot as plt
@@ -241,18 +241,17 @@ def corrplot(C, cmap=None, cmap_range=(0.0, 1.0), cbar=True, fontsize=14, **kwar
 
 
 @plotwrapper
-def bars(labels, data, color='#444444', width=0.7, err=None, ecolor='#111111',
+def bars(labels, data, color='#888888', width=0.7, err=None,
          capsize=5, capthick=2, **kwargs):
     """Plots values as a bar chart
-    
+
     Parameters
     ----------
     labels : list or iterable of text labels
     data : list or iterable of numerical values to plot
-    color : color of the bars (default: #444444)
+    color : color of the bars (default: #888888)
     width : width of the bars (default: 0.7)
     err : list or iterable of error bar values (default: None)
-    ecolor : color of the error bars (default: #111111)
     """
     ax = kwargs['ax']
 
@@ -264,12 +263,17 @@ def bars(labels, data, color='#444444', width=0.7, err=None, ecolor='#111111',
     ax.bar(x, data, width, color=color)
 
     if err is not None:
-        caplines = ax.errorbar(x, data, err, capsize=capsize, capthick=capthick, fmt='.', marker=None, color=ecolor)[1]
+        caplines = ax.errorbar(x, data, err, capsize=capsize, capthick=capthick, fmt='none', marker=None, color=color)[1]
         caplines[0].set_markeredgewidth(0)
 
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     tickdir('out', ax=ax)
+
+    nospines(ax=ax)
+    ax.tick_params(axis='x', length=0)
+    ax.spines['bottom'].set_color('none')
+    ax.set_xlim((0, n + width))
 
     return ax
 
