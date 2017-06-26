@@ -11,4 +11,4 @@ from .chart import *
 from .ionic import *
 from .capsules import *
 
-__version__ = '0.0.8'
+__version__ = '0.0.9'
