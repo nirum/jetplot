@@ -10,6 +10,7 @@ import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
+from .utils import plotwrapper, nospines
 
 __all__ = ['paired_scatter']
 
@@ -23,6 +24,28 @@ DEFAULT_COLOR_CYCLE = [(0.4470588235294118, 0.6196078431372549, 0.80784313725490
                        (0.6352941176470588, 0.6352941176470588, 0.6352941176470588),
                        (0.803921568627451, 0.8, 0.36470588235294116),
                        (0.42745098039215684, 0.8, 0.8549019607843137)]
+
+
+@plotwrapper
+def density2d(x, y, **kwargs):
+    ax = kwargs['ax']
+    ax = plt.subplot2grid((4, 4), (1, 0), colspan=3, rowspan=3)
+    ax_top = plt.subplot2grid((4, 4), (0, 0), colspan=3)
+    ax_right = plt.subplot2grid((4, 4), (1, 3), rowspan=3)
+
+    xmin, xmax = x.min(), x.max()
+    ymin, ymax = y.min(), y.max()
+    ax.hexbin(x, y, gridsize=25, extent=(xmin, xmax, ymin, ymax), cmap='magma_r')
+
+    xv, xe = np.histogram(x, bins=40, range=(xmin, xmax), normed=True)
+    xb = xe[:-1] + np.mean(np.diff(xe))
+    ax_top.plot(xb, xv, '-', color='mediumpurple')
+    nospines(ax=ax_top, bottom=True, left=True)
+
+    yv, ye = np.histogram(y, bins=40, range=(ymin, ymax), normed=True)
+    yb = ye[:-1] + np.mean(np.diff(ye))
+    ax_right.plot(yv, yb, '-', color='mediumpurple')
+    nospines(ax=ax_right, bottom=True, left=True)
 
 
 def paired_scatter(data, labels=None, axes=None, categories=None,
