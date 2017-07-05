@@ -5,11 +5,11 @@ Signals
 
 Tools for signal processing
 """
-from __future__ import (absolute_import, division, print_function, unicode_literals)
 import sys
+
 import numpy as np
+from scipy.linalg import inv, sqrtm
 from scipy.ndimage.filters import gaussian_filter1d
-from scipy.linalg import sqrtm, inv
 
 __all__ = ['peakdet', 'smooth', 'norms', 'sfthr', 'sfrct', 'sq', 'arr',
            'whiten', 'canoncorr', 'xcorr', 'sqa', 'sigmoid', 'softmax']
@@ -100,19 +100,7 @@ def peakdet(v, delta, x=None):
 
 
 def xcorr(x, y, maxlag):
-    """Performs cross-correlation between two signals, up to a given lag
-
-    Parameters
-    ----------
-    x : TODO
-    y : TODO
-    maxlag : TODO
-
-    Returns
-    -------
-    TODO
-
-    """
+    """Performs cross-correlation between two signals, up to a given lag"""
     assert type(maxlag) is int and maxlag > 0, \
         "Maximum lag must be a positive integer"
 
@@ -187,9 +175,7 @@ def norms(x, order=2):
     0      sum(x != 0)
     other  sum(abs(x)**ord)**(1./ord)
     =====  ==========================
-
     """
-
     return x / np.linalg.norm(x, axis=0, ord=order)
 
 
@@ -240,11 +226,9 @@ def canoncorr(X, Y):
     # singular values of the inner product between the orthogonalized spaces
     return np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
 
-    # return qu.dot(X), corr, qv.dot(Y)
-
 
 def softmax(x):
-    """numerically stable softmax"""
+    """Numerically stable softmax"""
     e_x = np.exp(x - x.max())
     return e_x / e_x.sum()
 
@@ -259,7 +243,7 @@ def sfthr(x, threshold):
         The input array to the soft thresholding function
 
     threshold : float
-        The threshold of the function
+        The threshold of the function (default: 0)
 
     Returns
     -------
@@ -271,7 +255,7 @@ def sfthr(x, threshold):
     return np.sign(x) * np.maximum(np.abs(x) - threshold, 0)
 
 
-def sfrct(x, threshold):
+def sfrct(x, threshold=0):
     """
     Soft rectification function
 
@@ -282,33 +266,15 @@ def sfrct(x, threshold):
     x : array_like
         The input array to the soft thresholding function
 
-    threshold : float
+    threshold : float, optional
         The threshold of the function
 
     Returns
     -------
     y : array_like
         The output of the soft thresholding function
-
     """
-
     return np.log1p(np.exp(x - threshold))
-
-
-def softmax(x):
-    """Numpy implementation of the softmax function
-
-    Parameters
-    ----------
-    x : array_like
-
-    Returns
-    -------
-    probabilities : array_like
-    """
-    xn = x - np.max(x)
-    z = np.exp(xn)
-    return z / np.sum(z)
 
 
 def sigmoid(x):
@@ -347,18 +313,12 @@ def whiten(X):
     -------
     W : array_like
         Matrix where the columns are whitened version of the input vectors
-
     """
-
     return inv(sqrtm(np.cov(X))).dot(X)
 
 
 def sq(x):
-    """
-    Reshape vector to a square image
-
-    """
-
+    """Reshape vector to a square image"""
     if np.sqrt(x.size)**2 != x.size:
         raise ValueError('Error: the input size is inconsistent with a square')
 

@@ -4,17 +4,14 @@ Timepiece
 ---------
 
 Tools for dealing with time
-
 """
-
-from __future__ import print_function
-import numpy as np
 import time
-import sys
-from .ionic import unicodes
 from functools import wraps
 
-# exports
+import numpy as np
+
+from .ionic import unicodes
+
 __all__ = ['hrtime', 'Stopwatch', 'profile']
 
 
@@ -36,9 +33,9 @@ class Stopwatch():
 
     def checkpoint(self, name=''):
         print("{timer} {checkpoint} took {elapsed}".format(
-            timer = self.name,
-            checkpoint = name,
-            elapsed = hrtime(self.elapsed),
+            timer=self.name,
+            checkpoint=name,
+            elapsed=hrtime(self.elapsed),
         ).strip())
 
     def __enter__(self):
@@ -73,23 +70,23 @@ def hrtime(t):
         raise ValueError("Input must be numeric")
 
     # weeks
-    if t >= 7*60*60*24:
-        weeks = np.floor(t / (7.*60.*60.*24.))
-        timestr = "{:0.0f} weeks, ".format(weeks) + hrtime(t % (7*60*60*24))
+    if t >= 7 * 60 * 60 * 24:
+        weeks = np.floor(t / (7 * 60 * 60 * 24))
+        timestr = "{:0.0f} weeks, ".format(weeks) + hrtime(t % (7 * 60 * 60 * 24))
 
     # days
-    elif t >= 60*60*24:
-        days = np.floor(t / (60.*60.*24.))
-        timestr = "{:0.0f} days, ".format(days) + hrtime(t % (60*60*24))
+    elif t >= 60 * 60 * 24:
+        days = np.floor(t / (60 * 60 * 24))
+        timestr = "{:0.0f} days, ".format(days) + hrtime(t % (60 * 60 * 24))
 
     # hours
-    elif t >= 60*60:
-        hours = np.floor(t / (60.*60.))
-        timestr = "{:0.0f} hours, ".format(hours) + hrtime(t % (60*60))
+    elif t >= 60 * 60:
+        hours = np.floor(t / (60 * 60))
+        timestr = "{:0.0f} hours, ".format(hours) + hrtime(t % (60 * 60))
 
     # minutes
     elif t >= 60:
-        minutes = np.floor(t / 60.)
+        minutes = np.floor(t / 60)
         timestr = "{:0.0f} min., ".format(minutes) + hrtime(t % 60)
 
     # seconds
@@ -98,27 +95,28 @@ def hrtime(t):
 
     # milliseconds
     elif t >= 1e-3:
-        timestr = "{:g} ms".format(t*1e3)
+        timestr = "{:g} ms".format(t * 1e3)
 
     # microseconds
     elif t >= 1e-6:
-        timestr = u"{:g} {}s".format(t*1e6, unicodes['micro'])
+        timestr = u"{:g} {}s".format(t * 1e6, unicodes['micro'])
 
     # nanoseconds or smaller
     else:
-        timestr = "{:g} ns".format(t*1e9)
+        timestr = "{:g} ns".format(t * 1e9)
 
     return timestr
 
 
 def profile(func):
     calls = list()
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         tstart = time.time()
         results = func(*args, **kwargs)
         tstop = time.time()
-        calls.append(tstop-tstart)
+        calls.append(tstop - tstart)
         return results
 
     wrapper.calls = calls

@@ -4,14 +4,13 @@ Ionic
 -----
 
 IO and display utilities
-
 """
-from __future__ import (absolute_import, division, print_function, unicode_literals)
 import sys
-import numpy as np
-from numbers import Number
-from contextlib import contextmanager
 import warnings
+from contextlib import contextmanager
+from numbers import Number
+
+import numpy as np
 
 try:
     from pushover import Client
@@ -57,9 +56,7 @@ def csv(filename, data, headers=None, fmt='%g'):
 
     fmt : string, optional
         A format string for how to encode the data (default: '%g')
-
     """
-
     assert data.ndim == 2, "Data must be a matrix (have two dimensions)"
 
     if not filename.endswith('.csv'):
@@ -134,12 +131,12 @@ def notify(title='Loading'):
 
     """
 
-    print(unicodes['arrow'] + ' ' + title + '... ', end='')
+    print(f"{unicodes['arrow']}  {title}...", end='')
     sys.stdout.flush()
     try:
         yield
     finally:
-        print('Done! ' + unicodes['check'])
+        print(f"Done! {unicodes['check']}")
 
 
 unicodes = {

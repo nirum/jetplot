@@ -2,13 +2,14 @@
 """
 Plots
 """
+import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import animation
 
 from .utils import nospines, noticks, plotwrapper, setfontsize, tickdir
 
-__all__ = ['hist', 'hist2d', 'errorplot', 'play', 'corrplot', 'bars']
+__all__ = ['hist', 'hist2d', 'errorplot', 'play', 'corrplot', 'bars', 'lines']
 
 
 @plotwrapper
@@ -205,3 +206,18 @@ def bars(labels, data, color='#888888', width=0.7, err=None,
     ax.set_xlim((0, n + width))
 
     return ax
+
+
+@plotwrapper
+def lines(x, lines=None, cmap='viridis', **kwargs):
+    if lines is None:
+        lines = list(x)
+        x = np.arange(len(lines[0]))
+
+    else:
+        lines = list(lines)
+
+    colors = cm.__getattribute__(cmap)(np.linspace(0, 1, len(lines)))
+
+    for line, color in zip(lines, colors):
+        plt.plot(x, line, color=color)

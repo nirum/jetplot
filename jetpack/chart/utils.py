@@ -3,10 +3,12 @@
 Utils
 """
 from __future__ import (absolute_import, division, print_function, unicode_literals)
+import numpy as np
 import matplotlib.pyplot as plt
 from functools import wraps
 
-__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir', 'get_bounds']
+__all__ = ['setfontsize', 'noticks', 'nospines', 'breathe', 'setcolor', 'tickdir', 'get_bounds',
+           'yclamp', 'xclamp']
 
 
 def plotwrapper(fun):
@@ -175,6 +177,41 @@ def tickdir(direction, **kwargs):
 
     ax.xaxis.set_tick_params(direction=direction)
     ax.yaxis.set_tick_params(direction=direction)
+
+    return ax
+
+
+@axwrapper
+def yclamp(y0=None, y1=None, dt=None, **kwargs):
+    ax = kwargs['ax']
+
+    lims = ax.get_ylim()
+    y0 = lims[0] if y0 is None else y0
+    y1 = lims[1] if y1 is None else y1
+    dt = np.mean(np.diff(ax.get_yticks())) if dt is None else dt
+    print('hello world')
+
+    new_ticks = np.arange(dt * np.floor(y0 / dt), dt * (np.ceil(y1 / dt) + 1), dt)
+    ax.set_yticks(new_ticks)
+    ax.set_yticklabels(new_ticks)
+    ax.set_ylim(new_ticks[0], new_ticks[1])
+
+    return ax
+
+
+@axwrapper
+def xclamp(x0=None, x1=None, dt=None, **kwargs):
+    ax = kwargs['ax']
+
+    lims = ax.get_xlim()
+    x0 = lims[0] if x0 is None else x0
+    x1 = lims[1] if x1 is None else x1
+    dt = np.mean(np.diff(ax.get_xticks())) if dt is None else dt
+
+    new_ticks = np.arange(dt * np.floor(x0 / dt), dt * (np.ceil(x1 / dt) + 1), dt)
+    ax.set_xticks(new_ticks)
+    ax.set_xticklabels(new_ticks)
+    ax.set_xlim(new_ticks[0], new_ticks[1])
 
     return ax
 

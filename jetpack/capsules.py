@@ -21,7 +21,6 @@ class FuzzyDict(MutableMapping):
     Lookups are compared to existing keys, if the new key is close enough
     to an existing entry, that entry is recalled
     """
-
     def __init__(self, threshold=0.6, *args, **kwargs):
         """
         Parameters
@@ -71,9 +70,7 @@ class pipe:
     -----
     >> x = np.random.randn(100)
     >> pipe(x) | (smooth, sigma=2.0) | plot
-
     """
-
     def __init__(self, payload):
         self.payload = payload
 
