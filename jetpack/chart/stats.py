@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from .utils import plotwrapper, nospines
 
-__all__ = ['paired_scatter']
+__all__ = ['paired_scatter', 'density2d']
 
 DEFAULT_COLOR_CYCLE = [(0.4470588235294118, 0.6196078431372549, 0.807843137254902),
                        (1.0, 0.6196078431372549, 0.2901960784313726),
@@ -27,25 +27,26 @@ DEFAULT_COLOR_CYCLE = [(0.4470588235294118, 0.6196078431372549, 0.80784313725490
 
 
 @plotwrapper
-def density2d(x, y, **kwargs):
-    ax = kwargs['ax']
-    ax = plt.subplot2grid((4, 4), (1, 0), colspan=3, rowspan=3)
-    ax_top = plt.subplot2grid((4, 4), (0, 0), colspan=3)
-    ax_right = plt.subplot2grid((4, 4), (1, 3), rowspan=3)
+def density2d(x, y, gridsize=25, nbins=20, ratio=4, cmap='magma_r', color='darkgray', **kwargs):
+    ax = plt.subplot2grid((ratio, ratio), (1, 0), colspan=3, rowspan=(ratio - 1))
+    ax_top = plt.subplot2grid((ratio, ratio), (0, 0), colspan=3)
+    ax_right = plt.subplot2grid((ratio, ratio), (1, ratio - 1), rowspan=(ratio - 1))
 
     xmin, xmax = x.min(), x.max()
     ymin, ymax = y.min(), y.max()
-    ax.hexbin(x, y, gridsize=25, extent=(xmin, xmax, ymin, ymax), cmap='magma_r')
+    ax.hexbin(x, y, gridsize=gridsize, extent=(xmin, xmax, ymin, ymax), cmap=cmap)
 
-    xv, xe = np.histogram(x, bins=40, range=(xmin, xmax), normed=True)
+    xv, xe = np.histogram(x, bins=nbins, range=(xmin, xmax), normed=True)
     xb = xe[:-1] + np.mean(np.diff(xe))
-    ax_top.plot(xb, xv, '-', color='mediumpurple')
+    ax_top.plot(xb, xv, '-', color=color)
     nospines(ax=ax_top, bottom=True, left=True)
 
-    yv, ye = np.histogram(y, bins=40, range=(ymin, ymax), normed=True)
+    yv, ye = np.histogram(y, bins=nbins, range=(ymin, ymax), normed=True)
     yb = ye[:-1] + np.mean(np.diff(ye))
-    ax_right.plot(yv, yb, '-', color='mediumpurple')
+    ax_right.plot(yv, yb, '-', color=color)
     nospines(ax=ax_right, bottom=True, left=True)
+
+    return ax, ax_top, ax_right
 
 
 def paired_scatter(data, labels=None, axes=None, categories=None,

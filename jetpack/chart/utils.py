@@ -15,21 +15,19 @@ def plotwrapper(fun):
     """
     Decorator that adds sane plotting defaults to the kwargs of a function
     """
-
     @wraps(fun)
     def wrapper(*args, **kwargs):
 
         if 'ax' not in kwargs:
             if 'fig' not in kwargs:
-                kwargs['fig'] = plt.figure()
+                figsize = kwargs['figsize'] if 'figsize' in kwargs else None
+                kwargs['fig'] = plt.figure(figsize=figsize)
             kwargs['ax'] = kwargs['fig'].add_subplot(111)
         else:
             if 'fig' not in kwargs:
                 kwargs['fig'] = kwargs['ax'].get_figure()
 
-        fun(*args, **kwargs)
-        return kwargs['ax']
-
+        return fun(*args, **kwargs)
     return wrapper
 
 
@@ -38,7 +36,6 @@ def axwrapper(fun):
     Decorator that adds axis arguments, used for functions that modify
     and existing plot (this decorator will never create a new plot)
     """
-
     @wraps(fun)
     def wrapper(*args, **kwargs):
         if 'ax' not in kwargs:
@@ -48,9 +45,7 @@ def axwrapper(fun):
         else:
             if 'fig' not in kwargs:
                 kwargs['fig'] = kwargs['ax'].get_figure()
-        fun(*args, **kwargs)
-        return kwargs['ax']
-
+        return fun(*args, **kwargs)
     return wrapper
 
 
