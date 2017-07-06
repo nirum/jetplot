@@ -1,11 +1,13 @@
 """
 Jetpack animation
 """
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import animation
 from moviepy.editor import VideoClip
 from moviepy.video.io.bindings import mplfig_to_npimage
+
+from .utils import plotwrapper, noticks
 
 __all__ = ['save_movie', 'play', 'save_frames']
 
@@ -26,15 +28,13 @@ def save_movie(make_frame, duration, filename, fps=20):
     return anim
 
 
-def play(frames, repeat=True, fps=15, cmap='seismic_r', clim=None):
+@plotwrapper
+def play(frames, repeat=True, fps=15, cmap='seismic_r', clim=None, **kwargs):
     """Plays the stack of frames as a movie"""
-    # Set up the figure
-    fig = plt.figure()
-    plt.axis('equal')
-    ax = plt.axes(xlim=(0, frames.shape[1]), ylim=(0, frames.shape[2]))
-    img = plt.imshow(frames[0])
-    ax.set_xticks([])
-    ax.set_yticks([])
+    fig = kwargs['fig']
+    ax = kwargs['ax']
+    img = ax.imshow(frames[0], aspect='equal')
+    noticks(ax=ax)
 
     # Set up the colors
     img.set_cmap(cmap)
@@ -54,9 +54,6 @@ def play(frames, repeat=True, fps=15, cmap='seismic_r', clim=None):
     dt = 1000 / fps
     anim = animation.FuncAnimation(fig, animate, np.arange(frames.shape[0]),
                                    interval=dt, repeat=repeat)
-    plt.show()
-    plt.draw()
-
     return anim
 
 

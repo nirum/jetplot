@@ -5,11 +5,10 @@ Plots
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import animation
 
 from .utils import nospines, noticks, plotwrapper, setfontsize, tickdir
 
-__all__ = ['hist', 'hist2d', 'errorplot', 'play', 'corrplot', 'bars', 'lines']
+__all__ = ['hist', 'hist2d', 'errorplot', 'corrplot', 'bars', 'lines']
 
 
 @plotwrapper
@@ -104,33 +103,6 @@ def errorplot(x, y, yerr, method='patch', color='k', xscale='linear', fmt='-',
         raise ValueError("Method must be 'line' or 'patch'")
 
     ax.set_xscale(xscale)
-
-
-def play(images, cmap='gray', interval=100, clim=None, **kwargs):
-    """Plays an animation of the given stack of images"""
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    noticks(ax=ax)
-
-    # set up the figure
-    plt.axis('equal')
-    img = ax.imshow(images[0])
-
-    # set up the colormap
-    img.set_cmap(cmap)
-    img.set_interpolation('nearest')
-    if clim is not None:
-        img.set_clim(clim)
-    else:
-        maxval = np.max(np.abs(images))
-        img.set_clim([-maxval, maxval])
-
-    def animate(im):
-        img.set_data(im)
-
-    anim = animation.FuncAnimation(fig, animate, images, interval=interval)
-    plt.show()
-    return anim
 
 
 @plotwrapper
