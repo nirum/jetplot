@@ -7,6 +7,24 @@ from matplotlib import animation
 from moviepy.editor import VideoClip
 from moviepy.video.io.bindings import mplfig_to_npimage
 
+__all__ = ['save_movie', 'play', 'save_frames']
+
+
+def save_movie(make_frame, duration, filename, fps=20):
+    """Writes an animation to disk"""
+    anim = VideoClip(make_frame, duration=duration)
+
+    if filename.endswith('.gif'):
+        anim.write_gif(filename, fps=fps)
+
+    elif filename.endswith('.mp4'):
+        anim.write_videofile(filename, fps=fps)
+
+    else:
+        raise ValueError(f'Invalid file type for {filename}. Must be .gif or .mp4')
+
+    return anim
+
 
 def play(frames, repeat=True, fps=15, cmap='seismic_r', clim=None):
     """Plays the stack of frames as a movie"""
@@ -42,7 +60,7 @@ def play(frames, repeat=True, fps=15, cmap='seismic_r', clim=None):
     return anim
 
 
-def save(frames, filename, cmap='seismic_r', T=None, clim=None, fps=15, figsize=None):
+def save_frames(frames, filename, cmap='seismic_r', T=None, clim=None, fps=15, figsize=None):
     """Saves the stack of frames as a movie"""
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111)
@@ -83,6 +101,4 @@ def save(frames, filename, cmap='seismic_r', T=None, clim=None, fps=15, figsize=
         img.set_data(X[i])
         return mplfig_to_npimage(fig)
 
-    animation = VideoClip(animate, duration=T * dt)
-    # animation.write_gif(filename + '.gif', fps=fps)
-    animation.write_videofile(filename + '.mp4', fps=fps)
+    save_movie(animate, T * dt, filename, fps=fps)
