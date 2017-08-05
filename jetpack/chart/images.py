@@ -83,5 +83,29 @@ def img(data, mode='div', center=True, cmap=None, aspect='equal', vmin=None, vma
     noticks(ax=kwargs['ax'])
 
 
+@plotwrapper
+def fsurface(func, xrng=None, yrng=None, n=100, nargs=2, **kwargs):
+    xrng = (-1, 1) if xrng is None else xrng
+    yrng = xrng if yrng is None else yrng
+
+    xs = np.linspace(*xrng, n)
+    ys = np.linspace(*yrng, n)
+
+    xm, ym = np.meshgrid(xs, ys)
+
+    if nargs == 1:
+        zz = np.vstack((xm.ravel(), ym.ravel()))
+        args = (zz,)
+    elif nargs == 2:
+        args = (xm.ravel(), ym.ravel())
+    else:
+        raise ValueError(f'Invalid value for nargs ({nargs})')
+
+    zm = func(*args).reshape(xm.shape)
+
+    kwargs['ax'].contourf(xm, ym, zm)
+    # return xm, ym, func(*args).reshape(xm.shape)
+
+
 # aliases
 imv = partial(img, mode='seq')

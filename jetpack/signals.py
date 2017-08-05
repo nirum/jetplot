@@ -186,6 +186,13 @@ def stable_rank(X):
     return svals_sq.sum() / svals_sq.max()
 
 
+def participation_ratio(C):
+    assert C.ndim == 2, "C must be a matrix"
+    assert C.shape[0] == C.shape[1], "C must be a square matrix"
+    ev = np.linalg.eigvalsh(C)
+    return ev.sum() ** 2 / (ev ** 2).sum()
+
+
 def canoncorr(X, Y):
     """Canonical correlation between two subspaces.
 
