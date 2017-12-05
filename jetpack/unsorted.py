@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 import numpy as np
 from .signals import norms
 
@@ -25,3 +26,23 @@ def spherical_interp(x, y, t):
         c2 = np.sin(t * theta) / sin_theta
 
     return norms(c1 * x + c2 * y)
+
+
+def alphanum_key(s):
+    """Turn a string into a list of string and number chunks.
+    
+    Usage
+    -----
+    "z23a" -> ["z", 23, "a"]
+    """
+    def tryint(s):
+        try:
+            return int(s)
+        except:
+            return s
+
+    return [tryint(c) for c in re.split('([0-9]+)', s)]
+
+
+def humansort(arr):
+    return sorted(arr, key=alphanum_key)
