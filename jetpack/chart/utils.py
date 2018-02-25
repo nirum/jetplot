@@ -144,21 +144,15 @@ def get_bounds(axis, ax=None):
 
 
 @axwrapper
-def breathe(factor=0.05, direction='out', **kwargs):
-    """
-    Adds space between axes and plot
-    """
+def breathe(xbounds, xlims, ybounds, ylims, direction='out', **kwargs):
+    """Adds space between axes and plot."""
     ax = kwargs['ax']
 
-    xa, xb = get_bounds('x', ax=ax)
-    xrng = xb - xa
-    ax.set_xlim(xa - factor * xrng, xb + factor * xrng)
-    ax.spines['bottom'].set_bounds(xa, xb)
+    ax.set_xlim(*xlims)
+    ax.spines['bottom'].set_bounds(*xbounds)
 
-    ya, yb = get_bounds('y', ax=ax)
-    yrng = yb - ya
-    ax.set_ylim(ya - factor * yrng, yb + factor * yrng)
-    ax.spines['left'].set_bounds(ya, yb)
+    ax.set_ylim(*ylims)
+    ax.spines['left'].set_bounds(*ybounds)
 
     nospines(**kwargs)
     tickdir(direction=direction, **kwargs)
