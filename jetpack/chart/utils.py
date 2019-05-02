@@ -144,15 +144,38 @@ def get_bounds(axis, ax=None):
 
 
 @axwrapper
-def breathe(xbounds, xlims, ybounds, ylims, direction='out', **kwargs):
+def breathe(xlims=None, ylims=None, padding_percent=0.05, direction='out', **kwargs):
     """Adds space between axes and plot."""
     ax = kwargs['ax']
 
-    ax.set_xlim(*xlims)
-    ax.spines['bottom'].set_bounds(*xbounds)
+    if ax.get_xscale() == 'log':
+        xfwd = np.log10
+        xrev = lambda x: 10 ** x
+    else:
+        xfwd = lambda x: x
+        xrev = lambda x: x
 
-    ax.set_ylim(*ylims)
-    ax.spines['left'].set_bounds(*ybounds)
+    if ax.get_yscale() == 'log':
+        yfwd = np.log10
+        yrev = lambda x: 10 ** x
+    else:
+        yfwd = lambda x: x
+        yrev = lambda x: x
+
+    xmin, xmax = xfwd(ax.get_xlim()) if xlims is None else xlims
+    ymin, ymax = yfwd(ax.get_ylim()) if ylims is None else ylims
+
+    xdelta = (xmax - xmin) * padding_percent
+    ydelta = (ymax - ymin) * padding_percent
+    print(ydelta)
+    print(yrev(ymin - ydelta))
+    print(yrev(ymax + ydelta))
+
+    ax.set_xlim(xrev(xmin - xdelta), xrev(xmax + xdelta))
+    ax.spines['bottom'].set_bounds(xrev(xmin), xrev(xmax))
+
+    ax.set_ylim(yrev(ymin - ydelta), yrev(ymax + ydelta))
+    ax.spines['left'].set_bounds(yrev(ymin), yrev(ymax))
 
     nospines(**kwargs)
     tickdir(direction=direction, **kwargs)
