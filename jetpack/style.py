@@ -1,6 +1,7 @@
 """Opinionated matplotlib style defaults."""
 
 from matplotlib import rcParams
+import matplotlib.font_manager as fm
 
 
 __all__ = ['light_mode', 'dark_mode']
@@ -22,7 +23,7 @@ rcParams.update({
     'patch.antialiased': True,
 
     'font.size': 12,
-    'text.usetex': True,
+    'text.usetex': False,
     'mathtext.default': 'regular',
 
     'axes.linewidth': 1.0,
@@ -60,7 +61,7 @@ rcParams.update({
     'legend.loc': 'best',
 
     'figure.figsize': (5, 3),
-    'figure.dpi': 400,
+    'figure.dpi': 100,
     'figure.autolayout': True,
 
     'image.cmap': 'turbo',
@@ -70,6 +71,7 @@ rcParams.update({
     'savefig.format': 'pdf',
     'savefig.bbox': 'tight',
     'savefig.pad_inches': 0.1,
+    'pdf.fonttype': 42,
 })
 
 
@@ -93,9 +95,21 @@ def set_colors(bg, fg, text):
   })
 
 
+def set_font(fontname):
+  """Specifies the matplotlib default font."""
+  assert fontname in available_fonts()
+  rcParams.update({'font.family': fontname})
+
+
 def light_mode():
+  """Sets figure colors to have dark text on a light background."""
   set_colors('#ffffff', '#444444', '#222222')
 
 
 def dark_mode():
+  """Sets figure colors to have light text on a dark background."""
   set_colors('#000000', '#bbbbbb', '#dddddd')
+
+
+def available_fonts():
+    return sorted(set([f.name for f in fm.fontManager.ttflist]))
