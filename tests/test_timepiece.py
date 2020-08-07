@@ -4,7 +4,6 @@ Tests for the timepiece module
 """
 
 from jetpack.timepiece import hrtime
-from jetpack.ionic import unicodes
 import pytest
 
 
@@ -19,8 +18,8 @@ def test_hrtime():
     assert hrtime(0) == u'0 s'
     assert hrtime(0.1) == u'100 ms'
     assert hrtime(0.005) == u'5 ms'
-    assert hrtime(1e-5) == u'10 {}s'.format(unicodes['micro'])
-    assert hrtime(5.25e-4) == u'525 {}s'.format(unicodes['micro'])
+    assert hrtime(1e-5) == u'10 {}s'.format(u'\u03BC')
+    assert hrtime(5.25e-4) == u'525 {}s'.format(u'\u03BC')
     assert hrtime(5e-7) == u'500 ns'
     assert hrtime(1e-12) == u'0.001 ns'
 
