@@ -1,16 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Timepiece
----------
-
-Tools for dealing with time
-"""
+"""Utilities for dealing with time."""
 import time
 from functools import wraps
 
 import numpy as np
-
-from .ionic import unicodes
 
 __all__ = ['hrtime', 'Stopwatch', 'profile']
 
@@ -99,7 +91,7 @@ def hrtime(t):
 
     # microseconds
     elif t >= 1e-6:
-        timestr = u"{:g} {}s".format(t * 1e6, unicodes['micro'])
+        timestr = u"{:g} {}s".format(t * 1e6,  u'\u03BC')
 
     # nanoseconds or smaller
     else:
@@ -123,5 +115,5 @@ def profile(func):
     wrapper.mean = lambda: np.mean(calls)
     wrapper.serr = lambda: np.std(calls) / np.sqrt(len(calls))
     wrapper.summary = lambda: print('Runtimes: {} {} {}'.format(
-        hrtime(wrapper.mean()), unicodes['pm'], hrtime(wrapper.serr())))
+        hrtime(wrapper.mean()), u'\u00B1', hrtime(wrapper.serr())))
     return wrapper
