@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Plots
-"""
+"""Common plot types."""
+
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
@@ -87,7 +85,7 @@ def errorplot(x, y, yerr, method='patch', color='k', xscale='linear', fmt='-',
     else:
         raise ValueError('Invalid yerr value: ', yerr)
 
-    if method is 'line':
+    if method == 'line':
         ax.plot(x, y, fmt, color=color, linewidth=4)
         ax.plot(x, ymax, '_', ms=20, color=color)
         ax.plot(x, ymin, '_', ms=20, color=color)
@@ -95,7 +93,7 @@ def errorplot(x, y, yerr, method='patch', color='k', xscale='linear', fmt='-',
             ax.plot(np.array([xi, xi]), np.array([ymin[i], ymax[i]]), '-',
                     color=color, linewidth=2)
 
-    elif method is 'patch':
+    elif method == 'patch':
         ax.fill_between(x, ymin, ymax, color=color, alpha=alpha_fill, interpolate=True)
         ax.plot(x, y, fmt, color=color)
 
