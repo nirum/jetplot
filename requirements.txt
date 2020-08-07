@@ -1,6 +1,4 @@
 numpy
 scipy
 matplotlib
-emoji
-python-pushover
 moviepy
