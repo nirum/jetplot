@@ -9,6 +9,3 @@ Collection of miscellaneous shared utils for Python / Numpy / Scipy / Matplotlib
 - Python 3.3-3.6 or 2.7
 - `emoji` (_optional_)
 - `python-pushover` (_optional_)
-
-### Contact
-Niru Maheswaranathan (`nirum@stanford.edu`)
