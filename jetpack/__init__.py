@@ -3,5 +3,4 @@
 from .chart import *
 from .signals import *
 from .timepiece import *
-
-__version__ = '0.2.0'
+from .version import __version__
