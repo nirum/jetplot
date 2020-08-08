@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 global __version__
 __version__ = None
 
-with open('renn/version.py') as f:
+with open('jetpack/version.py') as f:
   exec(f.read(), globals())
 
 here = os.path.abspath(os.path.dirname(__file__))
