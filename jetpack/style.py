@@ -4,7 +4,7 @@ from matplotlib import rcParams
 import matplotlib.font_manager as fm
 
 
-__all__ = ['light_mode', 'dark_mode']
+__all__ = ['light_mode', 'dark_mode', 'set_font', 'available_fonts']
 
 
 rcParams.update({
@@ -38,14 +38,14 @@ rcParams.update({
     'polaraxes.grid': True,
 
     'xtick.direction': 'out',
-    'xtick.labelsize': 10.,
+    'xtick.labelsize': 12.,
     'xtick.major.size': 4.,
     'xtick.minor.size': 2.,
     'xtick.major.width': 1.,
     'xtick.minor.width': 1.,
 
     'ytick.direction': 'out',
-    'ytick.labelsize': 10.,
+    'ytick.labelsize': 12.,
     'ytick.major.size': 4.,
     'ytick.minor.size': 2.,
     'ytick.major.width': 1.,
@@ -97,7 +97,10 @@ def set_colors(bg, fg, text):
 
 def set_font(fontname):
   """Specifies the matplotlib default font."""
-  assert fontname in available_fonts()
+
+  if fontname not in available_fonts():
+    raise ValueError(f'Font {fontname} not found.')
+
   rcParams.update({'font.family': fontname})
 
 
