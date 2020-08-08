@@ -3,7 +3,6 @@
 from matplotlib import rcParams
 import matplotlib.font_manager as fm
 
-
 __all__ = ['light_mode', 'dark_mode', 'set_font', 'available_fonts']
 
 
@@ -64,7 +63,7 @@ rcParams.update({
     'figure.dpi': 100,
     'figure.autolayout': True,
 
-    'image.cmap': 'turbo',
+    'image.cmap': 'viridis',
     'image.interpolation': None,
     'image.aspect': 'equal',
 

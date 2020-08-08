@@ -1,7 +1,4 @@
-"""
-Tests for the timepiece module
-
-"""
+"""Tests for the timepiece module."""
 
 from jetpack.timepiece import hrtime
 import pytest
