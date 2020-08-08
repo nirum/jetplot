@@ -5,7 +5,7 @@ import numpy as np
 from .chart_utils import nospines, plotwrapper
 from .colors import cmap_colors
 
-__all__ = ['hist', 'hist2d', 'errorplot', 'bar', 'lines']
+__all__ = ['hist', 'hist2d', 'errorplot', 'bar', 'lines', 'waterfall', 'circle']
 
 
 @plotwrapper
@@ -133,3 +133,27 @@ def lines(x, lines=None, cmap='viridis', **kwargs):
   colors = cmap_colors(cmap)
   for line, color in zip(lines, colors):
     ax.plot(x, line, color=color)
+
+
+@plotwrapper
+def waterfall(x, ys, dy=1., pad=0.1, color='#444444', ec='#cccccc', ew=0.5, **kwargs):
+  """Waterfall plot."""
+  ax = kwargs['ax']
+  total = len(ys)
+
+  for index, y in enumerate(ys):
+    zorder = total - index
+    y = y * dy + index
+    ax.plot(x, y + pad, color=ec, clip_on=False, lw=ew, zorder=zorder)
+    ax.fill_between(x, y, index, color=color, zorder=zorder)
+
+  ax.set_ylim(0, total)
+  ax.set_xlim(x[0], x[-1])
+
+
+@plotwrapper
+def circle(radius=1., **kwargs):
+  """Plots a unit circle."""
+  ax = kwargs['ax']
+  theta = np.linspace(0, 2 * np.pi, 1001)
+  ax.plot(radius * np.cos(theta), radius * np.sin(theta), '-')
