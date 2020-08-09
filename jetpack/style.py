@@ -1,5 +1,7 @@
 """Opinionated matplotlib style defaults."""
 
+from . import colors as c
+from cycler import cycler
 from matplotlib import rcParams
 import matplotlib.font_manager as fm
 
@@ -105,12 +107,14 @@ def set_font(fontname):
 
 def light_mode():
   """Sets figure colors to have dark text on a light background."""
-  set_colors('#ffffff', '#444444', '#222222')
+  set_colors(c.white, c.gray.v9, c.gray.v6)
+  rcParams['axes.prop_cycle'] = cycler(color=c.dark)
 
 
 def dark_mode():
   """Sets figure colors to have light text on a dark background."""
-  set_colors('#000000', '#bbbbbb', '#dddddd')
+  set_colors(c.black, c.gray.v1, c.gray.v4)
+  rcParams['axes.prop_cycle'] = cycler(color=c.bright)
 
 
 def available_fonts():
