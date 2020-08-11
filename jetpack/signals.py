@@ -30,8 +30,7 @@ def participation_ratio(C):
   """Computes the participation ratio of a square matrix."""
   assert C.ndim == 2, "C must be a matrix"
   assert C.shape[0] == C.shape[1], "C must be a square matrix"
-  ev = np.linalg.eigvalsh(C)
-  return ev.sum() ** 2 / (ev ** 2).sum()
+  return np.trace(C) ** 2 / np.trace(np.linalg.matrix_power(C, 2))
 
 
 def canoncorr(X, Y):

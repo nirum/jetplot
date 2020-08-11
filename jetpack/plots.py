@@ -75,7 +75,7 @@ def errorplot(x, y, yerr, method='patch', color='k', xscale='linear', fmt='-', a
       ax.plot(np.array([xi, xi]), np.array([ymin[i], ymax[i]]), '-', color=color, linewidth=2)
 
   elif method == 'patch':
-    ax.fill_between(x, ymin, ymax, color=color, alpha=alpha_fill, interpolate=True)
+    ax.fill_between(x, ymin, ymax, color=color, alpha=alpha_fill, interpolate=True, lw=0.0)
     ax.plot(x, y, fmt, color=color)
 
   else:
