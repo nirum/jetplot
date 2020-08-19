@@ -11,17 +11,17 @@ __all__ = ['hrtime', 'Stopwatch', 'profile']
 class Stopwatch():
   def __init__(self, name=''):
     self.name = name
-    self.start = time.time()
-    self.absolute_start = time.time()
+    self.start = time.perf_counter()
+    self.absolute_start = time.perf_counter()
 
   def __str__(self):
     return u'\u231a  Stopwatch for: ' + self.name
 
   @property
   def elapsed(self):
-    current = time.time()
+    current = time.perf_counter()
     elapsed = current - self.start
-    self.start = time.time()
+    self.start = time.perf_counter()
     return elapsed
 
   def checkpoint(self, name=''):
@@ -37,7 +37,7 @@ class Stopwatch():
   def __exit__(self, type, value, traceback):
     print(u'{timer} Finished! \u2714\nTotal elapsed time: {total}'.format(
         timer=self.name,
-        total=hrtime(time.time() - self.absolute_start)
+        total=hrtime(time.perf_counter() - self.absolute_start)
     ))
 
 
@@ -101,9 +101,9 @@ def profile(func):
 
   @wraps(func)
   def wrapper(*args, **kwargs):
-      tstart = time.time()
+      tstart = time.perf_counter()
       results = func(*args, **kwargs)
-      tstop = time.time()
+      tstop = time.perf_counter()
       calls.append(tstop - tstart)
       return results
 
