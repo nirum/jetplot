@@ -130,7 +130,7 @@ def lines(x, lines=None, cmap='viridis', **kwargs):
   else:
     lines = list(lines)
 
-  colors = cmap_colors(cmap)
+  colors = cmap_colors(cmap, len(lines))
   for line, color in zip(lines, colors):
     ax.plot(x, line, color=color)
 

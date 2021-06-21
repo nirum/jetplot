@@ -107,7 +107,7 @@ def set_font(fontname):
 
 def light_mode():
   """Sets figure colors to have dark text on a light background."""
-  set_colors(c.white, c.gray.v9, c.gray.v6)
+  set_colors(c.white, c.gray.v9, c.gray.v8)
   rcParams['axes.prop_cycle'] = cycler(color=c.dark)
 
 
