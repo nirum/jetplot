@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 global __version__
 __version__ = None
 
-with open('jetpack/version.py') as f:
+with open('jetplot/version.py') as f:
   exec(f.read(), globals())
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -13,11 +13,11 @@ try:
 except IOError:
     README = ''
 
-setup(name='jetpack',
+setup(name='jetplot',
       version=__version__,
       author='Niru Maheswaranathan',
       author_email='niru@hey.com',
-      url='https://github.com/nirum/jetpack.git',
+      url='https://github.com/nirum/jetplot.git',
       requires=['numpy', 'scipy', 'matplotlib'],
       python_requires='>=3.6',
       long_description=README,
