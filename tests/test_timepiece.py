@@ -1,6 +1,6 @@
 """Tests for the timepiece module."""
 
-from jetpack.timepiece import hrtime
+from jetplot.timepiece import hrtime
 import pytest
 
 
