@@ -136,7 +136,7 @@ def lines(x, lines=None, cmap='viridis', **kwargs):
 
 
 @plotwrapper
-def waterfall(x, ys, dy=1., pad=0.1, color='#444444', ec='#cccccc', ew=0.5, **kwargs):
+def waterfall(x, ys, dy=1., pad=0.1, color='#444444', ec='#cccccc', ew=2.0, **kwargs):
   """Waterfall plot."""
   ax = kwargs['ax']
   total = len(ys)
@@ -145,7 +145,7 @@ def waterfall(x, ys, dy=1., pad=0.1, color='#444444', ec='#cccccc', ew=0.5, **kw
     zorder = total - index
     y = y * dy + index
     ax.plot(x, y + pad, color=ec, clip_on=False, lw=ew, zorder=zorder)
-    ax.fill_between(x, y, index, color=color, zorder=zorder)
+    ax.fill_between(x, y, index, color=color, zorder=zorder, clip_on=False)
 
   ax.set_ylim(0, total)
   ax.set_xlim(x[0], x[-1])
