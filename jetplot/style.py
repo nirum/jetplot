@@ -5,7 +5,10 @@ from cycler import cycler
 from matplotlib import rcParams
 import matplotlib.font_manager as fm
 
-__all__ = ['light_mode', 'dark_mode', 'set_font', 'available_fonts']
+__all__ = [
+    'light_mode', 'dark_mode', 'set_font', 'set_dpi', 'available_fonts',
+    'install_fonts'
+]
 
 rcParams.update({
     'lines.linewidth': 1.5,
@@ -74,22 +77,27 @@ def set_colors(bg, fg, text):
         'savefig.facecolor': bg,
         'savefig.edgecolor': bg,
         'axes.edgecolor': fg,
-        'axes.labelcolor': fg,
+        'axes.labelcolor': text,
         'xtick.color': fg,
         'ytick.color': fg,
         'legend.edgecolor': fg,
         'grid.color': fg,
-        'text.color': fg,
+        'text.color': text,
     })
 
 
-def set_font(fontname):
+def set_font(fontname: str):
     """Specifies the matplotlib default font."""
 
     if fontname not in available_fonts():
         raise ValueError(f'Font {fontname} not found.')
 
-    rcParams.update({'font.family': fontname})
+    rcParams['font.family'] = fontname
+
+
+def set_dpi(dpi: int):
+    """Sets the figure DPI."""
+    rcParams['figure.dpi'] = dpi
 
 
 def light_mode():
@@ -106,3 +114,19 @@ def dark_mode():
 
 def available_fonts():
     return sorted(set([f.name for f in fm.fontManager.ttflist]))
+
+
+def install_fonts(filepath: str):
+    """Installs .ttf fonts in the given folder."""
+
+    original_fonts = set(available_fonts())
+    font_files = fm.findSystemFonts(fontpaths=[filepath])
+
+    for font_file in font_files:
+        fm.fontManager.addfont(font_file)
+
+    new_fonts = set(available_fonts()) - original_fonts
+    if new_fonts:
+        print(f'Added the following fonts: {", ".join(new_fonts)}')
+    else:
+        print(f'No new fonts added.')

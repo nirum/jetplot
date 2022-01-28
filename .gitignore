@@ -18,3 +18,4 @@ dist/
 # other
 tags
 .mypy_cache/
+.hypothesis/
