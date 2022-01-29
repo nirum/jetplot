@@ -57,7 +57,6 @@ rcParams.update({
     'legend.loc': 'best',
     'figure.figsize': (5, 3),
     'figure.dpi': 100,
-    'figure.autolayout': True,
     'image.cmap': 'viridis',
     'image.interpolation': None,
     'image.aspect': 'equal',
