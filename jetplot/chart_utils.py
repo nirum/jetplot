@@ -118,7 +118,7 @@ def get_bounds(axis, ax=None):
 
 
 @axwrapper
-def breathe(xlims=None, ylims=None, padding_percent=0.05, direction='out', **kwargs):
+def breathe(xlims=None, ylims=None, padding_percent=0.05, **kwargs):
   """Adds space between axes and plot."""
   ax = kwargs['ax']
 
