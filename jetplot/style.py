@@ -60,10 +60,6 @@ rcParams.update({
     'image.cmap': 'viridis',
     'image.interpolation': None,
     'image.aspect': 'equal',
-    'savefig.format': 'pdf',
-    'savefig.bbox': 'tight',
-    'savefig.pad_inches': 0.1,
-    'pdf.fonttype': 42,
 })
 
 
