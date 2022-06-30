@@ -128,5 +128,5 @@ bright = (r.v4 for r in rainbow)
 dark = (r.v6 for r in rainbow)
 
 
-def cmap_colors(cmap, n, vmin=0, vmax=1):
+def cmap_colors(cmap: str, n: int, vmin: float=0., vmax: float=1.):
     return cm.__getattribute__(cmap)(np.linspace(vmin, vmax, n))
