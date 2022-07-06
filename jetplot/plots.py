@@ -1,6 +1,7 @@
 """Common plots."""
 
 import numpy as np
+from scipy.stats import gaussian_kde
 
 from .chart_utils import nospines, plotwrapper
 from .colors import cmap_colors
@@ -178,6 +179,23 @@ def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **k
 
     ax.set_ylim(0, total)
     ax.set_xlim(x[0], x[-1])
+
+
+@plotwrapper
+def ridgeline(t, xs, colors, delta=0.03, **kwargs):
+    fig = kwargs["fig"]
+
+    for k, (x, c) in enumerate(zip(xs, colors)):
+        ax = fig.add_subplot(len(xs), 1, k + 1)
+        y = gaussian_kde(x).evaluate(t) + delta
+        ax.plot(t, y, color='#ffffff', clip_on=False)
+        ax.fill_between(t, y, color=c, clip_on=False)
+        ax.set_xlim(t[0], t[-1])
+        ax.set_yticks([])
+        ax.set_yticklabels([])
+        nospines(ax=ax, left=True)
+
+    return fig
 
 
 @plotwrapper
