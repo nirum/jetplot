@@ -1,12 +1,34 @@
 """Colorschemes"""
 
 from collections import namedtuple
-from matplotlib import cm
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib import cm, pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, to_hex
 import numpy as np
 
+from .chart_utils import noticks
 
-__all__ = ["cubehelix", "cmap_colors", "cmap_from_list"]
+__all__ = ["Palette", "cubehelix", "cmap_colors"]
+
+
+class Palette(list):
+    """Color palette."""
+
+    @property
+    def hex(self):
+        return Palette([to_hex(rgb) for rgb in self])
+
+    @property
+    def cmap(self):
+        return LinearSegmentedColormap.from_list('', self)
+
+    def plot(self, figsize=(5, 1)):
+        fig, axs = plt.subplots(1, len(self), figsize=figsize)
+        for c, ax in zip(self, axs):
+            ax.set_facecolor(c)
+            ax.set_aspect('equal')
+            noticks(ax=ax)
+
+        return fig, axs
 
 
 Color = namedtuple("Color", ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9"))
@@ -137,11 +159,8 @@ def cubehelix(n: int, vmin=0.85, vmax=0.15, gamma: float = 1.0, start=0.0, rot=0
     alpha = 0.5 * hue * x * (1.0 - x)
     A = np.array([[-0.14861, 1.78277], [-0.29227, -0.90649], [1.97294, 0.0]])
     b = np.stack([np.cos(phi), np.sin(phi)])
-    return (x + alpha * (A @ b)).T
+    return Palette((x + alpha * (A @ b)).T)
 
 
 def cmap_colors(cmap: str, n: int, vmin: float = 0.0, vmax: float = 1.0):
-    return cm.__getattribute__(cmap)(np.linspace(vmin, vmax, n))
-
-
-cmap_from_list = LinearSegmentedColormap.from_list
+    return Palette(cm.__getattribute__(cmap)(np.linspace(vmin, vmax, n)))

@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.stats import gaussian_kde
 
-from .chart_utils import nospines, plotwrapper
+from .chart_utils import figwrapper, nospines, plotwrapper
 from .colors import cmap_colors
 
 __all__ = ["hist", "hist2d", "errorplot", "bar", "lines", "waterfall", "ridgeline", "circle"]
@@ -181,7 +181,7 @@ def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **k
     ax.set_xlim(x[0], x[-1])
 
 
-@plotwrapper
+@figwrapper
 def ridgeline(t, xs, colors, ymax=0.6, **kwargs):
     fig = kwargs["fig"]
     axs = []
@@ -201,10 +201,10 @@ def ridgeline(t, xs, colors, ymax=0.6, **kwargs):
         ax.set_yticks([])
         ax.set_yticklabels([])
 
-        nospines(ax=ax, left=True)
+        nospines(ax=ax, left=True, bottom=True)
         axs.append(ax)
 
-    return fig
+    return fig, axs
 
 
 @plotwrapper
