@@ -2,10 +2,11 @@
 
 from collections import namedtuple
 from matplotlib import cm
+from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 
 
-__all__ = ["cmap_colors"]
+__all__ = ["cubehelix", "cmap_colors", "cmap_from_list"]
 
 
 Color = namedtuple("Color", ("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9"))
@@ -129,6 +130,7 @@ dark = (r.v6 for r in rainbow)
 
 
 def cubehelix(n: int, vmin=0.85, vmax=0.15, gamma: float = 1.0, start=0.0, rot=0.4, hue=0.8):
+    """Cubehelix parameterized colormap."""
     lambda_ = np.linspace(vmin, vmax, n)
     x = lambda_ ** gamma
     phi = 2 * np.pi * (start / 3 + rot * lambda_)
@@ -140,3 +142,6 @@ def cubehelix(n: int, vmin=0.85, vmax=0.15, gamma: float = 1.0, start=0.0, rot=0
 
 def cmap_colors(cmap: str, n: int, vmin: float = 0.0, vmax: float = 1.0):
     return cm.__getattribute__(cmap)(np.linspace(vmin, vmax, n))
+
+
+cmap_from_list = LinearSegmentedColormap.from_list
