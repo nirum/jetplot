@@ -2,6 +2,7 @@
 
 from . import colors as c
 from .chart_utils import *
+from .colors import *
 from .images import *
 from .plots import *
 from .style import *
