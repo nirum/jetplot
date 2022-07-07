@@ -10,11 +10,25 @@ __all__ = [
     "nospines",
     "breathe",
     "plotwrapper",
+    "figwrapper",
     "axwrapper",
     "get_bounds",
     "yclamp",
     "xclamp",
 ]
+
+
+def figwrapper(fun):
+    """Decorator that adds figure handles to the kwargs of a function."""
+
+    @wraps(fun)
+    def wrapper(*args, **kwargs):
+        if "fig" not in kwargs:
+            figsize = kwargs.get("figsize", None)
+            kwargs["fig"] = plt.figure(figsize=figsize)
+        return fun(*args, **kwargs)
+
+    return wrapper
 
 
 def plotwrapper(fun):
@@ -25,7 +39,7 @@ def plotwrapper(fun):
 
         if "ax" not in kwargs:
             if "fig" not in kwargs:
-                figsize = kwargs["figsize"] if "figsize" in kwargs else None
+                figsize = kwargs.get("figsize", None)
                 kwargs["fig"] = plt.figure(figsize=figsize)
             kwargs["ax"] = kwargs["fig"].add_subplot(111)
         else:

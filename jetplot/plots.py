@@ -6,7 +6,7 @@ from scipy.stats import gaussian_kde
 from .chart_utils import nospines, plotwrapper
 from .colors import cmap_colors
 
-__all__ = ["hist", "hist2d", "errorplot", "bar", "lines", "waterfall", "circle"]
+__all__ = ["hist", "hist2d", "errorplot", "bar", "lines", "waterfall", "ridgeline", "circle"]
 
 
 @plotwrapper
@@ -182,18 +182,27 @@ def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **k
 
 
 @plotwrapper
-def ridgeline(t, xs, colors, delta=0.03, **kwargs):
+def ridgeline(t, xs, colors, ymax=0.6, **kwargs):
     fig = kwargs["fig"]
+    axs = []
 
     for k, (x, c) in enumerate(zip(xs, colors)):
         ax = fig.add_subplot(len(xs), 1, k + 1)
-        y = gaussian_kde(x).evaluate(t) + delta
-        ax.plot(t, y, color='#ffffff', clip_on=False)
+        y = gaussian_kde(x).evaluate(t)
         ax.fill_between(t, y, color=c, clip_on=False)
+        ax.plot(t, y, color='#ffffff', clip_on=False)
+        ax.axhline(0.0, lw=2, color=c, clip_on=False)
+
         ax.set_xlim(t[0], t[-1])
+        ax.set_xticks([])
+        ax.set_xticklabels([])
+
+        ax.set_ylim(0., ymax)
         ax.set_yticks([])
         ax.set_yticklabels([])
+
         nospines(ax=ax, left=True)
+        axs.append(ax)
 
     return fig
 
