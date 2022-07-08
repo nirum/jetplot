@@ -65,6 +65,7 @@ def errorplot(
     xscale="linear",
     fmt="-",
     alpha_fill=0.3,
+    clip_on=True,
     **kwargs
 ):
     """Plot a line with error bars."""
@@ -78,10 +79,15 @@ def errorplot(
     else:
         raise ValueError("Invalid yerr value: ", yerr)
 
+    if clip_on:
+        print("clip ON")
+    else:
+        print("clip OFF")
+
     if method == "line":
-        ax.plot(x, y, fmt, color=color, linewidth=4)
-        ax.plot(x, ymax, "_", ms=20, color=color)
-        ax.plot(x, ymin, "_", ms=20, color=color)
+        ax.plot(x, y, fmt, color=color, linewidth=4, clip_on=clip_on)
+        ax.plot(x, ymax, "_", ms=20, color=color, clip_on=clip_on)
+        ax.plot(x, ymin, "_", ms=20, color=color, clip_on=clip_on)
         for i, xi in enumerate(x):
             ax.plot(
                 np.array([xi, xi]),
@@ -89,13 +95,13 @@ def errorplot(
                 "-",
                 color=color,
                 linewidth=2,
+                clip_on=clip_on,
             )
 
     elif method == "patch":
-        ax.fill_between(
-            x, ymin, ymax, color=color, alpha=alpha_fill, interpolate=True, lw=0.0
-        )
-        ax.plot(x, y, fmt, color=color)
+        ax.fill_between(x, ymin, ymax, color=color, alpha=alpha_fill,
+                        interpolate=True, lw=0.0, clip_on=clip_on)
+        ax.plot(x, y, fmt, color=color, clip_on=clip_on)
 
     else:
         raise ValueError("Method must be 'line' or 'patch'")
