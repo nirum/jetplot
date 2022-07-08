@@ -80,11 +80,6 @@ def errorplot(
     else:
         raise ValueError("Invalid yerr value: ", yerr)
 
-    if clip_on:
-        print("clip ON")
-    else:
-        print("clip OFF")
-
     if method == "line":
         ax.plot(x, y, fmt, color=color, linewidth=4, clip_on=clip_on)
         ax.plot(x, ymax, "_", ms=20, color=color, clip_on=clip_on)
