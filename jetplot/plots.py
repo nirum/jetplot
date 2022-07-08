@@ -184,7 +184,7 @@ def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **k
 
 
 @figwrapper
-def ridgeline(t, xs, colors, ymax=0.6, **kwargs):
+def ridgeline(t, xs, colors, edgecolor="#ffffff", ymax=0.6, **kwargs):
     fig = kwargs["fig"]
     axs = []
 
@@ -192,7 +192,7 @@ def ridgeline(t, xs, colors, ymax=0.6, **kwargs):
         ax = fig.add_subplot(len(xs), 1, k + 1)
         y = gaussian_kde(x).evaluate(t)
         ax.fill_between(t, y, color=c, clip_on=False)
-        ax.plot(t, y, color='#ffffff', clip_on=False)
+        ax.plot(t, y, color=edgecolor, clip_on=False)
         ax.axhline(0.0, lw=2, color=c, clip_on=False)
 
         ax.set_xlim(t[0], t[-1])
