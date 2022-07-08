@@ -12,9 +12,6 @@ __all__ = ["Palette", "cubehelix", "cmap_colors"]
 class Palette(list):
     """Color palette."""
 
-    def __getattribute__(self, key):
-        return self[int(key[1:])]
-
     @property
     def hex(self):
         return Palette([to_hex(rgb) for rgb in self])
