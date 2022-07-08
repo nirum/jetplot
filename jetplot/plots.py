@@ -5,6 +5,7 @@ from scipy.stats import gaussian_kde
 
 from .chart_utils import figwrapper, nospines, plotwrapper
 from .colors import cmap_colors
+from .typing import Color
 
 __all__ = ["hist", "hist2d", "errorplot", "bar", "lines", "waterfall", "ridgeline", "circle"]
 
@@ -61,7 +62,7 @@ def errorplot(
     y,
     yerr,
     method="patch",
-    color="k",
+    color: Color="k",
     xscale="linear",
     fmt="-",
     alpha_fill=0.3,
