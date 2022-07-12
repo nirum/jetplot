@@ -43,6 +43,17 @@ def cubehelix(
     return Palette((x + alpha * (A @ b)).T)
 
 
+def cubecircle(n: int, radius=0.2, center=(0., 0., 0.)):
+    """Generates a rotational colormap using a circle in RGB space."""
+    t = np.linspace(0, 2 * np.pi, n)
+    x = radius * np.cos(t)
+    y = radius * np.sin(t)
+    z = 0.0 * np.cos(t)
+    rotation, _ = np.linalg.qr(np.random.rand(3, 3))
+    colors = rotation @ np.vstack((x, y, z)) + np.atleast_2d(center).T
+    return Palette(colors.T)
+
+
 def cmap_colors(cmap: str, n: int, vmin: float = 0.0, vmax: float = 1.0):
     return Palette(cm.__getattribute__(cmap)(np.linspace(vmin, vmax, n)))
 
