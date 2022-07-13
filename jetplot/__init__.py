@@ -1,7 +1,6 @@
 """Jetpack is a set of useful utility functions for scientific python."""
 
-from . import typing
-from . import colors as c
+from . import colors as c, typing
 from .chart_utils import *
 from .colors import *
 from .images import *

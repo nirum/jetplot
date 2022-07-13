@@ -1,7 +1,7 @@
 """Tools for signal processing."""
 
 import numpy as np
-from scipy.ndimage.filters import gaussian_filter1d
+from scipy.ndimage import gaussian_filter1d
 
 __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank"]
 
