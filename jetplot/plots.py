@@ -5,7 +5,7 @@ from scipy.stats import gaussian_kde
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
 
 from matplotlib.patches import Ellipse
-from matplotlib.transforms import transforms
+from matplotlib.transforms import Affine2D
 
 from .chart_utils import figwrapper, nospines, plotwrapper
 from .colors import cmap_colors
@@ -270,10 +270,10 @@ def ellipse(x, y, n_std=3.0, facecolor='none', estimator='empirical', **kwargs):
     scale_y = np.sqrt(cov[1, 1]) * n_std
     mean_y = np.mean(y)
 
-    transf = transforms.Affine2D() \
+    transform = Affine2D() \
         .rotate_deg(45) \
         .scale(scale_x, scale_y) \
         .translate(mean_x, mean_y)
 
-    ellipse.set_transform(transf + ax.transData)
+    ellipse.set_transform(transform + ax.transData)
     return ax.add_patch(ellipse)
