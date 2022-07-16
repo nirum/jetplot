@@ -19,3 +19,4 @@ dist/
 tags
 .mypy_cache/
 .hypothesis/
+.DS_store

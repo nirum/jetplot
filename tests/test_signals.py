@@ -34,12 +34,47 @@ def test_participation_ratio():
 
 
 def test_smooth():
-    pass
+
+    def curvature(x):
+        second_derivative = np.convolve(x, [-1, 2, -1], mode='valid')
+        return np.abs(second_derivative).mean()
+
+    # Sample white noise.
+    rs = np.random.RandomState(0)
+    x = rs.randn(1000)
+
+    # Smooth white noise with different sigmas.
+    y1 = signals.smooth(x, sigma=1.)
+    y2 = signals.smooth(x, sigma=2.)
+    y3 = signals.smooth(x, sigma=5.)
+
+    assert curvature(x) > curvature(y1) > curvature(y2) > curvature(y3)
 
 
 def test_cca():
-    pass
+    n = 10
+    k = 3
+    assert k < n
 
+    rs = np.random.RandomState(0)
+
+    X = rs.randn(n, k)
+    Y = rs.randn(n, k)
+    Z = X @ np.linalg.qr(rs.randn(k, k))[0]
+
+    # Correlation with itself should be all ones.
+    xx = signals.canoncorr(X, X)
+    assert np.allclose(xx, np.ones(k))
+
+    # Correlation with a different random subspace.
+    xy = signals.canoncorr(X, Y)
+    assert np.all(xy <= 1.)
+    assert np.all(0. <= xy)
+    assert 0 < np.sum(xy) < k
+
+    # Correlation with random rotation should be all ones.
+    xz = signals.canoncorr(X, Z)
+    assert np.allclose(xz, np.ones(k))
 
 def test_normalize():
 
