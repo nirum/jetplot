@@ -1,11 +1,17 @@
 """Common plots."""
 
 import numpy as np
+from scipy.stats import gaussian_kde
+from sklearn.covariance import EmpiricalCovariance, MinCovDet
 
-from .chart_utils import nospines, plotwrapper
+from matplotlib.patches import Ellipse
+from matplotlib.transforms import Affine2D
+
+from .chart_utils import figwrapper, nospines, plotwrapper
 from .colors import cmap_colors
+from .typing import Color
 
-__all__ = ["hist", "hist2d", "errorplot", "bar", "lines", "waterfall", "circle"]
+__all__ = ["hist", "hist2d", "errorplot", "bar", "lines", "waterfall", "ridgeline", "circle"]
 
 
 @plotwrapper
@@ -60,10 +66,12 @@ def errorplot(
     y,
     yerr,
     method="patch",
-    color="k",
+    color: Color="#222222",
     xscale="linear",
     fmt="-",
-    alpha_fill=0.3,
+    err_color: Color="#cccccc",
+    alpha_fill=1.0,
+    clip_on=True,
     **kwargs
 ):
     """Plot a line with error bars."""
@@ -78,23 +86,23 @@ def errorplot(
         raise ValueError("Invalid yerr value: ", yerr)
 
     if method == "line":
-        ax.plot(x, y, fmt, color=color, linewidth=4)
-        ax.plot(x, ymax, "_", ms=20, color=color)
-        ax.plot(x, ymin, "_", ms=20, color=color)
+        ax.plot(x, y, fmt, color=color, linewidth=4, clip_on=clip_on)
+        ax.plot(x, ymax, "_", ms=20, color=err_color, clip_on=clip_on)
+        ax.plot(x, ymin, "_", ms=20, color=err_color, clip_on=clip_on)
         for i, xi in enumerate(x):
             ax.plot(
                 np.array([xi, xi]),
                 np.array([ymin[i], ymax[i]]),
                 "-",
-                color=color,
+                color=err_color,
                 linewidth=2,
+                clip_on=clip_on,
             )
 
     elif method == "patch":
-        ax.fill_between(
-            x, ymin, ymax, color=color, alpha=alpha_fill, interpolate=True, lw=0.0
-        )
-        ax.plot(x, y, fmt, color=color)
+        ax.fill_between(x, ymin, ymax, color=err_color, alpha=alpha_fill,
+                        interpolate=True, lw=0.0, clip_on=clip_on)
+        ax.plot(x, y, fmt, color=color, clip_on=clip_on)
 
     else:
         raise ValueError("Method must be 'line' or 'patch'")
@@ -180,9 +188,92 @@ def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **k
     ax.set_xlim(x[0], x[-1])
 
 
+@figwrapper
+def ridgeline(t, xs, colors, edgecolor="#ffffff", ymax=0.6, **kwargs):
+    fig = kwargs["fig"]
+    axs = []
+
+    for k, (x, c) in enumerate(zip(xs, colors)):
+        ax = fig.add_subplot(len(xs), 1, k + 1)
+        y = gaussian_kde(x).evaluate(t)
+        ax.fill_between(t, y, color=c, clip_on=False)
+        ax.plot(t, y, color=edgecolor, clip_on=False)
+        ax.axhline(0.0, lw=2, color=c, clip_on=False)
+
+        ax.set_xlim(t[0], t[-1])
+        ax.set_xticks([])
+        ax.set_xticklabels([])
+
+        ax.set_ylim(0., ymax)
+        ax.set_yticks([])
+        ax.set_yticklabels([])
+
+        nospines(ax=ax, left=True, bottom=True)
+        axs.append(ax)
+
+    return fig, axs
+
+
 @plotwrapper
 def circle(radius=1.0, **kwargs):
     """Plots a unit circle."""
     ax = kwargs["ax"]
     theta = np.linspace(0, 2 * np.pi, 1001)
     ax.plot(radius * np.cos(theta), radius * np.sin(theta), "-")
+
+
+@plotwrapper
+def ellipse(x, y, n_std=3.0, facecolor='none', estimator='empirical', **kwargs):
+    """
+    Create a plot of the covariance confidence ellipse of *x* and *y*.
+
+    Parameters
+    ----------
+    x, y : array-like, shape (n, )
+        Input data.
+
+    n_std : float
+        The number of standard deviations to determine the ellipse's radiuses.
+
+    **kwargs
+        Forwarded to `~matplotlib.patches.Ellipse`
+
+    Returns
+    -------
+    matplotlib.patches.Ellipse
+    """
+    ax = kwargs.get("ax")
+
+    if x.size != y.size:
+        raise ValueError("x and y must be the same size")
+
+    # cov = np.cov(x, y)
+    pts = np.vstack((x, y)).T
+    Estimator = MinCovDet if estimator == 'robust' else EmpiricalCovariance
+    cov = Estimator().fit(pts).covariance_
+    
+    pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
+    # Using a special case to obtain the eigenvalues of this
+    # two-dimensionl dataset.
+    ell_radius_x = np.sqrt(1 + pearson)
+    ell_radius_y = np.sqrt(1 - pearson)
+    ellipse = Ellipse((0, 0), width=ell_radius_x * 2, height=ell_radius_y * 2,
+                      facecolor=facecolor, **kwargs)
+
+    # Calculating the stdandard deviation of x from
+    # the squareroot of the variance and multiplying
+    # with the given number of standard deviations.
+    scale_x = np.sqrt(cov[0, 0]) * n_std
+    mean_x = np.mean(x)
+
+    # calculating the stdandard deviation of y ...
+    scale_y = np.sqrt(cov[1, 1]) * n_std
+    mean_y = np.mean(y)
+
+    transform = Affine2D() \
+        .rotate_deg(45) \
+        .scale(scale_x, scale_y) \
+        .translate(mean_x, mean_y)
+
+    ellipse.set_transform(transform + ax.transData)
+    return ax.add_patch(ellipse)

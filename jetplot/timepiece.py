@@ -36,7 +36,7 @@ class Stopwatch:
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, *_):
         print(
             u"{timer} Finished! \u2714\nTotal elapsed time: {total}".format(
                 timer=self.name, total=hrtime(time.perf_counter() - self.absolute_start)

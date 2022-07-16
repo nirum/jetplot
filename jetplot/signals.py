@@ -1,9 +1,12 @@
 """Tools for signal processing."""
 
-import numpy as np
-from scipy.ndimage.filters import gaussian_filter1d
+from numpy.typing import ArrayLike
+from typing import Callable
 
-__all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank"]
+import numpy as np
+from scipy.ndimage import gaussian_filter1d
+
+__all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normalize"]
 
 
 def smooth(x, sigma=1.0, axis=0):
@@ -33,7 +36,7 @@ def participation_ratio(C):
     return np.trace(C) ** 2 / np.trace(np.linalg.matrix_power(C, 2))
 
 
-def canoncorr(X, Y):
+def canoncorr(X: ArrayLike, Y: ArrayLike) -> ArrayLike:
     """Canonical correlation between two subspaces.
 
     Args:
@@ -59,3 +62,17 @@ def canoncorr(X, Y):
 
     # singular values of the inner product between the orthogonalized spaces
     return np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
+
+
+def normalize(X: ArrayLike, axis: int=-1, norm: Callable=np.linalg.norm):
+    """Normalizes elements of an array or matrix.
+
+    Args:
+        X: The set of arrays to normalize.
+        axis: The axis along which to compute the norm (Default: -1).
+        norm: Function that computes the norm (Default: np.linalg.norm).
+
+    Returns:
+        Xn: Arrays that have been normalized using to the given function.
+    """
+    return X / norm(X, axis=axis, keepdims=True)

@@ -17,7 +17,7 @@ rcParams.update(
     {
         "lines.linewidth": 1.5,
         "lines.linestyle": "-",
-        "lines.marker": None,
+        "lines.marker": '',
         "lines.markeredgewidth": 0.0,
         "lines.markersize": 6.0,
         "lines.antialiased": True,
@@ -62,7 +62,7 @@ rcParams.update(
         "figure.figsize": (5, 3),
         "figure.dpi": 150,
         "image.cmap": "viridis",
-        "image.interpolation": None,
+        "image.interpolation": 'none',
         "image.aspect": "equal",
     }
 )
@@ -104,13 +104,13 @@ def set_dpi(dpi: int):
 
 def light_mode():
     """Sets figure colors to have dark text on a light background."""
-    set_colors(c.white, c.gray.v9, c.gray.v9)
+    set_colors(c.white, c.gray[9], c.gray[9])
     rcParams["axes.prop_cycle"] = cycler(color=c.dark)
 
 
 def dark_mode():
     """Sets figure colors to have light text on a dark background."""
-    set_colors(c.black, c.gray.v1, c.gray.v4)
+    set_colors(c.black, c.zinc[0], c.zinc[4])
     rcParams["axes.prop_cycle"] = cycler(color=c.bright)
 
 

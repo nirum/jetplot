@@ -1,5 +1,5 @@
 import os
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 global __version__
 __version__ = None
@@ -19,7 +19,7 @@ setup(name='jetplot',
       author_email='niru@hey.com',
       url='https://github.com/nirum/jetplot.git',
       install_requires=['numpy', 'scipy', 'matplotlib'],
-      python_requires='>=3.6',
+      python_requires='>=3.7',
       long_description=README,
       packages=find_packages(),
       license='LICENSE.md'

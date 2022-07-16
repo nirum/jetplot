@@ -1,7 +1,9 @@
 """Tests for the timepiece module."""
 
-from jetplot.timepiece import hrtime
+from jetplot.timepiece import hrtime, profile
+import numpy as np
 import pytest
+import time
 
 
 def test_hrtime():
@@ -27,3 +29,18 @@ def test_hrtime():
             hrtime(val)
 
         assert 'Input must be numeric' in str(context.value)
+
+
+def test_profile():
+    T = 0.2
+    K = 3
+
+    wrapper = profile(time.sleep)
+    for _ in range(K):
+        wrapper(T)
+
+    assert isinstance(wrapper.calls, list)
+    assert len(wrapper.calls) == K
+    assert np.allclose(wrapper.mean(), T, atol=0.01)
+    assert np.allclose(wrapper.serr(), 0., atol=0.01)
+    assert wrapper.summary() is None
