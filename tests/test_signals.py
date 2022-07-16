@@ -5,6 +5,7 @@ import numpy as np
 
 
 def test_stable_rank():
+
     U, _ = np.linalg.qr(np.random.randn(32, 32))
     V, _ = np.linalg.qr(np.random.randn(32, 32))
     S = np.random.randn(32)
@@ -19,6 +20,7 @@ def test_stable_rank():
 
 
 def test_participation_ratio():
+
     def _random_matrix(evals):
         dim = evals.size
         Q, _ = np.linalg.qr(np.random.randn(dim, dim))
@@ -37,3 +39,16 @@ def test_smooth():
 
 def test_cca():
     pass
+
+
+def test_normalize():
+
+    X = np.random.randn(10, 3)
+    expected = np.stack([x / np.linalg.norm(x) for x in X])
+    computed = signals.normalize(X)
+    assert np.allclose(expected, computed)
+
+    X = np.random.rand(4, 6)
+    expected = np.stack([x / np.linalg.norm(x) for x in X.T]).T
+    computed = signals.normalize(X, axis=0)
+    assert np.allclose(expected, computed)
