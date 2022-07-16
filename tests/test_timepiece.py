@@ -42,5 +42,5 @@ def test_profile():
     assert isinstance(wrapper.calls, list)
     assert len(wrapper.calls) == K
     assert np.allclose(wrapper.mean(), T, atol=0.01)
-    assert np.allclose(wrapper.serr(), 0., atol=1e-3)
+    assert np.allclose(wrapper.serr(), 0., atol=0.01)
     assert wrapper.summary() is None
