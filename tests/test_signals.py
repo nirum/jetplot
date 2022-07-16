@@ -29,3 +29,11 @@ def test_participation_ratio():
 
     C = _random_matrix(np.array([1., 1., 1.]))
     assert np.allclose(signals.participation_ratio(C), 3.0)
+
+
+def test_smooth():
+    pass
+
+
+def test_cca():
+    pass

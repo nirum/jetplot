@@ -93,7 +93,7 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
     # disable spines
     for key in disabled:
         if disabled[key]:
-            ax.spines[key].set_color("none")
+            ax.spines[key].set_visible(False)
 
     # disable xticks
     if disabled["top"] and disabled["bottom"]:
