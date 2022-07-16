@@ -23,6 +23,7 @@ Coming soon.
 
 | Version | Release Date | Description                                                                                                                                                                                                     |
 | ------: | :----------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0.5.0   | Jul 15 2022  | Updates default color palettes, adds new Palette class, adds ridgeline plot.                                                                                                                                                     |
 | 0.4.0   | Oct 20 2021  | Name change! Renamed package from `jetpack` to `jetplot`.                                                                                                                                                       |
 | 0.3.0   | Oct 13 2021  | Drops animation module and the `moviepy` dependency                                                                                                                                                             |
 | 0.0.0   | Jan 19 2015  | Initial commit                                                                                                                                                                                                  |
