@@ -102,15 +102,15 @@ def set_dpi(dpi: int):
     rcParams["figure.dpi"] = dpi
 
 
-def light_mode():
+def light_mode(bg=c.white, fg=c.gray[9], text=c.gray[9]):
     """Sets figure colors to have dark text on a light background."""
-    set_colors(c.white, c.gray[9], c.gray[9])
+    set_colors(bg, fg, text)
     rcParams["axes.prop_cycle"] = cycler(color=c.dark)
 
 
-def dark_mode():
+def dark_mode(bg=c.black, fg=c.zinc[3], text=c.zinc[0]):
     """Sets figure colors to have light text on a dark background."""
-    set_colors(c.black, c.zinc[0], c.zinc[4])
+    set_colors(bg, fg, text)
     rcParams["axes.prop_cycle"] = cycler(color=c.bright)
 
 
