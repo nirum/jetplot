@@ -11,7 +11,16 @@ from .chart_utils import figwrapper, nospines, plotwrapper
 from .colors import cmap_colors
 from .typing import Color
 
-__all__ = ["hist", "hist2d", "errorplot", "bar", "lines", "waterfall", "ridgeline", "circle"]
+__all__ = [
+    "hist",
+    "hist2d",
+    "errorplot",
+    "bar",
+    "lines",
+    "waterfall",
+    "ridgeline",
+    "circle",
+]
 
 
 @plotwrapper
@@ -66,10 +75,10 @@ def errorplot(
     y,
     yerr,
     method="patch",
-    color: Color="#222222",
+    color: Color = "#222222",
     xscale="linear",
     fmt="-",
-    err_color: Color="#cccccc",
+    err_color: Color = "#cccccc",
     alpha_fill=1.0,
     clip_on=True,
     **kwargs
@@ -100,8 +109,16 @@ def errorplot(
             )
 
     elif method == "patch":
-        ax.fill_between(x, ymin, ymax, color=err_color, alpha=alpha_fill,
-                        interpolate=True, lw=0.0, clip_on=clip_on)
+        ax.fill_between(
+            x,
+            ymin,
+            ymax,
+            color=err_color,
+            alpha=alpha_fill,
+            interpolate=True,
+            lw=0.0,
+            clip_on=clip_on,
+        )
         ax.plot(x, y, fmt, color=color, clip_on=clip_on)
 
     else:
@@ -204,7 +221,7 @@ def ridgeline(t, xs, colors, edgecolor="#ffffff", ymax=0.6, **kwargs):
         ax.set_xticks([])
         ax.set_xticklabels([])
 
-        ax.set_ylim(0., ymax)
+        ax.set_ylim(0.0, ymax)
         ax.set_yticks([])
         ax.set_yticklabels([])
 
@@ -223,7 +240,7 @@ def circle(radius=1.0, **kwargs):
 
 
 @plotwrapper
-def ellipse(x, y, n_std=3.0, facecolor='none', estimator='empirical', **kwargs):
+def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
     """
     Create a plot of the covariance confidence ellipse of *x* and *y*.
 
@@ -249,16 +266,21 @@ def ellipse(x, y, n_std=3.0, facecolor='none', estimator='empirical', **kwargs):
 
     # cov = np.cov(x, y)
     pts = np.vstack((x, y)).T
-    Estimator = MinCovDet if estimator == 'robust' else EmpiricalCovariance
+    Estimator = MinCovDet if estimator == "robust" else EmpiricalCovariance
     cov = Estimator().fit(pts).covariance_
-    
-    pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
+
+    pearson = cov[0, 1] / np.sqrt(cov[0, 0] * cov[1, 1])
     # Using a special case to obtain the eigenvalues of this
     # two-dimensionl dataset.
     ell_radius_x = np.sqrt(1 + pearson)
     ell_radius_y = np.sqrt(1 - pearson)
-    ellipse = Ellipse((0, 0), width=ell_radius_x * 2, height=ell_radius_y * 2,
-                      facecolor=facecolor, **kwargs)
+    ellipse = Ellipse(
+        (0, 0),
+        width=ell_radius_x * 2,
+        height=ell_radius_y * 2,
+        facecolor=facecolor,
+        **kwargs
+    )
 
     # Calculating the stdandard deviation of x from
     # the squareroot of the variance and multiplying
@@ -270,10 +292,9 @@ def ellipse(x, y, n_std=3.0, facecolor='none', estimator='empirical', **kwargs):
     scale_y = np.sqrt(cov[1, 1]) * n_std
     mean_y = np.mean(y)
 
-    transform = Affine2D() \
-        .rotate_deg(45) \
-        .scale(scale_x, scale_y) \
-        .translate(mean_x, mean_y)
+    transform = (
+        Affine2D().rotate_deg(45).scale(scale_x, scale_y).translate(mean_x, mean_y)
+    )
 
     ellipse.set_transform(transform + ax.transData)
     return ax.add_patch(ellipse)
