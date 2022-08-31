@@ -64,7 +64,7 @@ def canoncorr(X: ArrayLike, Y: ArrayLike) -> ArrayLike:
     return np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
 
 
-def normalize(X: ArrayLike, axis: int=-1, norm: Callable=np.linalg.norm):
+def normalize(X: ArrayLike, axis: int = -1, norm: Callable = np.linalg.norm):
     """Normalizes elements of an array or matrix.
 
     Args:

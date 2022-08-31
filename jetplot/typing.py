@@ -1,6 +1,6 @@
-from typing import Union, Sequence
+from typing import Sequence, Union
 
-__all__ = ['Color', 'Palette']
+__all__ = ["Color", "Palette"]
 
 Color = Union[str, Sequence[float]]
 Palette = Sequence[Color]
