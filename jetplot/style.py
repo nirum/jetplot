@@ -115,11 +115,17 @@ def set_defaults(
     text: Color,
     cycler_colors: Palette,
     defaults: Mapping[str, Any] = STYLE_DEFAULTS,
+    font: str = "Helvetica",
 ):
     """Sets matplotlib defaults."""
     rcParams.update(defaults)
     set_colors(bg, fg, text)
     rcParams["axes.prop_cycle"] = cycler(color=cycler_colors)
+
+    try:
+        set_font(font)
+    except ValueError:
+        pass
 
 
 light_mode = partial(
