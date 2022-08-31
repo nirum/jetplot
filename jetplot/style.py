@@ -1,8 +1,9 @@
 """Opinionated matplotlib style defaults."""
 
-from . import colors as c
 from cycler import cycler
 from matplotlib import font_manager as fm, rcParams
+
+from . import colors as c
 
 __all__ = [
     "light_mode",
@@ -17,7 +18,7 @@ rcParams.update(
     {
         "lines.linewidth": 1.5,
         "lines.linestyle": "-",
-        "lines.marker": '',
+        "lines.marker": "",
         "lines.markeredgewidth": 0.0,
         "lines.markersize": 6.0,
         "lines.antialiased": True,
@@ -62,7 +63,7 @@ rcParams.update(
         "figure.figsize": (5, 3),
         "figure.dpi": 150,
         "image.cmap": "viridis",
-        "image.interpolation": 'none',
+        "image.interpolation": "none",
         "image.aspect": "equal",
     }
 )

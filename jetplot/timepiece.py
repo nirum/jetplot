@@ -1,7 +1,7 @@
 """Utilities for dealing with time."""
 
-from functools import wraps
 import time
+from functools import wraps
 
 import numpy as np
 

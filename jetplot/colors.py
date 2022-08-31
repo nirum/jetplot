@@ -1,8 +1,8 @@
 """Colorschemes"""
 
+import numpy as np
 from matplotlib import cm, pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, to_hex
-import numpy as np
 
 from .chart_utils import noticks
 
@@ -35,7 +35,7 @@ def cubehelix(
 ):
     """Cubehelix parameterized colormap."""
     lambda_ = np.linspace(vmin, vmax, n)
-    x = lambda_**gamma
+    x = lambda_ ** gamma
     phi = 2 * np.pi * (start / 3 + rot * lambda_)
     alpha = 0.5 * hue * x * (1.0 - x)
     A = np.array([[-0.14861, 1.78277], [-0.29227, -0.90649], [1.97294, 0.0]])

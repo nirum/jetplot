@@ -1,9 +1,9 @@
 """Tools for signal processing."""
 
-from numpy.typing import ArrayLike
 from typing import Callable
 
 import numpy as np
+from numpy.typing import ArrayLike
 from scipy.ndimage import gaussian_filter1d
 
 __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normalize"]

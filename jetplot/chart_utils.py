@@ -1,9 +1,9 @@
 """Plotting utils."""
 
-from matplotlib import pyplot as plt
-import numpy as np
-
 from functools import wraps
+
+import numpy as np
+from matplotlib import pyplot as plt
 
 __all__ = [
     "noticks",
@@ -150,14 +150,14 @@ def breathe(xlims=None, ylims=None, padding_percent=0.05, **kwargs):
 
     if ax.get_xscale() == "log":
         xfwd = np.log10
-        xrev = lambda x: 10**x
+        xrev = lambda x: 10 ** x
     else:
         xfwd = lambda x: x
         xrev = lambda x: x
 
     if ax.get_yscale() == "log":
         yfwd = np.log10
-        yrev = lambda x: 10**x
+        yrev = lambda x: 10 ** x
     else:
         yfwd = lambda x: x
         yrev = lambda x: x
