@@ -20,7 +20,7 @@ setup(
     author="Niru Maheswaranathan",
     author_email="niru@hey.com",
     url="https://github.com/nirum/jetplot.git",
-    install_requires=["numpy", "scipy", "matplotlib"],
+    install_requires=["numpy>=1.19", "scipy", "matplotlib"],
     python_requires=">=3.7",
     long_description=README,
     packages=find_packages(),
