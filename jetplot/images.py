@@ -9,7 +9,7 @@ from matplotlib.ticker import FixedLocator
 from . import colors as c
 from .chart_utils import noticks, plotwrapper
 
-__all__ = ["img", "imv", "fsurface"]
+__all__ = ["img", "imv", "fsurface", "cmat"]
 
 
 @plotwrapper
