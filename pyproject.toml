@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jetplot"
+dynamic = ["version"]
+requires-python = ">=3.7"
+dependencies = [
+  "numpy>=1.19",
+  "scipy",
+  "matplotlib",
+]
+authors = [
+  {name = "Niru Maheswaranathan", email="niru@hey.com"},
+]
+description = "jetplot is collection of miscellaneous utils for Matplotlib."
+readme = "README.md"
+license = {file = "LICENSE.md"}
+
+[project.urls]
+Homepage = "https://github.com/nirum/jetplot"
+
+[tool.setuptools.dynamic]
+version = {attr = "jetplot.__version__"}
