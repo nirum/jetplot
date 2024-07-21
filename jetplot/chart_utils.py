@@ -1,6 +1,6 @@
 """Plotting utils."""
 
-from functools import wraps
+from functools import partial, wraps
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -148,19 +148,22 @@ def breathe(xlims=None, ylims=None, padding_percent=0.05, **kwargs):
     """Adds space between axes and plot."""
     ax = kwargs["ax"]
 
+    def identity(x):
+        return x
+
     if ax.get_xscale() == "log":
         xfwd = np.log10
-        xrev = lambda x: 10 ** x
+        xrev = partial(np.power, 10)
     else:
-        xfwd = lambda x: x
-        xrev = lambda x: x
+        xfwd = identity
+        xrev = identity
 
     if ax.get_yscale() == "log":
         yfwd = np.log10
-        yrev = lambda x: 10 ** x
+        yrev = partial(np.power, 10)
     else:
-        yfwd = lambda x: x
-        yrev = lambda x: x
+        yfwd = identity
+        yrev = identity
 
     xmin, xmax = xfwd(ax.get_xlim()) if xlims is None else xlims
     ymin, ymax = yfwd(ax.get_ylim()) if ylims is None else ylims

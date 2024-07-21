@@ -129,7 +129,7 @@ def errorplot(
 
 @plotwrapper
 def bar(
-    labels, data, color="#888888", width=0.7, err=None, capsize=5, capthick=2, **kwargs
+    labels, data, color="#888888", width=0.7, offset=0.0, err=None, capsize=5, capthick=2, **kwargs
 ):
     """Bar chart.
 
@@ -162,13 +162,13 @@ def bar(
         )[1]
         caplines[0].set_markeredgewidth(0)
 
-    ax.set_xticks(x)
+    ax.set_xticks(x - offset)
     ax.set_xticklabels(labels)
 
     nospines(ax=ax)
     ax.tick_params(axis="x", length=0)
     ax.spines["bottom"].set_color("none")
-    ax.set_xlim((0, n + width))
+    ax.set_xlim((0 - offset, n + width + offset))
 
     return ax
 

@@ -112,25 +112,29 @@ def cmat(
     light_color="#dddddd",
     grid_color=c.gray[9],
     theta=0.5,
+    label_fontsize=10.0,
+    fontsize=10.0,
+    vmin=0.0,
+    vmax=1.0,
     **kwargs,
 ):
     """Plot confusion matrix."""
     num_rows, num_cols = arr.shape
 
     ax = kwargs.pop("ax")
-    imv(arr, ax=ax, vmin=0, vmax=1, cmap=cmap, cbar=cbar)
+    cb = imv(arr, ax=ax, vmin=vmin, vmax=vmax, cmap=cmap, cbar=cbar)
 
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows))
     for x, y, value in zip(xs.flat, ys.flat, arr.flat):
         color = dark_color if (value <= theta) else light_color
         annot = f"{{:{fmt}}}".format(value)
-        ax.text(x, y, annot, ha="center", va="center", color=color)
+        ax.text(x, y, annot, ha="center", va="center", color=color, fontsize=fontsize)
 
     if labels is not None:
         ax.set_xticks(np.arange(num_cols))
-        ax.set_xticklabels(labels, rotation=90)
+        ax.set_xticklabels(labels, rotation=90, fontsize=label_fontsize)
         ax.set_yticks(np.arange(num_rows))
-        ax.set_yticklabels(labels)
+        ax.set_yticklabels(labels, label_fontsize=label_fontsize)
 
     ax.xaxis.set_minor_locator(FixedLocator(np.arange(num_cols) - 0.5))
     ax.yaxis.set_minor_locator(FixedLocator(np.arange(num_rows) - 0.5))
@@ -145,7 +149,7 @@ def cmat(
         alpha=1.0,
     )
 
-    return ax
+    return cb, ax
 
 
 # aliases
