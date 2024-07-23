@@ -1,6 +1,6 @@
 """Jetpack is a set of useful utility functions for scientific python."""
 
-__version__ = "0.6.0"
+__version__ = "0.6.2"
 
 from . import colors as c, typing
 from .chart_utils import *

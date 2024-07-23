@@ -134,7 +134,7 @@ def cmat(
         ax.set_xticks(np.arange(num_cols))
         ax.set_xticklabels(labels, rotation=90, fontsize=label_fontsize)
         ax.set_yticks(np.arange(num_rows))
-        ax.set_yticklabels(labels, label_fontsize=label_fontsize)
+        ax.set_yticklabels(labels, fontsize=label_fontsize)
 
     ax.xaxis.set_minor_locator(FixedLocator(np.arange(num_cols) - 0.5))
     ax.yaxis.set_minor_locator(FixedLocator(np.arange(num_rows) - 0.5))

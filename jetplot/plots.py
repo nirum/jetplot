@@ -1,26 +1,87 @@
 """Common plots."""
 
 import numpy as np
+from matplotlib.patches import Ellipse
+from matplotlib.transforms import Affine2D
 from scipy.stats import gaussian_kde
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
 
-from matplotlib.patches import Ellipse
-from matplotlib.transforms import Affine2D
-
 from .chart_utils import figwrapper, nospines, plotwrapper
-from .colors import cmap_colors
+from .colors import cmap_colors, neutral
 from .typing import Color
 
 __all__ = [
     "hist",
     "hist2d",
     "errorplot",
+    "violinplot",
     "bar",
     "lines",
     "waterfall",
     "ridgeline",
     "circle",
 ]
+
+
+@plotwrapper
+def violinplot(
+    data,
+    xs,
+    fc=neutral[3],
+    ec=neutral[9],
+    mc=neutral[1],
+    showmedians=True,
+    showmeans=False,
+    showquartiles=True,
+    **kwargs,
+):
+    _ = kwargs.pop("fig")
+    ax = kwargs.pop("ax")
+
+    data = np.atleast_2d(data).T
+
+    if isinstance(xs, float) or isinstance(xs, int):
+        xs = [
+            xs,
+        ]
+
+    parts = ax.violinplot(
+        data, positions=xs, showmeans=False, showmedians=False, showextrema=False
+    )
+
+    for pc in parts["bodies"]:
+        pc.set_facecolor(fc)
+        pc.set_edgecolor(ec)
+        pc.set_alpha(1.0)
+
+    q1, medians, q3 = np.percentile(data, [25, 50, 75], axis=0)
+
+    ax.vlines(
+        xs,
+        np.min(data, axis=0),
+        np.max(data, axis=0),
+        color=ec,
+        linestyle="-",
+        lw=1,
+        zorder=10,
+        label="Extrema",
+    )
+
+    if showquartiles:
+        ax.vlines(xs, q1, q3, color=ec, linestyle="-", lw=5, zorder=5)
+
+    if showmedians:
+        ax.scatter(xs, medians, marker="o", color=mc, s=15, zorder=20)
+
+    if showmeans:
+        ax.scatter(
+            xs,
+            np.mean(data, axis=0),
+            marker="s",
+            color=mc,
+            s=15,
+            zorder=20,
+        )
 
 
 @plotwrapper
@@ -81,7 +142,7 @@ def errorplot(
     err_color: Color = "#cccccc",
     alpha_fill=1.0,
     clip_on=True,
-    **kwargs
+    **kwargs,
 ):
     """Plot a line with error bars."""
     ax = kwargs["ax"]
@@ -129,7 +190,15 @@ def errorplot(
 
 @plotwrapper
 def bar(
-    labels, data, color="#888888", width=0.7, offset=0.0, err=None, capsize=5, capthick=2, **kwargs
+    labels,
+    data,
+    color="#888888",
+    width=0.7,
+    offset=0.0,
+    err=None,
+    capsize=5,
+    capthick=2,
+    **kwargs,
 ):
     """Bar chart.
 
@@ -279,7 +348,7 @@ def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
         width=ell_radius_x * 2,
         height=ell_radius_y * 2,
         facecolor=facecolor,
-        **kwargs
+        **kwargs,
     )
 
     # Calculating the stdandard deviation of x from
