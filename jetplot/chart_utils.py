@@ -194,7 +194,7 @@ def yclamp(y0=None, y1=None, dt=None, **kwargs):
     new_ticks = np.arange(dt * np.floor(y0 / dt), dt * (np.ceil(y1 / dt) + 1), dt)
     ax.set_yticks(new_ticks)
     ax.set_yticklabels(new_ticks)
-    ax.set_ylim(new_ticks[0], new_ticks[1])
+    ax.set_ylim(new_ticks[0], new_ticks[-1])
 
     return ax
 
@@ -211,6 +211,6 @@ def xclamp(x0=None, x1=None, dt=None, **kwargs):
     new_ticks = np.arange(dt * np.floor(x0 / dt), dt * (np.ceil(x1 / dt) + 1), dt)
     ax.set_xticks(new_ticks)
     ax.set_xticklabels(new_ticks)
-    ax.set_xlim(new_ticks[0], new_ticks[1])
+    ax.set_xlim(new_ticks[0], new_ticks[-1])
 
     return ax

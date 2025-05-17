@@ -57,7 +57,7 @@ def img(
             cmap = "viridis"
     elif mode == "cov":
         vmin, vmax, cmap, cbar = 0, 1, "viridis", True
-    elif mode == "cov":
+    elif mode == "corr":
         vmin, vmax, cmap, cbar = -1, 1, "seismic", True
     else:
         raise ValueError("Unrecognized mode: '" + mode + "'")
