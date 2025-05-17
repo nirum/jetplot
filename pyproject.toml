@@ -26,7 +26,7 @@ Homepage = "https://github.com/nirum/jetplot"
 dev = ["ruff"]
 
 [tool.ruff]
-extend-ignore = ["E111", "E114", "E501"]
+lint.extend-ignore = ["E111", "E114", "E501", "F403"]
 
 [tool.setuptools.dynamic]
 version = {attr = "jetplot.__version__"}

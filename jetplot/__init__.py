@@ -2,7 +2,7 @@
 
 __version__ = "0.6.3"
 
-from . import colors as c, typing
+from . import colors as c, typing  # noqa: F401
 from .chart_utils import *
 from .colors import *
 from .images import *
