@@ -23,7 +23,7 @@ license = {file = "LICENSE.md"}
 Homepage = "https://github.com/nirum/jetplot"
 
 [project.optional-dependencies]
-dev = ["ruff"]
+dev = ["ruff", "pytest", "pytest-cov"]
 
 [tool.ruff]
 lint.extend-ignore = ["E111", "E114", "E501", "F403"]
