@@ -22,5 +22,11 @@ license = {file = "LICENSE.md"}
 [project.urls]
 Homepage = "https://github.com/nirum/jetplot"
 
+[project.optional-dependencies]
+dev = ["ruff"]
+
+[tool.ruff]
+extend-ignore = ["E111", "E114", "E501"]
+
 [tool.setuptools.dynamic]
 version = {attr = "jetplot.__version__"}
