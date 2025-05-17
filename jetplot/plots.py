@@ -340,7 +340,7 @@ def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
 
     pearson = cov[0, 1] / np.sqrt(cov[0, 0] * cov[1, 1])
     # Using a special case to obtain the eigenvalues of this
-    # two-dimensionl dataset.
+    # two-dimensional dataset.
     ell_radius_x = np.sqrt(1 + pearson)
     ell_radius_y = np.sqrt(1 - pearson)
     ellipse = Ellipse(
@@ -351,13 +351,13 @@ def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
         **kwargs,
     )
 
-    # Calculating the stdandard deviation of x from
-    # the squareroot of the variance and multiplying
+    # Calculating the standard deviation of x from
+    # the square root of the variance and multiplying
     # with the given number of standard deviations.
     scale_x = np.sqrt(cov[0, 0]) * n_std
     mean_x = np.mean(x)
 
-    # calculating the stdandard deviation of y ...
+    # calculating the standard deviation of y ...
     scale_y = np.sqrt(cov[1, 1]) * n_std
     mean_y = np.mean(y)
 
