@@ -1,12 +1,12 @@
-.. jetpack documentation master file, created by
+.. jetplot documentation master file, created by
    sphinx-quickstart on Fri Oct  2 14:49:15 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Jetpack
+Jetplot
 =======
 
-Jetpack consists of the following modules:
+Jetplot consists of the following modules:
 
 
 Timepiece
