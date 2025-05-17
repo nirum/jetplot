@@ -28,8 +28,9 @@ def img(
 
     Args:
       img: array_like, The array to visualize.
-      mode: string, Either 'div' for a diverging image or 'seq' for
-        sequential (default: 'div').
+      mode: string, One of 'div' for a diverging image, 'seq' for
+        sequential, 'cov' for covariance matrices, or 'corr' for
+        correlation matrices (default: 'div').
       cmap: string, Colormap to use.
       aspect: string, Either 'equal' or 'auto'
     """
