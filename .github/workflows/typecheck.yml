@@ -1,4 +1,4 @@
-name: CI
+name: Tests
 
 on:
   push:
@@ -31,10 +31,5 @@ jobs:
         run: |
           uv pip install --system .[dev]
 
-      - name: Run ruff
-        run: |
-          ruff check .
-
-      - name: Run tests with pytest
-        run: |
-          pytest --cov --cov-report=term-missing
+      - name: Run Pyrefly Type Checker
+        run: pyrefly check
