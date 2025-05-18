@@ -1,0 +1,6 @@
+site_name: Jetplot
+site_url: https://github.com/nirum/jetplot
+repo_url: https://github.com/nirum/jetplot
+nav:
+  - Home: index.md
+  - Description: description.md

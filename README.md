@@ -14,6 +14,16 @@
 pip install jetplot
 ```
 
+## Documentation
+
+Documentation is built with [MkDocs](https://www.mkdocs.org/). To view the
+pages locally run:
+
+```bash
+mkdocs serve
+```
+The documentation sources live in the [`docs/`](docs/) folder.
+
 ## Changelog
 
 | Version | Release Date | Description                                                                                                                                                                                                     |
