@@ -1,8 +1,28 @@
 site_name: Jetplot
 site_url: https://github.com/nirum/jetplot
 repo_url: https://github.com/nirum/jetplot
+
 nav:
   - Home: index.md
   - Description: description.md
+
 theme:
   name: material
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: ["src"]
+          options:
+            show_source: true
+            show_signature_annotations: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - toc:
+      permalink: true
