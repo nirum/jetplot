@@ -2,7 +2,6 @@
 
 [![Tests](https://github.com/nirum/jetplot/actions/workflows/ci.yml/badge.svg)](https://github.com/nirum/jetplot/actions/workflows/ci.yml)
 [![Typecheck](https://github.com/nirum/jetplot/actions/workflows/typecheck.yml/badge.svg)](https://github.com/nirum/jetplot/actions/workflows/typecheck.yml)
-[![codecov](https://codecov.io/gh/nirum/jetplot/branch/master/graph/badge.svg)](https://codecov.io/gh/nirum/jetplot)
 
 ## About
 
