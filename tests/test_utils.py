@@ -19,7 +19,7 @@ def test_wrappers():
     cu.plotwrapper(ax_func)()
 
 
-def test_noticks():
+def test_nospines():
     """Tests all combinations of removing spines."""
 
     compass = ("left", "right", "top", "bottom")
@@ -36,3 +36,16 @@ def test_noticks():
             assert spine.get_visible() == (not kwargs[key])
 
         plt.close(fig)
+
+
+def test_noticks():
+    """Tests that noticks removes both x and y ticks."""
+
+    fig, ax = plt.subplots()
+    ax.plot([1, 2, 3, 4, 5])
+    cu.noticks(ax=ax)
+
+    assert len(ax.get_xticks()) == 0
+    assert len(ax.get_yticks()) == 0
+
+    plt.close(fig)
