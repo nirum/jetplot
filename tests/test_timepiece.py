@@ -2,6 +2,8 @@
 
 from jetplot.timepiece import hrtime, profile
 import numpy as np
+
+# pyrefly: ignore  # import-error
 import pytest
 import time
 

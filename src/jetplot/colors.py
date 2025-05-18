@@ -38,10 +38,12 @@ def cubehelix(
     x = lambda_**gamma
     phi = 2 * np.pi * (start / 3 + rot * lambda_)
 
+    # pyrefly: ignore  # bad-argument-type, no-matching-overload
     alpha = 0.5 * hue * x * (1.0 - x)
     A = np.array([[-0.14861, 1.78277], [-0.29227, -0.90649], [1.97294, 0.0]])
     b = np.stack([np.cos(phi), np.sin(phi)])
 
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     return Palette((x + alpha * (A @ b)).T)
 
 

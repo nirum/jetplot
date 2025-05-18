@@ -54,6 +54,7 @@ def violinplot(
         pc.set_edgecolor(ec)
         pc.set_alpha(1.0)
 
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     q1, medians, q3 = np.percentile(data, [25, 50, 75], axis=0)
 
     ax.vlines(
@@ -76,6 +77,7 @@ def violinplot(
     if showmeans:
         ax.scatter(
             xs,
+            # pyrefly: ignore  # no-matching-overload, bad-argument-type
             np.mean(data, axis=0),
             marker="s",
             color=mc,
@@ -121,6 +123,7 @@ def hist2d(x, y, bins=None, range=None, cmap="hot", **kwargs):
 
     # compute the histogram
 
+    # pyrefly: ignore  # no-matching-overload, unexpected-keyword, bad-argument-type
     cnt, xe, ye = np.histogram2d(x, y, bins=bins, normed=True, range=range)
 
     # generate the plot
@@ -363,6 +366,7 @@ def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
     mean_y = np.mean(y)
 
     transform = (
+        # pyrefly: ignore  # bad-argument-type
         Affine2D().rotate_deg(45).scale(scale_x, scale_y).translate(mean_x, mean_y)
     )
 

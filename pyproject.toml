@@ -37,7 +37,7 @@ docs = [
 
 [tool.pyrefly]
 search_path = [
-  "src/jetplot"
+  "src/"
 ]
 
 [tool.ruff]

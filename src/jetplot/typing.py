@@ -1,4 +1,4 @@
-# pyrefly: ignore  # missing-module-attribute
+
 from typing import Sequence, Union
 
 __all__ = ["Color", "Palette"]

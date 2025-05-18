@@ -83,8 +83,10 @@ def fsurface(func, xrng=None, yrng=None, n=100, nargs=2, **kwargs):
     xrng = (-1, 1) if xrng is None else xrng
     yrng = xrng if yrng is None else yrng
 
+    # pyrefly: ignore  # missing-argument, no-matching-overload, bad-argument-type
     xs = np.linspace(*xrng, n)
 
+    # pyrefly: ignore  # missing-argument, no-matching-overload, bad-argument-type
     ys = np.linspace(*yrng, n)
 
     xm, ym = np.meshgrid(xs, ys)
@@ -128,6 +130,7 @@ def cmat(
 
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows))
 
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     for x, y, value in zip(xs.flat, ys.flat, arr.flat):
         color = dark_color if (value <= theta) else light_color
         annot = f"{{:{fmt}}}".format(value)
@@ -139,8 +142,10 @@ def cmat(
         ax.set_yticks(np.arange(num_rows))
         ax.set_yticklabels(labels, fontsize=label_fontsize)
 
+    # pyrefly: ignore  # bad-argument-type
     ax.xaxis.set_minor_locator(FixedLocator(np.arange(num_cols) - 0.5))
 
+    # pyrefly: ignore  # bad-argument-type
     ax.yaxis.set_minor_locator(FixedLocator(np.arange(num_rows) - 0.5))
 
     ax.grid(

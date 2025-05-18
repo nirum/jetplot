@@ -1,6 +1,6 @@
 """Tools for signal processing."""
 
-# pyrefly: ignore  # missing-module-attribute
+
 from typing import Callable
 
 import numpy as np
@@ -62,6 +62,7 @@ def canoncorr(X: ArrayLike, Y: ArrayLike) -> ArrayLike:
     """
     # Orthogonalize each subspace
 
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     qu, qv = np.linalg.qr(X)[0], np.linalg.qr(Y)[0]
 
     # singular values of the inner product between the orthogonalized spaces

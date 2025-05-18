@@ -2,7 +2,7 @@
 
 from functools import partial
 
-# pyrefly: ignore  # missing-module-attribute
+
 from typing import Mapping, Any
 
 from cycler import cycler
