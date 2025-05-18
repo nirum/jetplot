@@ -27,9 +27,11 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
+      - name: Create virtual environment
+        run: uv venv
+
       - name: Install project with dev dependencies
-        run: |
-          uv pip install -e .[dev]
+        run: uv pip install -e .[dev]
 
       - name: Run Pyrefly Type Checker
-        run: pyrefly check
+        run: uv run pyrefly check
