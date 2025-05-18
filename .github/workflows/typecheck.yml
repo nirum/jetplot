@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 name: Typecheck
-=======
-name: Tests
->>>>>>> da56154 (Adds typecheck workflow)
 
 on:
   push:
