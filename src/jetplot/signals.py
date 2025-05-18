@@ -1,11 +1,10 @@
 """Tools for signal processing."""
 
 
-from typing import Callable
+from typing import Any, Callable
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
-
 from scipy.ndimage import gaussian_filter1d  # pyrefly: ignore[missing-module-attribute]
 
 __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normalize"]
@@ -58,7 +57,7 @@ def canoncorr(X: ArrayLike, Y: ArrayLike) -> NDArray[np.floating]:
       the principal vectors and angles via the QR decomposition [2]_.
 
     References:
-      .. [1] Angles between flats. (2016, August 4). In Wikipedia, The Free Encyclopedia.
+      .. [1] Angles between flats. (2016, August 4). In Wikipedia, The Free Encyclopedia
        https://en.wikipedia.org/w/index.php?title=Angles_between_flats
       .. [2] Björck, Ȧke, and Gene H. Golub. "Numerical methods for computing angles
        between linear subspaces." Mathematics of computation 27.123 (1973): 579-594.
@@ -73,7 +72,7 @@ def canoncorr(X: ArrayLike, Y: ArrayLike) -> NDArray[np.floating]:
 
 
 def normalize(
-    X: ArrayLike, axis: int = -1, norm: Callable[[ArrayLike], float] = np.linalg.norm
+    X: ArrayLike, axis: int = -1, norm: Callable[[Any], float] = np.linalg.norm
 ) -> NDArray[np.floating]:
     """Normalizes elements of an array or matrix.
 

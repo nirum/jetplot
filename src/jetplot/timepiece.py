@@ -25,26 +25,17 @@ class Stopwatch:
         return elapsed
 
     def checkpoint(self, name=""):
-        print(
-            "{timer} {checkpoint} took {elapsed}".format(
-                timer=self.name,
-                checkpoint=name,
-                elapsed=hrtime(self.elapsed),
-            ).strip()
-        )
+        print(f"{self.name} {name} took {hrtime(self.elapsed)}".strip())
 
     def __enter__(self):
         return self
 
     def __exit__(self, *_):
-        print(
-            "{timer} Finished! \u2714\nTotal elapsed time: {total}".format(
-                timer=self.name, total=hrtime(time.perf_counter() - self.absolute_start)
-            )
-        )
+        total = hrtime(time.perf_counter() - self.absolute_start)
+        print(f"{self.name} Finished! \u2714\nTotal elapsed time: {total}")
 
 
-def hrtime(t):
+def hrtime(t: float):
     """Converts a time in seconds to a reasonable human readable time.
 
     Args:
@@ -54,46 +45,41 @@ def hrtime(t):
       time: string, Human readable formatted value of the given time.
     """
 
-    try:
-        t = float(t)
-    except (ValueError, TypeError):
-        raise ValueError("Input must be numeric")
-
     # weeks
     if t >= 7 * 60 * 60 * 24:
         weeks = np.floor(t / (7 * 60 * 60 * 24))
-        timestr = "{:0.0f} weeks, ".format(weeks) + hrtime(t % (7 * 60 * 60 * 24))
+        timestr = f"{weeks:0.0f} weeks, " + hrtime(t % (7 * 60 * 60 * 24))
 
     # days
     elif t >= 60 * 60 * 24:
         days = np.floor(t / (60 * 60 * 24))
-        timestr = "{:0.0f} days, ".format(days) + hrtime(t % (60 * 60 * 24))
+        timestr = f"{days:0.0f} days, " + hrtime(t % (60 * 60 * 24))
 
     # hours
     elif t >= 60 * 60:
         hours = np.floor(t / (60 * 60))
-        timestr = "{:0.0f} hours, ".format(hours) + hrtime(t % (60 * 60))
+        timestr = f"{hours:0.0f} hours, " + hrtime(t % (60 * 60))
 
     # minutes
     elif t >= 60:
         minutes = np.floor(t / 60)
-        timestr = "{:0.0f} min., ".format(minutes) + hrtime(t % 60)
+        timestr = f"{minutes:0.0f} min., " + hrtime(t % 60)
 
     # seconds
     elif (t >= 1) | (t == 0):
-        timestr = "{:g} s".format(t)
+        timestr = f"{t:g} s"
 
     # milliseconds
     elif t >= 1e-3:
-        timestr = "{:g} ms".format(t * 1e3)
+        timestr = f"{t * 1e3:g} ms"
 
     # microseconds
     elif t >= 1e-6:
-        timestr = "{:g} {}s".format(t * 1e6, "\u03bc")
+        timestr = f"{t * 1e6:g} \u03bcs"
 
     # nanoseconds or smaller
     else:
-        timestr = "{:g} ns".format(t * 1e9)
+        timestr = f"{t * 1e9:g} ns"
 
     return timestr
 
@@ -110,8 +96,6 @@ def profile(func):
         calls.append(tstop - tstart)
         return results
 
-    wrapper.calls = calls
-
     def mean() -> float:
         return float(np.mean(calls))
 
@@ -121,8 +105,9 @@ def profile(func):
     def summary() -> None:
         print(f"Runtimes: {hrtime(mean())} \u00b1 {hrtime(serr())}")
 
-    wrapper.mean = mean
-    wrapper.serr = serr
-    wrapper.summary = summary
+    wrapper.__dict__["calls"] = calls
+    wrapper.__dict__["mean"] = mean
+    wrapper.__dict__["serr"] = serr
+    wrapper.__dict__["summary"] = summary
 
     return wrapper

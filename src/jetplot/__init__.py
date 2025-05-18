@@ -1,6 +1,6 @@
 """Jetplot is a set of useful utility functions for scientific python."""
 
-__version__ = "0.6.3"
+__version__ = "0.6.4"
 
 from . import colors as c, typing  # noqa: F401
 from .chart_utils import *

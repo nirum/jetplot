@@ -1,11 +1,10 @@
 """Tests for the timepiece module."""
 
-from jetplot.timepiece import hrtime, profile
+import time
+
 import numpy as np
 
-# pyrefly: ignore  # import-error
-import pytest
-import time
+from jetplot.timepiece import hrtime, profile
 
 
 def test_hrtime():
@@ -22,13 +21,6 @@ def test_hrtime():
     assert hrtime(5.25e-4) == "525 {}s".format("\u03bc")
     assert hrtime(5e-7) == "500 ns"
     assert hrtime(1e-12) == "0.001 ns"
-
-    # test non-numeric input
-    for val in ("abc", [], {"x": 5}):
-        with pytest.raises(ValueError) as context:
-            hrtime(val)
-
-        assert "Input must be numeric" in str(context.value)
 
 
 def test_profile():
