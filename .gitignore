@@ -15,6 +15,9 @@ docs/_build
 build/
 dist/
 
+# docs
+site/
+
 # other
 tags
 .mypy_cache/
