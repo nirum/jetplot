@@ -54,7 +54,6 @@ def violinplot(
         pc.set_edgecolor(ec)
         pc.set_alpha(1.0)
 
-    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     q1, medians, q3 = np.percentile(data, [25, 50, 75], axis=0)
 
     ax.vlines(
@@ -77,8 +76,7 @@ def violinplot(
     if showmeans:
         ax.scatter(
             xs,
-            # pyrefly: ignore  # no-matching-overload, bad-argument-type
-            np.mean(data, axis=0),
+            np.mean(data, axis=0, dtype=float),
             marker="s",
             color=mc,
             s=15,
@@ -116,15 +114,16 @@ def hist2d(x, y, bins=None, range=None, cmap="hot", **kwargs):
 
     # parse inputs
     if range is None:
-        range = np.array([[np.min(x), np.max(x)], [np.min(y), np.max(y)]])
+        range_ = np.array([[np.min(x), np.max(x)], [np.min(y), np.max(y)]])
+    else:
+        range_ = range
 
     if bins is None:
         bins = 25
 
     # compute the histogram
 
-    # pyrefly: ignore  # no-matching-overload, unexpected-keyword, bad-argument-type
-    cnt, xe, ye = np.histogram2d(x, y, bins=bins, normed=True, range=range)
+    cnt, xe, ye = np.histogram2d(x, y, bins=bins, range=range_, density=True)
 
     # generate the plot
     ax = kwargs["ax"]
@@ -366,8 +365,10 @@ def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
     mean_y = np.mean(y)
 
     transform = (
-        # pyrefly: ignore  # bad-argument-type
-        Affine2D().rotate_deg(45).scale(scale_x, scale_y).translate(mean_x, mean_y)
+        Affine2D()
+        .rotate_deg(45)
+        .scale(float(scale_x), float(scale_y))
+        .translate(float(mean_x), float(mean_y))
     )
 
     ellipse.set_transform(transform + ax.transData)

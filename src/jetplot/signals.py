@@ -4,10 +4,9 @@
 from typing import Callable
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import ArrayLike, NDArray
 
-# pyrefly: ignore  # missing-module-attribute
-from scipy.ndimage import gaussian_filter1d
+from scipy.ndimage import gaussian_filter1d  # pyrefly: ignore[missing-module-attribute]
 
 __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normalize"]
 
@@ -32,14 +31,18 @@ def stable_rank(X):
     return svals_sq.sum() / svals_sq.max()
 
 
-def participation_ratio(C):
-    """Computes the participation ratio of a square matrix."""
+def participation_ratio(C: NDArray[np.floating]) -> float:
+    """Compute the participation ratio of a square matrix."""
+
     assert C.ndim == 2, "C must be a matrix"
     assert C.shape[0] == C.shape[1], "C must be a square matrix"
-    return np.trace(C) ** 2 / np.trace(np.linalg.matrix_power(C, 2))
+
+    diag_sum = float(np.trace(C))
+    diag_sq_sum = float(np.trace(C @ C))
+    return diag_sum**2 / diag_sq_sum
 
 
-def canoncorr(X: ArrayLike, Y: ArrayLike) -> ArrayLike:
+def canoncorr(X: ArrayLike, Y: ArrayLike) -> NDArray[np.floating]:
     """Canonical correlation between two subspaces.
 
     Args:
@@ -62,14 +65,16 @@ def canoncorr(X: ArrayLike, Y: ArrayLike) -> ArrayLike:
     """
     # Orthogonalize each subspace
 
-    # pyrefly: ignore  # no-matching-overload, bad-argument-type
-    qu, qv = np.linalg.qr(X)[0], np.linalg.qr(Y)[0]
+    qu = np.linalg.qr(np.asarray(X))[0]
+    qv = np.linalg.qr(np.asarray(Y))[0]
 
     # singular values of the inner product between the orthogonalized spaces
     return np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
 
 
-def normalize(X: ArrayLike, axis: int = -1, norm: Callable = np.linalg.norm):
+def normalize(
+    X: ArrayLike, axis: int = -1, norm: Callable[[ArrayLike], float] = np.linalg.norm
+) -> NDArray[np.floating]:
     """Normalizes elements of an array or matrix.
 
     Args:
@@ -80,4 +85,4 @@ def normalize(X: ArrayLike, axis: int = -1, norm: Callable = np.linalg.norm):
     Returns:
         Xn: Arrays that have been normalized using to the given function.
     """
-    return X / norm(X, axis=axis, keepdims=True)
+    return np.asarray(X) / norm(X, axis=axis, keepdims=True)

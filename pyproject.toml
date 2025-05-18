@@ -36,9 +36,8 @@ docs = [
 ]
 
 [tool.pyrefly]
-search_path = [
-  "src/"
-]
+project_includes = ["src/**"]
+project_excludes = ["**/.[!/.]*", "**/*venv/**/*", "build/**/*"]
 
 [tool.ruff]
 lint.extend-ignore = ["E111", "E114", "E501", "F403"]

@@ -110,17 +110,19 @@ def profile(func):
         calls.append(tstop - tstart)
         return results
 
-    # pyrefly: ignore  # missing-attribute
     wrapper.calls = calls
-    # pyrefly: ignore  # missing-attribute
-    wrapper.mean = lambda: np.mean(calls)
-    # pyrefly: ignore  # missing-attribute
-    wrapper.serr = lambda: np.std(calls) / np.sqrt(len(calls))
-    # pyrefly: ignore  # missing-attribute
-    wrapper.summary = lambda: print(
-        "Runtimes: {} {} {}".format(
-            hrtime(wrapper.mean()), "\u00b1", hrtime(wrapper.serr())
-        )
-    )
+
+    def mean() -> float:
+        return float(np.mean(calls))
+
+    def serr() -> float:
+        return float(np.std(calls) / np.sqrt(len(calls)))
+
+    def summary() -> None:
+        print(f"Runtimes: {hrtime(mean())} \u00b1 {hrtime(serr())}")
+
+    wrapper.mean = mean
+    wrapper.serr = serr
+    wrapper.summary = summary
 
     return wrapper
