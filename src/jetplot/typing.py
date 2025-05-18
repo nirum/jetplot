@@ -1,3 +1,4 @@
+
 from typing import Sequence, Union
 
 __all__ = ["Color", "Palette"]

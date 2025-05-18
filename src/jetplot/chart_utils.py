@@ -129,6 +129,8 @@ def get_bounds(axis, ax=None):
         return ax.spines[spine_key].get_bounds()
     else:
         lower, upper = None, None
+
+        # pyrefly: ignore  # no-matching-overload, bad-argument-type
         for tick, label in zip(ticks(), labels()):
             if label.get_text() != "":
                 if lower is None:
@@ -188,6 +190,8 @@ def yclamp(y0=None, y1=None, dt=None, **kwargs):
     lims = ax.get_ylim()
     y0 = lims[0] if y0 is None else y0
     y1 = lims[1] if y1 is None else y1
+
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     dt = np.mean(np.diff(ax.get_yticks())) if dt is None else dt
 
     new_ticks = np.arange(dt * np.floor(y0 / dt), dt * (np.ceil(y1 / dt) + 1), dt)
@@ -205,6 +209,8 @@ def xclamp(x0=None, x1=None, dt=None, **kwargs):
     lims = ax.get_xlim()
     x0 = lims[0] if x0 is None else x0
     x1 = lims[1] if x1 is None else x1
+
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     dt = np.mean(np.diff(ax.get_xticks())) if dt is None else dt
 
     new_ticks = np.arange(dt * np.floor(x0 / dt), dt * (np.ceil(x1 / dt) + 1), dt)

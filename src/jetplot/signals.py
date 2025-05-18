@@ -1,9 +1,12 @@
 """Tools for signal processing."""
 
+
 from typing import Callable
 
 import numpy as np
 from numpy.typing import ArrayLike
+
+# pyrefly: ignore  # missing-module-attribute
 from scipy.ndimage import gaussian_filter1d
 
 __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normalize"]
@@ -58,6 +61,8 @@ def canoncorr(X: ArrayLike, Y: ArrayLike) -> ArrayLike:
        between linear subspaces." Mathematics of computation 27.123 (1973): 579-594.
     """
     # Orthogonalize each subspace
+
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     qu, qv = np.linalg.qr(X)[0], np.linalg.qr(Y)[0]
 
     # singular values of the inner product between the orthogonalized spaces

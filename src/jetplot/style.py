@@ -1,6 +1,8 @@
 """Opinionated matplotlib style defaults."""
 
 from functools import partial
+
+
 from typing import Mapping, Any
 
 from cycler import cycler

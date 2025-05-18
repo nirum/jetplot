@@ -37,13 +37,18 @@ def cubehelix(
     lambda_ = np.linspace(vmin, vmax, n)
     x = lambda_**gamma
     phi = 2 * np.pi * (start / 3 + rot * lambda_)
+
+    # pyrefly: ignore  # bad-argument-type, no-matching-overload
     alpha = 0.5 * hue * x * (1.0 - x)
     A = np.array([[-0.14861, 1.78277], [-0.29227, -0.90649], [1.97294, 0.0]])
     b = np.stack([np.cos(phi), np.sin(phi)])
+
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     return Palette((x + alpha * (A @ b)).T)
 
 
 def cmap_colors(cmap: str, n: int, vmin: float = 0.0, vmax: float = 1.0):
+    # pyrefly: ignore  # missing-attribute
     return Palette(cm.__getattribute__(cmap)(np.linspace(vmin, vmax, n)))
 
 

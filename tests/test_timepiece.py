@@ -2,6 +2,8 @@
 
 from jetplot.timepiece import hrtime, profile
 import numpy as np
+
+# pyrefly: ignore  # import-error
 import pytest
 import time
 
@@ -37,8 +39,12 @@ def test_profile():
     for _ in range(K):
         wrapper(T)
 
+    # pyrefly: ignore  # missing-attribute
     assert isinstance(wrapper.calls, list)
     assert len(wrapper.calls) == K
+    # pyrefly: ignore  # missing-attribute
     assert np.allclose(wrapper.mean(), T, atol=0.01)
+    # pyrefly: ignore  # missing-attribute
     assert np.allclose(wrapper.serr(), 0.0, atol=0.01)
+    # pyrefly: ignore  # missing-attribute
     assert wrapper.summary() is None
