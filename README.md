@@ -1,6 +1,7 @@
 # Jetplot
 
-[![CI](https://github.com/nirum/jetplot/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/nirum/jetplot/actions/workflows/ci.yaml)
+[![Tests](https://github.com/nirum/jetplot/actions/workflows/ci.yml/badge.svg)](https://github.com/nirum/jetplot/actions/workflows/ci.yml)
+[![Typecheck](https://github.com/nirum/jetplot/actions/workflows/typecheck.yml/badge.svg)](https://github.com/nirum/jetplot/actions/workflows/typecheck.yml)
 [![codecov](https://codecov.io/gh/nirum/jetplot/branch/master/graph/badge.svg)](https://codecov.io/gh/nirum/jetplot)
 
 ## About
