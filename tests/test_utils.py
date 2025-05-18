@@ -6,14 +6,13 @@ from matplotlib import pyplot as plt
 
 
 def test_wrappers():
-    
     @cu.figwrapper
     def fig_func(**kwargs):
-        assert 'fig' in kwargs
+        assert "fig" in kwargs
 
     def ax_func(**kwargs):
-        assert 'fig' in kwargs
-        assert 'ax' in kwargs
+        assert "fig" in kwargs
+        assert "ax" in kwargs
 
     fig_func()
     cu.axwrapper(ax_func)()
@@ -23,7 +22,7 @@ def test_wrappers():
 def test_noticks():
     """Tests all combinations of removing spines."""
 
-    compass = ('left', 'right', 'top', 'bottom')
+    compass = ("left", "right", "top", "bottom")
     args = ((True, False),) * len(compass)
 
     for bools in product(*args):

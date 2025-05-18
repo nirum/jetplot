@@ -89,7 +89,7 @@ def hrtime(t):
 
     # microseconds
     elif t >= 1e-6:
-        timestr = "{:g} {}s".format(t * 1e6, "\u03BC")
+        timestr = "{:g} {}s".format(t * 1e6, "\u03bc")
 
     # nanoseconds or smaller
     else:
@@ -115,7 +115,7 @@ def profile(func):
     wrapper.serr = lambda: np.std(calls) / np.sqrt(len(calls))
     wrapper.summary = lambda: print(
         "Runtimes: {} {} {}".format(
-            hrtime(wrapper.mean()), "\u00B1", hrtime(wrapper.serr())
+            hrtime(wrapper.mean()), "\u00b1", hrtime(wrapper.serr())
         )
     )
 

@@ -5,13 +5,12 @@ import numpy as np
 
 
 def test_stable_rank():
-
     U, _ = np.linalg.qr(np.random.randn(32, 32))
     V, _ = np.linalg.qr(np.random.randn(32, 32))
     S = np.random.randn(32)
 
     X = U @ np.diag(S) @ V.T
-    expected = (S ** 2).sum() / (S ** 2).max()
+    expected = (S**2).sum() / (S**2).max()
     computed = signals.stable_rank(X)
     print(expected)
     print(computed)
@@ -20,23 +19,21 @@ def test_stable_rank():
 
 
 def test_participation_ratio():
-
     def _random_matrix(evals):
         dim = evals.size
         Q, _ = np.linalg.qr(np.random.randn(dim, dim))
         return Q @ np.diag(evals) @ Q.T
-    
-    C = _random_matrix(np.array([1., 0., 0.]))
+
+    C = _random_matrix(np.array([1.0, 0.0, 0.0]))
     assert np.allclose(signals.participation_ratio(C), 1.0)
 
-    C = _random_matrix(np.array([1., 1., 1.]))
+    C = _random_matrix(np.array([1.0, 1.0, 1.0]))
     assert np.allclose(signals.participation_ratio(C), 3.0)
 
 
 def test_smooth():
-
     def curvature(x):
-        second_derivative = np.convolve(x, [-1, 2, -1], mode='valid')
+        second_derivative = np.convolve(x, [-1, 2, -1], mode="valid")
         return np.abs(second_derivative).mean()
 
     # Sample white noise.
@@ -44,9 +41,9 @@ def test_smooth():
     x = rs.randn(1000)
 
     # Smooth white noise with different sigmas.
-    y1 = signals.smooth(x, sigma=1.)
-    y2 = signals.smooth(x, sigma=2.)
-    y3 = signals.smooth(x, sigma=5.)
+    y1 = signals.smooth(x, sigma=1.0)
+    y2 = signals.smooth(x, sigma=2.0)
+    y3 = signals.smooth(x, sigma=5.0)
 
     assert curvature(x) > curvature(y1) > curvature(y2) > curvature(y3)
 
@@ -68,16 +65,16 @@ def test_cca():
 
     # Correlation with a different random subspace.
     xy = signals.canoncorr(X, Y)
-    assert np.all(xy <= 1.)
-    assert np.all(0. <= xy)
+    assert np.all(xy <= 1.0)
+    assert np.all(0.0 <= xy)
     assert 0 < np.sum(xy) < k
 
     # Correlation with random rotation should be all ones.
     xz = signals.canoncorr(X, Z)
     assert np.allclose(xz, np.ones(k))
 
-def test_normalize():
 
+def test_normalize():
     X = np.random.randn(10, 3)
     expected = np.stack([x / np.linalg.norm(x) for x in X])
     computed = signals.normalize(X)

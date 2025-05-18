@@ -151,6 +151,6 @@ def install_fonts(filepath: str):
 
     new_fonts = set(available_fonts()) - original_fonts
     if new_fonts:
-        print(f'Added the following fonts: {", ".join(new_fonts)}')
+        print(f"Added the following fonts: {', '.join(new_fonts)}")
     else:
         print("No new fonts added.")
