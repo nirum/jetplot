@@ -84,6 +84,7 @@ def fsurface(func, xrng=None, yrng=None, n=100, nargs=2, **kwargs):
     yrng = xrng if yrng is None else yrng
 
     xs = np.linspace(*xrng, n)
+
     ys = np.linspace(*yrng, n)
 
     xm, ym = np.meshgrid(xs, ys)
@@ -126,6 +127,7 @@ def cmat(
     cb = imv(arr, ax=ax, vmin=vmin, vmax=vmax, cmap=cmap, cbar=cbar)
 
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows))
+
     for x, y, value in zip(xs.flat, ys.flat, arr.flat):
         color = dark_color if (value <= theta) else light_color
         annot = f"{{:{fmt}}}".format(value)
@@ -138,6 +140,7 @@ def cmat(
         ax.set_yticklabels(labels, fontsize=label_fontsize)
 
     ax.xaxis.set_minor_locator(FixedLocator(np.arange(num_cols) - 0.5))
+
     ax.yaxis.set_minor_locator(FixedLocator(np.arange(num_rows) - 0.5))
 
     ax.grid(

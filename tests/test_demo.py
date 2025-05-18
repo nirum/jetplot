@@ -8,4 +8,5 @@ def test_peaks():
     n = 256
     xm, ym, zm = demo.peaks(n=n)
 
+    # pyrefly: ignore  # missing-attribute
     assert xm.shape == ym.shape == zm.shape == (n, n)

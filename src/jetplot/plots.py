@@ -120,6 +120,7 @@ def hist2d(x, y, bins=None, range=None, cmap="hot", **kwargs):
         bins = 25
 
     # compute the histogram
+
     cnt, xe, ye = np.histogram2d(x, y, bins=bins, normed=True, range=range)
 
     # generate the plot

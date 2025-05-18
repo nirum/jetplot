@@ -6,6 +6,7 @@ import numpy as np
 
 def test_stable_rank():
     U, _ = np.linalg.qr(np.random.randn(32, 32))
+
     V, _ = np.linalg.qr(np.random.randn(32, 32))
     S = np.random.randn(32)
 
@@ -21,6 +22,7 @@ def test_stable_rank():
 def test_participation_ratio():
     def _random_matrix(evals):
         dim = evals.size
+
         Q, _ = np.linalg.qr(np.random.randn(dim, dim))
         return Q @ np.diag(evals) @ Q.T
 
@@ -57,6 +59,7 @@ def test_cca():
 
     X = rs.randn(n, k)
     Y = rs.randn(n, k)
+
     Z = X @ np.linalg.qr(rs.randn(k, k))[0]
 
     # Correlation with itself should be all ones.
@@ -65,7 +68,9 @@ def test_cca():
 
     # Correlation with a different random subspace.
     xy = signals.canoncorr(X, Y)
+
     assert np.all(xy <= 1.0)
+
     assert np.all(0.0 <= xy)
     assert 0 < np.sum(xy) < k
 
