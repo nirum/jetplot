@@ -1,4 +1,4 @@
-"""Jetpack is a set of useful utility functions for scientific python."""
+"""Jetplot is a set of useful utility functions for scientific python."""
 
 __version__ = "0.6.3"
 
