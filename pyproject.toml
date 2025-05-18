@@ -23,10 +23,24 @@ license = {file = "LICENSE.md"}
 Homepage = "https://github.com/nirum/jetplot"
 
 [project.optional-dependencies]
-dev = ["ruff", "pytest", "pytest-cov"]
+dev = [
+    "pre-commit>=2.21.0",
+    "pyrefly>=0.14.0",
+    "pytest>=7.4.4",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.11.10",
+]
 
 [tool.ruff]
 lint.extend-ignore = ["E111", "E114", "E501", "F403"]
 
 [tool.setuptools.dynamic]
 version = {attr = "jetplot.__version__"}
+
+[tool.uv]
+default-groups = ["dev", "docs"]
+
+[dependency-groups]
+docs = [
+    "mkdocs>=1.5.3",
+]
