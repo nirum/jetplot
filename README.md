@@ -1,6 +1,6 @@
 # Jetplot
 
-![build](https://github.com/nirum/jetplot/workflows/build/badge.svg)
+[![CI](https://github.com/nirum/jetplot/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/nirum/jetplot/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/nirum/jetplot/branch/master/graph/badge.svg)](https://codecov.io/gh/nirum/jetplot)
 
 ## About
