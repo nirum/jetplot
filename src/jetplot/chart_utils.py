@@ -1,5 +1,6 @@
 """Plotting utils."""
 
+from collections.abc import Callable
 from functools import partial, wraps
 
 import numpy as np
@@ -117,7 +118,10 @@ def get_bounds(axis, ax=None):
     if ax is None:
         ax = plt.gca()
 
-    axis_map = {
+
+    Result = tuple[Callable[[], list[float]], Callable[[], list[str]], Callable[[], tuple[float, float]], str]
+
+    axis_map: dict[str, Result] = {
         "x": (ax.get_xticks, ax.get_xticklabels, ax.get_xlim, "bottom"),
         "y": (ax.get_yticks, ax.get_yticklabels, ax.get_ylim, "left"),
     }
@@ -130,7 +134,7 @@ def get_bounds(axis, ax=None):
     else:
         lower, upper = None, None
 
-        for tick, label in zip(list(ticks()), list(labels())):
+        for tick, label in zip(list(ticks()), list(labels()), strict=True):
             if label.get_text() != "":
                 if lower is None:
                     lower = tick
@@ -190,7 +194,8 @@ def yclamp(y0=None, y1=None, dt=None, **kwargs):
     y0 = lims[0] if y0 is None else y0
     y1 = lims[1] if y1 is None else y1
 
-    dt = float(np.mean(np.diff(ax.get_yticks()))) if dt is None else float(dt)
+    ticks: list[float] = ax.get_yticks() # pyrefly: ignore
+    dt = float(np.mean(np.diff(ticks))) if dt is None else float(dt)
 
     new_ticks = np.arange(dt * np.floor(y0 / dt), dt * (np.ceil(y1 / dt) + 1), dt)
     ax.set_yticks(new_ticks)
@@ -208,7 +213,8 @@ def xclamp(x0=None, x1=None, dt=None, **kwargs):
     x0 = lims[0] if x0 is None else x0
     x1 = lims[1] if x1 is None else x1
 
-    dt = float(np.mean(np.diff(ax.get_xticks()))) if dt is None else float(dt)
+    ticks: list[float] = ax.get_xticks() # pyrefly: ignore
+    dt = float(np.mean(np.diff(ticks))) if dt is None else float(dt)
 
     new_ticks = np.arange(dt * np.floor(x0 / dt), dt * (np.ceil(x1 / dt) + 1), dt)
     ax.set_xticks(new_ticks)

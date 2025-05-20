@@ -1,7 +1,8 @@
 """Tests for the signals module."""
 
-from jetplot import signals
 import numpy as np
+
+from jetplot import signals
 
 
 def test_stable_rank():

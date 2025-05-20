@@ -1,16 +1,18 @@
 """Colorschemes"""
 
 import numpy as np
-from matplotlib import cm, pyplot as plt
+from matplotlib import cm
+from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, to_hex
+from matplotlib.typing import ColorType
 
 from .chart_utils import noticks
 
 __all__ = ["Palette", "cubehelix", "cmap_colors"]
 
 
-class Palette(list):
-    """Color palette."""
+class Palette(list[ColorType]):
+    """Color palette based on a list of values."""
 
     @property
     def hex(self):
@@ -22,7 +24,7 @@ class Palette(list):
 
     def plot(self, figsize=(5, 1)):
         fig, axs = plt.subplots(1, len(self), figsize=figsize)
-        for c, ax in zip(self, axs):
+        for c, ax in zip(self, axs, strict=True): # pyrefly: ignore
             ax.set_facecolor(c)
             ax.set_aspect("equal")
             noticks(ax=ax)
@@ -31,18 +33,25 @@ class Palette(list):
 
 
 def cubehelix(
-    n: int, vmin=0.85, vmax=0.15, gamma: float = 1.0, start=0.0, rot=0.4, hue=0.8
+    n: int,
+    vmin: float = 0.85,
+    vmax: float = 0.15,
+    gamma: float = 1.0,
+    start: float = 0.0,
+    rot: float = 0.4,
+    hue: float = 0.8,
 ):
     """Cubehelix parameterized colormap."""
     lambda_ = np.linspace(vmin, vmax, n)
     x = lambda_**gamma
     phi = 2 * np.pi * (start / 3 + rot * lambda_)
 
-    alpha = 0.5 * hue * x * (1.0 - x)
+    alpha = 0.5 * hue * x * (1.0 - x)  # pyrefly: ignore
     A = np.array([[-0.14861, 1.78277], [-0.29227, -0.90649], [1.97294, 0.0]])
     b = np.stack([np.cos(phi), np.sin(phi)])
 
-    return Palette((x + alpha * (A @ b)).T)
+    colors: list[tuple[float, float, float]] = (x + alpha * (A @ b)).T.tolist()
+    return Palette(colors)
 
 
 def cmap_colors(cmap: str, n: int, vmin: float = 0.0, vmax: float = 1.0):
