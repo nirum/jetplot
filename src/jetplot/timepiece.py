@@ -9,28 +9,30 @@ __all__ = ["hrtime", "Stopwatch", "profile"]
 
 
 class Stopwatch:
-    def __init__(self, name=""):
+    """Simple timer utility for measuring code execution time."""
+
+    def __init__(self, name: str = "") -> None:
         self.name = name
         self.start = time.perf_counter()
         self.absolute_start = time.perf_counter()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "\u231a  Stopwatch for: " + self.name
 
     @property
-    def elapsed(self):
+    def elapsed(self) -> float:
         current = time.perf_counter()
         elapsed = current - self.start
         self.start = time.perf_counter()
         return elapsed
 
-    def checkpoint(self, name=""):
+    def checkpoint(self, name: str = "") -> None:
         print(f"{self.name} {name} took {hrtime(self.elapsed)}".strip())
 
-    def __enter__(self):
+    def __enter__(self) -> "Stopwatch":
         return self
 
-    def __exit__(self, *_):
+    def __exit__(self, *_: object) -> None:
         total = hrtime(time.perf_counter() - self.absolute_start)
         print(f"{self.name} Finished! \u2714\nTotal elapsed time: {total}")
 

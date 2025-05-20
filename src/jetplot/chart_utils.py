@@ -3,6 +3,8 @@
 from collections.abc import Callable
 from functools import partial, wraps
 
+from matplotlib.axes import Axes
+
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -114,7 +116,21 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
     return ax
 
 
-def get_bounds(axis, ax=None):
+def get_bounds(axis: str, ax: Axes | None = None) -> tuple[float, float]:
+    """Return the axis spine bounds for the given axis.
+
+    Parameters
+    ----------
+    axis : str
+        Axis to inspect, either ``"x"`` or ``"y"``.
+    ax : matplotlib.axes.Axes | None, optional
+        Axes object to inspect. If ``None``, the current axes are used.
+
+    Returns
+    -------
+    tuple[float, float]
+        Lower and upper bounds of the axis spine.
+    """
     if ax is None:
         ax = plt.gca()
 
@@ -187,7 +203,13 @@ def breathe(xlims=None, ylims=None, padding_percent=0.05, **kwargs):
 
 
 @axwrapper
-def yclamp(y0=None, y1=None, dt=None, **kwargs):
+def yclamp(
+    y0: float | None = None,
+    y1: float | None = None,
+    dt: float | None = None,
+    **kwargs,
+) -> Axes:
+    """Clamp the y-axis to evenly spaced tick marks."""
     ax = kwargs["ax"]
 
     lims = ax.get_ylim()
@@ -206,7 +228,13 @@ def yclamp(y0=None, y1=None, dt=None, **kwargs):
 
 
 @axwrapper
-def xclamp(x0=None, x1=None, dt=None, **kwargs):
+def xclamp(
+    x0: float | None = None,
+    x1: float | None = None,
+    dt: float | None = None,
+    **kwargs,
+) -> Axes:
+    """Clamp the x-axis to evenly spaced tick marks."""
     ax = kwargs["ax"]
 
     lims = ax.get_xlim()

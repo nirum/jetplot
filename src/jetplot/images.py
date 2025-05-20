@@ -1,10 +1,12 @@
 """Image visualization tools."""
 
 from functools import partial
+from collections.abc import Callable
 
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FixedLocator
+from matplotlib.axes import Axes
 
 from . import colors as c
 from .chart_utils import noticks, plotwrapper
@@ -79,7 +81,15 @@ def img(
 
 
 @plotwrapper
-def fsurface(func, xrng=None, yrng=None, n=100, nargs=2, **kwargs):
+def fsurface(
+    func: Callable[..., np.ndarray],
+    xrng: tuple[float, float] | None = None,
+    yrng: tuple[float, float] | None = None,
+    n: int = 100,
+    nargs: int = 2,
+    **kwargs,
+) -> None:
+    """Plot a 2‑D function as a filled surface."""
     xrng = (-1, 1) if xrng is None else xrng
     yrng = xrng if yrng is None else yrng
 

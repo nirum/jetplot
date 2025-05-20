@@ -4,7 +4,10 @@ import numpy as np
 from matplotlib import cm
 from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, to_hex
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 from matplotlib.typing import ColorType
+from numpy.typing import NDArray
 
 from .chart_utils import noticks
 
@@ -15,14 +18,17 @@ class Palette(list[ColorType]):
     """Color palette based on a list of values."""
 
     @property
-    def hex(self):
+    def hex(self) -> "Palette":
+        """Return the palette colors as hexadecimal strings."""
         return Palette([to_hex(rgb) for rgb in self])
 
     @property
-    def cmap(self):
+    def cmap(self) -> LinearSegmentedColormap:
+        """Return the palette as a Matplotlib colormap."""
         return LinearSegmentedColormap.from_list("", self)
 
-    def plot(self, figsize=(5, 1)):
+    def plot(self, figsize: tuple[float, float] = (5, 1)) -> tuple[Figure, NDArray[Axes]]:
+        """Visualize the colors in the palette."""
         fig, axs = plt.subplots(1, len(self), figsize=figsize)
         for c, ax in zip(self, axs, strict=True): # pyrefly: ignore
             ax.set_facecolor(c)
@@ -54,7 +60,13 @@ def cubehelix(
     return Palette(colors)
 
 
-def cmap_colors(cmap: str, n: int, vmin: float = 0.0, vmax: float = 1.0):
+def cmap_colors(
+    cmap: str,
+    n: int,
+    vmin: float = 0.0,
+    vmax: float = 1.0,
+) -> Palette:
+    """Extract ``n`` colors from a Matplotlib colormap."""
     return Palette(getattr(cm, cmap)(np.linspace(vmin, vmax, n)))
 
 
@@ -371,6 +383,8 @@ rose = Palette(
 
 
 def rainbow(k: int) -> Palette:
+    """Return a palette of distinct colors from several base palettes."""
+
     _colors = (
         blue,
         orange,
