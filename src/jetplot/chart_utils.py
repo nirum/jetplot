@@ -2,11 +2,11 @@
 
 from collections.abc import Callable
 from functools import partial, wraps
-
-from matplotlib.axes import Axes
+from typing import Any
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
 
 __all__ = [
     "noticks",
@@ -135,9 +135,7 @@ def get_bounds(axis: str, ax: Axes | None = None) -> tuple[float, float]:
         ax = plt.gca()
 
 
-    Result = tuple[Callable[[], list[float]], Callable[[], list[str]], Callable[[], tuple[float, float]], str]
-
-    axis_map: dict[str, Result] = {
+    axis_map: dict[str, Any] = {
         "x": (ax.get_xticks, ax.get_xticklabels, ax.get_xlim, "bottom"),
         "y": (ax.get_yticks, ax.get_yticklabels, ax.get_ylim, "left"),
     }

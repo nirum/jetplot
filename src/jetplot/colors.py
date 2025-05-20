@@ -3,9 +3,9 @@
 import numpy as np
 from matplotlib import cm
 from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
 from matplotlib.colors import LinearSegmentedColormap, to_hex
 from matplotlib.figure import Figure
-from matplotlib.axes import Axes
 from matplotlib.typing import ColorType
 from numpy.typing import NDArray
 
@@ -18,7 +18,7 @@ class Palette(list[ColorType]):
     """Color palette based on a list of values."""
 
     @property
-    def hex(self) -> "Palette":
+    def hex(self):
         """Return the palette colors as hexadecimal strings."""
         return Palette([to_hex(rgb) for rgb in self])
 
