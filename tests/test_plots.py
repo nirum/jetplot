@@ -5,10 +5,12 @@ from jetplot import plots
 
 
 def test_hist():
+    bins = 11
     x = np.arange(10)
     fig, ax = plt.subplots()
-    n, bins, patches = plots.hist(x, fig=fig, ax=ax)
-    assert n.sum() == len(x)
+    values, bin_edges, patches = plots.hist(x, bins=bins, fig=fig, ax=ax)
+    assert len(values) == bins
+    assert len(bin_edges) == bins + 1
     plt.close(fig)
 
 
@@ -17,7 +19,7 @@ def test_hist2d():
     y = np.random.randn(100)
     fig, ax = plt.subplots()
     plots.hist2d(x, y, fig=fig, ax=ax)
-    assert ax.get_aspect() == "equal"
+    assert ax.get_aspect() == 1.0
     plt.close(fig)
 
 

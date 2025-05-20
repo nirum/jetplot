@@ -88,23 +88,23 @@ def violinplot(
 
 
 @plotwrapper
-def hist(*args, **kwargs):
+def hist(*args, histtype="stepfilled", alpha=0.85, density=True, **kwargs):
     """Wrapper for matplotlib.hist function."""
-
-    # remove kwargs that are filled in manually
-    kwargs.pop("alpha", None)
-    kwargs.pop("histtype", None)
-    kwargs.pop("normed", None)
-
-    # get the axis and figure handles
     ax = kwargs.pop("ax")
     kwargs.pop("fig")
 
-    return ax.hist(*args, histtype="stepfilled", alpha=0.85, normed=True, **kwargs)
+    return ax.hist(*args, histtype=histtype, alpha=alpha, density=density, **kwargs)
 
 
 @plotwrapper
-def hist2d(x, y, bins=None, range=None, cmap="hot", **kwargs):
+def hist2d(
+    x: np.ndarray,
+    y: np.ndarray,
+    bins: int | None = None,
+    limits: np.ndarray | None = None,
+    cmap: str = "hot",
+    **kwargs,
+):
     """
     Visualizes a 2D histogram by binning data.
 
@@ -116,17 +116,15 @@ def hist2d(x, y, bins=None, range=None, cmap="hot", **kwargs):
     """
 
     # parse inputs
-    if range is None:
-        range_ = np.array([[np.min(x), np.max(x)], [np.min(y), np.max(y)]])
-    else:
-        range_ = range
+    if limits is None:
+        limits = np.array([[np.min(x), np.max(x)], [np.min(y), np.max(y)]])
 
     if bins is None:
         bins = 25
 
     # compute the histogram
     # pyrefly: ignore  # no-matching-overload, bad-argument-type
-    cnt, xe, ye = np.histogram2d(x, y, bins=bins, range=range_, density=True)
+    cnt, xe, ye = np.histogram2d(x, y, bins=bins, range=limits, density=True)
 
     # generate the plot
     ax = kwargs["ax"]
