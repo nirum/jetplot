@@ -1,8 +1,10 @@
 """Tests chart utilities."""
 
 from itertools import product
-from jetplot import chart_utils as cu
+
 from matplotlib import pyplot as plt
+
+from jetplot import chart_utils as cu
 
 
 def test_wrappers():
@@ -26,7 +28,7 @@ def test_nospines():
     args = ((True, False),) * len(compass)
 
     for bools in product(*args):
-        kwargs = dict(zip(compass, bools))
+        kwargs = dict(zip(compass, bools, strict=False))
 
         fig, ax = plt.subplots()
         ax.plot([1, 2, 3, 4, 5])

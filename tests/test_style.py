@@ -1,8 +1,9 @@
 """Tests style settings."""
 
-from jetplot import style
-from matplotlib import rcParams
 import numpy as np
+from matplotlib import rcParams
+
+from jetplot import style
 
 
 def test_defaults():

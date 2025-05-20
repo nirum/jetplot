@@ -1,7 +1,8 @@
 """Colorschemes"""
 
 import numpy as np
-from matplotlib import cm, pyplot as plt
+from matplotlib import cm
+from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, to_hex
 
 from .chart_utils import noticks
@@ -22,7 +23,7 @@ class Palette(list):
 
     def plot(self, figsize=(5, 1)):
         fig, axs = plt.subplots(1, len(self), figsize=figsize)
-        for c, ax in zip(self, axs):
+        for c, ax in zip(self, axs, strict=False):
             ax.set_facecolor(c)
             ax.set_aspect("equal")
             noticks(ax=ax)

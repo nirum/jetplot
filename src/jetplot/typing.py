@@ -1,7 +1,13 @@
+from __future__ import annotations
 
-from typing import Sequence, Union
+from collections.abc import Sequence
 
-__all__ = ["Color", "Palette"]
+import numpy as np
+from numpy.typing import NDArray
 
-Color = Union[str, Sequence[float]]
+__all__ = ["Color", "Palette", "FloatArray"]
+
+Color = str | Sequence[float]
 Palette = Sequence[Color]
+
+FloatArray = NDArray[np.floating]
