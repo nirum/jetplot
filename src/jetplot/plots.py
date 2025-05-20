@@ -4,6 +4,9 @@ import numpy as np
 from matplotlib.patches import Ellipse
 from matplotlib.transforms import Affine2D
 from matplotlib.typing import ColorType
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
+from collections.abc import Sequence
 from numpy.typing import NDArray
 from scipy.stats import gaussian_kde
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
@@ -35,7 +38,8 @@ def violinplot(
     showmeans=False,
     showquartiles=True,
     **kwargs,
-):
+) -> Axes:
+    """Violin plot with customizable elements."""
     _ = kwargs.pop("fig")
     ax = kwargs.pop("ax")
 
@@ -85,6 +89,8 @@ def violinplot(
             s=15,
             zorder=20,
         )
+
+    return ax
 
 
 @plotwrapper
@@ -247,11 +253,17 @@ def bar(
 
 
 @plotwrapper
-def lines(x, lines=None, cmap="viridis", **kwargs):
+def lines(
+    x: NDArray[np.floating] | NDArray[np.integer],
+    lines: list[NDArray[np.floating]] | None = None,
+    cmap: str = "viridis",
+    **kwargs,
+) -> Axes:
+    """Plot multiple lines using a color map."""
     ax = kwargs["ax"]
 
     if lines is None:
-        lines = list(x)
+        lines = list(x)  # pyrefly: ignore
         x = np.arange(len(lines[0]))
 
     else:
@@ -260,6 +272,8 @@ def lines(x, lines=None, cmap="viridis", **kwargs):
     colors = cmap_colors(cmap, len(lines))
     for line, color in zip(lines, colors, strict=False):
         ax.plot(x, line, color=color)
+
+    return ax
 
 
 @plotwrapper
@@ -279,7 +293,15 @@ def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **k
 
 
 @figwrapper
-def ridgeline(t, xs, colors, edgecolor="#ffffff", ymax=0.6, **kwargs):
+def ridgeline(
+    t: NDArray[np.floating],
+    xs: Sequence[NDArray[np.floating]],
+    colors: Sequence[ColorType],
+    edgecolor: ColorType = "#ffffff",
+    ymax: float = 0.6,
+    **kwargs,
+) -> tuple[Figure, list[Axes]]:
+    """Stacked density plots reminiscent of a ridgeline plot."""
     fig = kwargs["fig"]
     axs = []
 

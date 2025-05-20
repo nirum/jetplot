@@ -140,7 +140,7 @@ dark_mode = partial(
 
 def available_fonts() -> list[str]:
     """Returns a list of available fonts."""
-    return sorted(set([f.name for f in fm.fontManager.ttflist])) # pyrefly: ignore
+    return sorted(set([f.name for f in fm.fontManager.ttflist]))  # pyrefly: ignore
 
 
 def install_fonts(filepath: str):
@@ -150,7 +150,7 @@ def install_fonts(filepath: str):
     font_files = fm.findSystemFonts(fontpaths=[filepath])
 
     for font_file in font_files:
-        fm.fontManager.addfont(font_file) # pyrefly: ignore
+        fm.fontManager.addfont(font_file)  # pyrefly: ignore
 
     new_fonts = set(available_fonts()) - original_fonts
     if new_fonts:
