@@ -30,7 +30,7 @@ class Palette(list[ColorType]):
     def plot(self, figsize: tuple[int, int] = (5, 1)) -> tuple[Figure, NDArray[Axes]]:
         """Visualize the colors in the palette."""
         fig, axs = plt.subplots(1, len(self), figsize=figsize)
-        for c, ax in zip(self, axs, strict=True): # pyrefly: ignore
+        for c, ax in zip(self, axs, strict=True):  # pyrefly: ignore
             ax.set_facecolor(c)
             ax.set_aspect("equal")
             noticks(ax=ax)

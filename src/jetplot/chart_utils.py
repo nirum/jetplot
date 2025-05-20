@@ -133,7 +133,6 @@ def get_bounds(axis: Literal["x", "y"], ax: Axes | None = None) -> tuple[float, 
     if ax is None:
         ax = plt.gca()
 
-
     axis_map: dict[str, Any] = {
         "x": (ax.get_xticks, ax.get_xticklabels, ax.get_xlim, "bottom"),
         "y": (ax.get_yticks, ax.get_yticklabels, ax.get_ylim, "left"),
@@ -213,7 +212,7 @@ def yclamp(
     y0 = lims[0] if y0 is None else y0
     y1 = lims[1] if y1 is None else y1
 
-    ticks: list[float] = ax.get_yticks() # pyrefly: ignore
+    ticks: list[float] = ax.get_yticks()  # pyrefly: ignore
     dt = float(np.mean(np.diff(ticks))) if dt is None else float(dt)
 
     new_ticks = np.arange(dt * np.floor(y0 / dt), dt * (np.ceil(y1 / dt) + 1), dt)
@@ -238,7 +237,7 @@ def xclamp(
     x0 = lims[0] if x0 is None else x0
     x1 = lims[1] if x1 is None else x1
 
-    ticks: list[float] = ax.get_xticks() # pyrefly: ignore
+    ticks: list[float] = ax.get_xticks()  # pyrefly: ignore
     dt = float(np.mean(np.diff(ticks))) if dt is None else float(dt)
 
     new_ticks = np.arange(dt * np.floor(x0 / dt), dt * (np.ceil(x1 / dt) + 1), dt)

@@ -1,12 +1,11 @@
 """Image visualization tools."""
 
-from functools import partial
 from collections.abc import Callable
+from functools import partial
 
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FixedLocator
-from matplotlib.axes import Axes
 
 from . import colors as c
 from .chart_utils import noticks, plotwrapper
@@ -137,7 +136,7 @@ def cmat(
 
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows), indexing="xy")
 
-    for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True): # pyrefly: ignore
+    for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True):  # pyrefly: ignore
         color = dark_color if (value <= theta) else light_color
         annot = f"{{:{fmt}}}".format(value)
         ax.text(x, y, annot, ha="center", va="center", color=color, fontsize=fontsize)

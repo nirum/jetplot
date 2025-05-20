@@ -265,7 +265,7 @@ def lines(
     ax = kwargs["ax"]
 
     if lines is None:
-        lines = list(x) # pyrefly: ignore
+        lines = list(x)  # pyrefly: ignore
         x = np.arange(len(lines[0]))
 
     else:
