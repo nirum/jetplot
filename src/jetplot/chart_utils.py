@@ -1,8 +1,7 @@
 """Plotting utils."""
 
-from collections.abc import Callable
 from functools import partial, wraps
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -116,7 +115,7 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
     return ax
 
 
-def get_bounds(axis: str, ax: Axes | None = None) -> tuple[float, float]:
+def get_bounds(axis: Literal["x", "y"], ax: Axes | None = None) -> tuple[float, float]:
     """Return the axis spine bounds for the given axis.
 
     Parameters
