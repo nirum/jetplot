@@ -8,9 +8,9 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 from scipy.ndimage import gaussian_filter1d
 
-from jetplot.typing import FloatArray
-
 __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normalize"]
+
+FloatArray = NDArray[np.floating]
 
 
 def smooth(x, sigma=1.0, axis=0):
@@ -69,8 +69,10 @@ def canoncorr(X: FloatArray, Y: FloatArray) -> FloatArray:
        between linear subspaces." Mathematics of computation 27.123 (1973): 579-594.
     """
     # Orthogonalize each subspace
-    Qx, _ = np.linalg.qr(X, mode="reduced")  # pyrefly: ignore
-    Qy, _ = np.linalg.qr(Y, mode="reduced")  # pyrefly: ignore
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
+    Qx, _ = np.linalg.qr(X, mode="reduced")
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
+    Qy, _ = np.linalg.qr(Y, mode="reduced")
 
     # singular values of the inner product between the orthogonalized spaces
     return np.linalg.svd(Qx.T @ Qy, compute_uv=False)

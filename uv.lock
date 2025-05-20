@@ -363,21 +363,23 @@ dependencies = [
 
 [package.optional-dependencies]
 dev = [
+    { name = "matplotlib-stubs" },
     { name = "pyrefly" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
+    { name = "scipy-stubs" },
 ]
 docs = [
     { name = "mkdocs" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
-    { name = "scipy-stubs" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "matplotlib" },
+    { name = "matplotlib-stubs", marker = "extra == 'dev'", specifier = ">=0.1.0" },
     { name = "mkdocs", marker = "extra == 'docs'", specifier = ">=1.5.3" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.2.7" },
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.22.0" },
@@ -388,7 +390,7 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11.10" },
     { name = "scikit-learn", specifier = ">=1.0.2" },
     { name = "scipy" },
-    { name = "scipy-stubs", marker = "extra == 'docs'", specifier = ">=1.15.3.0" },
+    { name = "scipy-stubs", marker = "extra == 'dev'", specifier = ">=1.15.3.0" },
 ]
 provides-extras = ["dev", "docs"]
 
@@ -617,6 +619,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/3d/d1/f54d43e95384b312ffa4a74a4326c722f3b8187aaaa12e9a84cdf3037131/matplotlib-3.10.3-pp310-pypy310_pp73-macosx_10_15_x86_64.whl", hash = "sha256:86ab63d66bbc83fdb6733471d3bff40897c1e9921cba112accd748eee4bce5e4", size = 8162896 },
     { url = "https://files.pythonhosted.org/packages/24/a4/fbfc00c2346177c95b353dcf9b5a004106abe8730a62cb6f27e79df0a698/matplotlib-3.10.3-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:a48f9c08bf7444b5d2391a83e75edb464ccda3c380384b36532a0962593a1751", size = 8039702 },
     { url = "https://files.pythonhosted.org/packages/6a/b9/59e120d24a2ec5fc2d30646adb2efb4621aab3c6d83d66fb2a7a182db032/matplotlib-3.10.3-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:cb73d8aa75a237457988f9765e4dfe1c0d2453c5ca4eabc897d4309672c8e014", size = 8594298 },
+]
+
+[[package]]
+name = "matplotlib-stubs"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8f/69/4e4938d9162a75e3505559af59fe6c650d71d72656f0659d4112e9539b98/matplotlib_stubs-0.1.0.tar.gz", hash = "sha256:98e078ff77085f626eb3388899ec40e67f3bc3c422220eb4f86c6185e40cd3e3", size = 75056 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f5/0b/f7759d93e7f5ccebc9fdccce14eace2aa1de195eaa90c5840b4687451869/matplotlib_stubs-0.1.0-py3-none-any.whl", hash = "sha256:bf46ad5e515a9e721b7e1f4410825677de123c5bc6d18ca7d5f37f59936938f4", size = 116094 },
 ]
 
 [[package]]

@@ -1,13 +1,13 @@
 """Opinionated matplotlib style defaults."""
 
+from collections.abc import Mapping
 from functools import partial
-
-
-from typing import Mapping, Any
+from typing import Any
 
 from cycler import cycler
-from jetplot.typing import Color, Palette
-from matplotlib import font_manager as fm, rcParams
+from matplotlib import font_manager as fm
+from matplotlib import rcParams
+from matplotlib.typing import ColorType
 
 from . import colors as c
 
@@ -112,10 +112,10 @@ def set_dpi(dpi: int):
 
 def set_defaults(
     *,
-    bg: Color,
-    fg: Color,
-    text: Color,
-    cycler_colors: Palette,
+    bg: ColorType,
+    fg: ColorType,
+    text: ColorType,
+    cycler_colors: c.Palette,
     defaults: Mapping[str, Any] = STYLE_DEFAULTS,
     font: str = "Helvetica",
 ):
@@ -138,8 +138,9 @@ dark_mode = partial(
 )
 
 
-def available_fonts():
-    return sorted(set([f.name for f in fm.fontManager.ttflist]))
+def available_fonts() -> list[str]:
+    """Returns a list of available fonts."""
+    return sorted(set([f.name for f in fm.fontManager.ttflist])) # pyrefly: ignore
 
 
 def install_fonts(filepath: str):
@@ -149,7 +150,7 @@ def install_fonts(filepath: str):
     font_files = fm.findSystemFonts(fontpaths=[filepath])
 
     for font_file in font_files:
-        fm.fontManager.addfont(font_file)
+        fm.fontManager.addfont(font_file) # pyrefly: ignore
 
     new_fonts = set(available_fonts()) - original_fonts
     if new_fonts:
