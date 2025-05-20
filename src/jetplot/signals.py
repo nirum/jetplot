@@ -13,7 +13,7 @@ __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normali
 FloatArray = NDArray[np.floating]
 
 
-def smooth(x, sigma=1.0, axis=0):
+def smooth(x: ArrayLike, sigma: float = 1.0, axis: int = 0) -> NDArray[np.floating]:
     """Smooths a 1D signal with a gaussian filter.
 
     Args:
@@ -26,7 +26,7 @@ def smooth(x, sigma=1.0, axis=0):
     return gaussian_filter1d(x, sigma, axis=axis)
 
 
-def stable_rank(X):
+def stable_rank(X: NDArray[np.floating]) -> float:
     """Computes the stable rank of a matrix"""
     assert X.ndim == 2, "X must be a matrix"
     svals_sq = np.linalg.svd(X, compute_uv=False, full_matrices=False) ** 2

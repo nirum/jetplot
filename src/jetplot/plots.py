@@ -1,12 +1,15 @@
 """Common plots."""
 
 import numpy as np
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from matplotlib.patches import Ellipse
 from matplotlib.transforms import Affine2D
 from matplotlib.typing import ColorType
 from numpy.typing import NDArray
 from scipy.stats import gaussian_kde
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
+from typing import Any, Iterable, Sequence
 
 from .chart_utils import figwrapper, nospines, plotwrapper
 from .colors import cmap_colors, neutral
@@ -27,15 +30,15 @@ __all__ = [
 @plotwrapper
 def violinplot(
     data: NDArray[np.floating],
-    xs,
-    fc=neutral[3],
-    ec=neutral[9],
-    mc=neutral[1],
-    showmedians=True,
-    showmeans=False,
-    showquartiles=True,
-    **kwargs,
-):
+    xs: Sequence[float] | float,
+    fc: ColorType = neutral[3],
+    ec: ColorType = neutral[9],
+    mc: ColorType = neutral[1],
+    showmedians: bool = True,
+    showmeans: bool = False,
+    showquartiles: bool = True,
+    **kwargs: Any,
+) -> Axes:
     _ = kwargs.pop("fig")
     ax = kwargs.pop("ax")
 
@@ -85,10 +88,10 @@ def violinplot(
             s=15,
             zorder=20,
         )
-
+    return ax
 
 @plotwrapper
-def hist(*args, **kwargs):
+def hist(*args: Any, **kwargs: Any) -> Any:
     """Wrapper for matplotlib.hist function."""
 
     # remove kwargs that are filled in manually
@@ -104,7 +107,14 @@ def hist(*args, **kwargs):
 
 
 @plotwrapper
-def hist2d(x, y, bins=None, range=None, cmap="hot", **kwargs):
+def hist2d(
+    x: NDArray[np.floating],
+    y: NDArray[np.floating],
+    bins: int | Sequence[float] | None = None,
+    range: NDArray[np.floating] | Sequence[Sequence[float]] | None = None,
+    cmap: str = "hot",
+    **kwargs: Any,
+) -> None:
     """
     Visualizes a 2D histogram by binning data.
 
@@ -138,18 +148,18 @@ def hist2d(x, y, bins=None, range=None, cmap="hot", **kwargs):
 
 @plotwrapper
 def errorplot(
-    x,
-    y,
-    yerr,
-    method="patch",
+    x: NDArray[np.floating],
+    y: NDArray[np.floating],
+    yerr: NDArray[np.floating] | float | tuple[NDArray[np.floating], NDArray[np.floating]],
+    method: str = "patch",
     color: ColorType = "#222222",
-    xscale="linear",
-    fmt="-",
+    xscale: str = "linear",
+    fmt: str = "-",
     err_color: ColorType = "#cccccc",
-    alpha_fill=1.0,
-    clip_on=True,
-    **kwargs,
-):
+    alpha_fill: float = 1.0,
+    clip_on: bool = True,
+    **kwargs: Any,
+) -> None:
     """Plot a line with error bars."""
     ax = kwargs["ax"]
 
@@ -196,16 +206,16 @@ def errorplot(
 
 @plotwrapper
 def bar(
-    labels,
-    data,
-    color="#888888",
-    width=0.7,
-    offset=0.0,
-    err=None,
-    capsize=5,
-    capthick=2,
-    **kwargs,
-):
+    labels: Sequence[str],
+    data: Sequence[float],
+    color: ColorType = "#888888",
+    width: float = 0.7,
+    offset: float = 0.0,
+    err: Sequence[float] | None = None,
+    capsize: float = 5,
+    capthick: float = 2,
+    **kwargs: Any,
+) -> Axes:
     """Bar chart.
 
     Args:
@@ -249,7 +259,12 @@ def bar(
 
 
 @plotwrapper
-def lines(x, lines=None, cmap="viridis", **kwargs):
+def lines(
+    x: NDArray[np.floating] | Sequence[float],
+    lines: Iterable[Sequence[float]] | None = None,
+    cmap: str = "viridis",
+    **kwargs: Any,
+) -> None:
     ax = kwargs["ax"]
 
     if lines is None:
@@ -265,7 +280,16 @@ def lines(x, lines=None, cmap="viridis", **kwargs):
 
 
 @plotwrapper
-def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **kwargs):
+def waterfall(
+    x: NDArray[np.floating],
+    ys: Iterable[NDArray[np.floating]],
+    dy: float = 1.0,
+    pad: float = 0.1,
+    color: ColorType = "#444444",
+    ec: ColorType = "#cccccc",
+    ew: float = 2.0,
+    **kwargs: Any,
+) -> None:
     """Waterfall plot."""
     ax = kwargs["ax"]
     total = len(ys)
@@ -281,7 +305,14 @@ def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **k
 
 
 @figwrapper
-def ridgeline(t, xs, colors, edgecolor="#ffffff", ymax=0.6, **kwargs):
+def ridgeline(
+    t: NDArray[np.floating],
+    xs: Iterable[NDArray[np.floating]],
+    colors: Iterable[ColorType],
+    edgecolor: ColorType = "#ffffff",
+    ymax: float = 0.6,
+    **kwargs: Any,
+) -> tuple[Figure, list[Axes]]:
     fig = kwargs["fig"]
     axs = []
 
@@ -307,7 +338,7 @@ def ridgeline(t, xs, colors, edgecolor="#ffffff", ymax=0.6, **kwargs):
 
 
 @plotwrapper
-def circle(radius=1.0, **kwargs):
+def circle(radius: float = 1.0, **kwargs: Any) -> None:
     """Plots a unit circle."""
     ax = kwargs["ax"]
     theta = np.linspace(0, 2 * np.pi, 1001)
@@ -315,7 +346,14 @@ def circle(radius=1.0, **kwargs):
 
 
 @plotwrapper
-def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
+def ellipse(
+    x: NDArray[np.floating],
+    y: NDArray[np.floating],
+    n_std: float = 3.0,
+    facecolor: str = "none",
+    estimator: str = "empirical",
+    **kwargs: Any,
+) -> Ellipse:
     """
     Create a plot of the covariance confidence ellipse of *x* and *y*.
 

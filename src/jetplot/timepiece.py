@@ -4,38 +4,39 @@ import time
 from functools import wraps
 
 import numpy as np
+from typing import Any, Callable
 
 __all__ = ["hrtime", "Stopwatch", "profile"]
 
 
 class Stopwatch:
-    def __init__(self, name=""):
+    def __init__(self, name: str = "") -> None:
         self.name = name
         self.start = time.perf_counter()
         self.absolute_start = time.perf_counter()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "\u231a  Stopwatch for: " + self.name
 
     @property
-    def elapsed(self):
+    def elapsed(self) -> float:
         current = time.perf_counter()
         elapsed = current - self.start
         self.start = time.perf_counter()
         return elapsed
 
-    def checkpoint(self, name=""):
+    def checkpoint(self, name: str = "") -> None:
         print(f"{self.name} {name} took {hrtime(self.elapsed)}".strip())
 
-    def __enter__(self):
+    def __enter__(self) -> "Stopwatch":
         return self
 
-    def __exit__(self, *_):
+    def __exit__(self, *_: object) -> None:
         total = hrtime(time.perf_counter() - self.absolute_start)
         print(f"{self.name} Finished! \u2714\nTotal elapsed time: {total}")
 
 
-def hrtime(t: float):
+def hrtime(t: float) -> str:
     """Converts a time in seconds to a reasonable human readable time.
 
     Args:
@@ -84,7 +85,8 @@ def hrtime(t: float):
     return timestr
 
 
-def profile(func):
+
+def profile(func: Callable[..., Any]) -> Callable[..., Any]:
     """Timing (profile) decorator for a function."""
     calls = list()
 

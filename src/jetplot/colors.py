@@ -15,14 +15,14 @@ class Palette(list[ColorType]):
     """Color palette based on a list of values."""
 
     @property
-    def hex(self):
+    def hex(self) -> "Palette":
         return Palette([to_hex(rgb) for rgb in self])
 
     @property
-    def cmap(self):
+    def cmap(self) -> LinearSegmentedColormap:
         return LinearSegmentedColormap.from_list("", self)
 
-    def plot(self, figsize=(5, 1)):
+    def plot(self, figsize: tuple[float, float] = (5, 1)) -> tuple[plt.Figure, np.ndarray]:
         fig, axs = plt.subplots(1, len(self), figsize=figsize)
         for c, ax in zip(self, axs, strict=True): # pyrefly: ignore
             ax.set_facecolor(c)
@@ -40,7 +40,7 @@ def cubehelix(
     start: float = 0.0,
     rot: float = 0.4,
     hue: float = 0.8,
-):
+) -> Palette:
     """Cubehelix parameterized colormap."""
     lambda_ = np.linspace(vmin, vmax, n)
     x = lambda_**gamma
@@ -54,7 +54,7 @@ def cubehelix(
     return Palette(colors)
 
 
-def cmap_colors(cmap: str, n: int, vmin: float = 0.0, vmax: float = 1.0):
+def cmap_colors(cmap: str, n: int, vmin: float = 0.0, vmax: float = 1.0) -> Palette:
     return Palette(getattr(cm, cmap)(np.linspace(vmin, vmax, n)))
 
 

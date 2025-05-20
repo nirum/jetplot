@@ -76,7 +76,7 @@ STYLE_DEFAULTS = {
 }
 
 
-def set_colors(bg, fg, text):
+def set_colors(bg: ColorType, fg: ColorType, text: ColorType) -> None:
     """Set background/foreground colorscheme."""
     rcParams.update(
         {
@@ -96,7 +96,7 @@ def set_colors(bg, fg, text):
     )
 
 
-def set_font(fontname: str):
+def set_font(fontname: str) -> None:
     """Specifies the matplotlib default font."""
 
     if fontname not in available_fonts():
@@ -105,7 +105,7 @@ def set_font(fontname: str):
     rcParams["font.family"] = fontname
 
 
-def set_dpi(dpi: int):
+def set_dpi(dpi: int) -> None:
     """Sets the figure DPI."""
     rcParams["figure.dpi"] = dpi
 
@@ -118,7 +118,7 @@ def set_defaults(
     cycler_colors: c.Palette,
     defaults: Mapping[str, Any] = STYLE_DEFAULTS,
     font: str = "Helvetica",
-):
+) -> None:
     """Sets matplotlib defaults."""
     rcParams.update(defaults)
     set_colors(bg, fg, text)
@@ -143,7 +143,7 @@ def available_fonts() -> list[str]:
     return sorted(set([f.name for f in fm.fontManager.ttflist])) # pyrefly: ignore
 
 
-def install_fonts(filepath: str):
+def install_fonts(filepath: str) -> None:
     """Installs .ttf fonts in the given folder."""
 
     original_fonts = set(available_fonts())

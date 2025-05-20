@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 from functools import partial, wraps
+from typing import Any
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -19,7 +20,7 @@ __all__ = [
 ]
 
 
-def figwrapper(fun):
+def figwrapper(fun: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator that adds figure handles to the kwargs of a function."""
 
     @wraps(fun)
@@ -32,7 +33,7 @@ def figwrapper(fun):
     return wrapper
 
 
-def plotwrapper(fun):
+def plotwrapper(fun: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator that adds figure and axes handles to the kwargs of a function."""
 
     @wraps(fun)
@@ -51,7 +52,7 @@ def plotwrapper(fun):
     return wrapper
 
 
-def axwrapper(fun):
+def axwrapper(fun: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator that adds an axes handle to kwargs."""
 
     @wraps(fun)
@@ -69,7 +70,7 @@ def axwrapper(fun):
 
 
 @axwrapper
-def noticks(**kwargs):
+def noticks(**kwargs: Any) -> None:
     """
     Clears tick marks (useful for images)
     """
@@ -80,7 +81,13 @@ def noticks(**kwargs):
 
 
 @axwrapper
-def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
+def nospines(
+    left: bool = False,
+    bottom: bool = False,
+    top: bool = True,
+    right: bool = True,
+    **kwargs: Any,
+) -> plt.Axes:
     """
     Hides the specified axis spines (by default, right and top spines)
     """
@@ -114,7 +121,7 @@ def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
     return ax
 
 
-def get_bounds(axis, ax=None):
+def get_bounds(axis: str, ax: plt.Axes | None = None) -> tuple[float, float]:
     if ax is None:
         ax = plt.gca()
 
@@ -148,7 +155,12 @@ def get_bounds(axis, ax=None):
 
 
 @axwrapper
-def breathe(xlims=None, ylims=None, padding_percent=0.05, **kwargs):
+def breathe(
+    xlims: tuple[float, float] | None = None,
+    ylims: tuple[float, float] | None = None,
+    padding_percent: float = 0.05,
+    **kwargs: Any,
+) -> plt.Axes:
     """Adds space between axes and plot."""
     ax = kwargs["ax"]
 
@@ -187,7 +199,12 @@ def breathe(xlims=None, ylims=None, padding_percent=0.05, **kwargs):
 
 
 @axwrapper
-def yclamp(y0=None, y1=None, dt=None, **kwargs):
+def yclamp(
+    y0: float | None = None,
+    y1: float | None = None,
+    dt: float | None = None,
+    **kwargs: Any,
+) -> plt.Axes:
     ax = kwargs["ax"]
 
     lims = ax.get_ylim()
@@ -206,7 +223,12 @@ def yclamp(y0=None, y1=None, dt=None, **kwargs):
 
 
 @axwrapper
-def xclamp(x0=None, x1=None, dt=None, **kwargs):
+def xclamp(
+    x0: float | None = None,
+    x1: float | None = None,
+    dt: float | None = None,
+    **kwargs: Any,
+) -> plt.Axes:
     ax = kwargs["ax"]
 
     lims = ax.get_xlim()
