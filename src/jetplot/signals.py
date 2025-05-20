@@ -1,14 +1,16 @@
 """Tools for signal processing."""
 
+from __future__ import annotations
 
-from typing import Callable
+from typing import Protocol, SupportsIndex
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
-
-from scipy.ndimage import gaussian_filter1d  # pyrefly: ignore[missing-module-attribute]
+from scipy.ndimage import gaussian_filter1d
 
 __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normalize"]
+
+FloatArray = NDArray[np.floating]
 
 
 def smooth(x, sigma=1.0, axis=0):
@@ -31,18 +33,21 @@ def stable_rank(X):
     return svals_sq.sum() / svals_sq.max()
 
 
-def participation_ratio(C: NDArray[np.floating]) -> float:
+def participation_ratio(C: np.ndarray) -> float:
     """Compute the participation ratio of a square matrix."""
 
-    assert C.ndim == 2, "C must be a matrix"
-    assert C.shape[0] == C.shape[1], "C must be a square matrix"
+    if C.ndim != 2:
+        raise ValueError("C must be a matrix")
+
+    if C.shape[0] != C.shape[1]:
+        raise ValueError("C must be a square matrix")
 
     diag_sum = float(np.trace(C))
     diag_sq_sum = float(np.trace(C @ C))
     return diag_sum**2 / diag_sq_sum
 
 
-def canoncorr(X: ArrayLike, Y: ArrayLike) -> NDArray[np.floating]:
+def canoncorr(X: FloatArray, Y: FloatArray) -> FloatArray:
     """Canonical correlation between two subspaces.
 
     Args:
@@ -58,22 +63,29 @@ def canoncorr(X: ArrayLike, Y: ArrayLike) -> NDArray[np.floating]:
       the principal vectors and angles via the QR decomposition [2]_.
 
     References:
-      .. [1] Angles between flats. (2016, August 4). In Wikipedia, The Free Encyclopedia.
+      .. [1] Angles between flats. (2016, August 4). In Wikipedia, The Free Encyclopedia
        https://en.wikipedia.org/w/index.php?title=Angles_between_flats
       .. [2] Björck, Ȧke, and Gene H. Golub. "Numerical methods for computing angles
        between linear subspaces." Mathematics of computation 27.123 (1973): 579-594.
     """
     # Orthogonalize each subspace
-
-    qu = np.linalg.qr(np.asarray(X))[0]
-    qv = np.linalg.qr(np.asarray(Y))[0]
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
+    Qx, _ = np.linalg.qr(X, mode="reduced")
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
+    Qy, _ = np.linalg.qr(Y, mode="reduced")
 
     # singular values of the inner product between the orthogonalized spaces
-    return np.linalg.svd(qu.T.dot(qv), compute_uv=False, full_matrices=False)
+    return np.linalg.svd(Qx.T @ Qy, compute_uv=False)
+
+
+class NormFunction(Protocol):
+    def __call__(
+        self, x: ArrayLike, *, axis: SupportsIndex, keepdims: bool
+    ) -> NDArray[np.floating]: ...
 
 
 def normalize(
-    X: ArrayLike, axis: int = -1, norm: Callable[[ArrayLike], float] = np.linalg.norm
+    X: ArrayLike, axis: int = -1, norm: NormFunction = np.linalg.norm
 ) -> NDArray[np.floating]:
     """Normalizes elements of an array or matrix.
 

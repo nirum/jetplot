@@ -3,12 +3,13 @@
 import numpy as np
 from matplotlib.patches import Ellipse
 from matplotlib.transforms import Affine2D
+from matplotlib.typing import ColorType
+from numpy.typing import NDArray
 from scipy.stats import gaussian_kde
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
 
 from .chart_utils import figwrapper, nospines, plotwrapper
 from .colors import cmap_colors, neutral
-from .typing import Color
 
 __all__ = [
     "hist",
@@ -25,7 +26,7 @@ __all__ = [
 
 @plotwrapper
 def violinplot(
-    data,
+    data: NDArray[np.floating],
     xs,
     fc=neutral[3],
     ec=neutral[9],
@@ -54,6 +55,7 @@ def violinplot(
         pc.set_edgecolor(ec)
         pc.set_alpha(1.0)
 
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     q1, medians, q3 = np.percentile(data, [25, 50, 75], axis=0)
 
     ax.vlines(
@@ -76,7 +78,8 @@ def violinplot(
     if showmeans:
         ax.scatter(
             xs,
-            np.mean(data, axis=0, dtype=float),
+            # pyrefly: ignore  # no-matching-overload, bad-argument-type
+            np.mean(data, axis=0),
             marker="s",
             color=mc,
             s=15,
@@ -122,7 +125,7 @@ def hist2d(x, y, bins=None, range=None, cmap="hot", **kwargs):
         bins = 25
 
     # compute the histogram
-
+    # pyrefly: ignore  # no-matching-overload, bad-argument-type
     cnt, xe, ye = np.histogram2d(x, y, bins=bins, range=range_, density=True)
 
     # generate the plot
@@ -139,10 +142,10 @@ def errorplot(
     y,
     yerr,
     method="patch",
-    color: Color = "#222222",
+    color: ColorType = "#222222",
     xscale="linear",
     fmt="-",
-    err_color: Color = "#cccccc",
+    err_color: ColorType = "#cccccc",
     alpha_fill=1.0,
     clip_on=True,
     **kwargs,
@@ -257,7 +260,7 @@ def lines(x, lines=None, cmap="viridis", **kwargs):
         lines = list(lines)
 
     colors = cmap_colors(cmap, len(lines))
-    for line, color in zip(lines, colors):
+    for line, color in zip(lines, colors, strict=False):
         ax.plot(x, line, color=color)
 
 
@@ -282,7 +285,7 @@ def ridgeline(t, xs, colors, edgecolor="#ffffff", ymax=0.6, **kwargs):
     fig = kwargs["fig"]
     axs = []
 
-    for k, (x, c) in enumerate(zip(xs, colors)):
+    for k, (x, c) in enumerate(zip(xs, colors, strict=False)):
         ax = fig.add_subplot(len(xs), 1, k + 1)
         y = gaussian_kde(x).evaluate(t)
         ax.fill_between(t, y, color=c, clip_on=False)

@@ -1,9 +1,10 @@
 """Tests the colors module."""
 
-from jetplot import colors
 from matplotlib.axes import Axes
 from matplotlib.colors import to_rgb
 from matplotlib.figure import Figure
+
+from jetplot import colors
 
 
 def test_palette():
@@ -19,7 +20,7 @@ def test_palette():
     assert len(pal) == 5
 
     # Palette hex values.
-    for computed, expected in zip(pal.hex, hex_colors):
+    for computed, expected in zip(pal.hex, hex_colors, strict=False):
         assert computed == expected
 
     fig, axs = pal.plot()

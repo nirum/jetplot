@@ -127,7 +127,7 @@ def cmat(
 
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows), indexing="xy")
 
-    for x, y, value in zip(xs.flat, ys.flat, arr.flat):
+    for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True): # pyrefly: ignore
         color = dark_color if (value <= theta) else light_color
         annot = f"{{:{fmt}}}".format(value)
         ax.text(x, y, annot, ha="center", va="center", color=color, fontsize=fontsize)
