@@ -1,0 +1,2 @@
+# plots
+::: jetplot.plots

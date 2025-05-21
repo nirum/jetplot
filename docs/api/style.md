@@ -1,0 +1,2 @@
+# style
+::: jetplot.style

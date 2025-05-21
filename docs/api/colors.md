@@ -1,0 +1,2 @@
+# colors
+::: jetplot.colors

@@ -1,0 +1,2 @@
+# signals
+::: jetplot.signals

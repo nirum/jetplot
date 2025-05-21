@@ -5,6 +5,14 @@ repo_url: https://github.com/nirum/jetplot
 nav:
   - Home: index.md
   - Description: description.md
+  - API:
+    - Chart Utils: api/chart_utils.md
+    - Plots: api/plots.md
+    - Images: api/images.md
+    - Colors: api/colors.md
+    - Style: api/style.md
+    - Signals: api/signals.md
+    - Timepiece: api/timepiece.md
 
 theme:
   name: material
@@ -24,5 +32,3 @@ markdown_extensions:
   - admonition
   - pymdownx.highlight
   - pymdownx.superfences
-  - toc:
-      permalink: true
