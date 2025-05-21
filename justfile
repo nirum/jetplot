@@ -3,8 +3,8 @@ default: test
 build:
   uv build
 
-upload:
-  uv upload
+publish:
+  uv publish
 
 docs:
   mkdocs build --strict
