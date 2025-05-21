@@ -6,6 +6,9 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Ellipse
 from matplotlib.transforms import Affine2D
 from matplotlib.typing import ColorType
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
+from collections.abc import Sequence
 from numpy.typing import NDArray
 from scipy.stats import gaussian_kde
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
@@ -39,6 +42,7 @@ def violinplot(
     showquartiles: bool = True,
     **kwargs: Any,
 ) -> Axes:
+    """Violin plot with customizable elements."""
     _ = kwargs.pop("fig")
     ax = kwargs.pop("ax")
 
@@ -88,8 +92,10 @@ def violinplot(
             s=15,
             zorder=20,
         )
+
     return ax
 
+  
 @plotwrapper
 def hist(*args: Any, histtype="stepfilled", alpha=0.85, density=True, **kwargs: Any) -> Any:
     """Wrapper for matplotlib.hist function."""
@@ -251,15 +257,16 @@ def bar(
 
 @plotwrapper
 def lines(
-    x: NDArray[np.floating] | Sequence[float],
-    lines: Iterable[Sequence[float]] | None = None,
+    x: NDArray[np.floating] | NDArray[np.integer],
+    lines: list[NDArray[np.floating]] | None = None,
     cmap: str = "viridis",
-    **kwargs: Any,
-) -> None:
+    **kwargs,
+) -> Axes:
+    """Plot multiple lines using a color map."""
     ax = kwargs["ax"]
 
     if lines is None:
-        lines = list(x)
+        lines = list(x)  # pyrefly: ignore
         x = np.arange(len(lines[0]))
 
     else:
@@ -268,6 +275,8 @@ def lines(
     colors = cmap_colors(cmap, len(lines))
     for line, color in zip(lines, colors, strict=False):
         ax.plot(x, line, color=color)
+
+    return ax
 
 
 @plotwrapper
@@ -304,6 +313,7 @@ def ridgeline(
     ymax: float = 0.6,
     **kwargs: Any,
 ) -> tuple[Figure, list[Axes]]:
+    """Stacked density plots reminiscent of a ridgeline plot."""
     fig = kwargs["fig"]
     axs = []
 

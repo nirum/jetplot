@@ -1,11 +1,11 @@
 """Plotting utils."""
 
-from collections.abc import Callable
 from functools import partial, wraps
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
 
 __all__ = [
     "noticks",
@@ -121,14 +121,25 @@ def nospines(
     return ax
 
 
-def get_bounds(axis: str, ax: plt.Axes | None = None) -> tuple[float, float]:
+def get_bounds(axis: Literal["x", "y"], ax: Axes | None = None) -> tuple[float, float]:
+    """Return the axis spine bounds for the given axis.
+
+    Parameters
+    ----------
+    axis : str
+        Axis to inspect, either ``"x"`` or ``"y"``.
+    ax : matplotlib.axes.Axes | None, optional
+        Axes object to inspect. If ``None``, the current axes are used.
+
+    Returns
+    -------
+    tuple[float, float]
+        Lower and upper bounds of the axis spine.
+    """
     if ax is None:
         ax = plt.gca()
 
-
-    Result = tuple[Callable[[], list[float]], Callable[[], list[str]], Callable[[], tuple[float, float]], str]
-
-    axis_map: dict[str, Result] = {
+    axis_map: dict[str, Any] = {
         "x": (ax.get_xticks, ax.get_xticklabels, ax.get_xlim, "bottom"),
         "y": (ax.get_yticks, ax.get_yticklabels, ax.get_ylim, "left"),
     }
@@ -204,14 +215,15 @@ def yclamp(
     y1: float | None = None,
     dt: float | None = None,
     **kwargs: Any,
-) -> plt.Axes:
+) -> Axes:
+    """Clamp the y-axis to evenly spaced tick marks."""
     ax = kwargs["ax"]
 
     lims = ax.get_ylim()
     y0 = lims[0] if y0 is None else y0
     y1 = lims[1] if y1 is None else y1
 
-    ticks: list[float] = ax.get_yticks() # pyrefly: ignore
+    ticks: list[float] = ax.get_yticks()  # pyrefly: ignore
     dt = float(np.mean(np.diff(ticks))) if dt is None else float(dt)
 
     new_ticks = np.arange(dt * np.floor(y0 / dt), dt * (np.ceil(y1 / dt) + 1), dt)
@@ -228,14 +240,15 @@ def xclamp(
     x1: float | None = None,
     dt: float | None = None,
     **kwargs: Any,
-) -> plt.Axes:
+) -> Axes:
+    """Clamp the x-axis to evenly spaced tick marks."""
     ax = kwargs["ax"]
 
     lims = ax.get_xlim()
     x0 = lims[0] if x0 is None else x0
     x1 = lims[1] if x1 is None else x1
 
-    ticks: list[float] = ax.get_xticks() # pyrefly: ignore
+    ticks: list[float] = ax.get_xticks()  # pyrefly: ignore
     dt = float(np.mean(np.diff(ticks))) if dt is None else float(dt)
 
     new_ticks = np.arange(dt * np.floor(x0 / dt), dt * (np.ceil(x1 / dt) + 1), dt)

@@ -1,5 +1,6 @@
 """Image visualization tools."""
 
+from collections.abc import Callable
 from functools import partial
 from typing import Any, Callable, Iterable
 
@@ -90,6 +91,7 @@ def fsurface(
     nargs: int = 2,
     **kwargs: Any,
 ) -> None:
+    """Plot a 2‑D function as a filled surface."""
     xrng = (-1, 1) if xrng is None else xrng
     yrng = xrng if yrng is None else yrng
 
@@ -137,7 +139,7 @@ def cmat(
 
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows), indexing="xy")
 
-    for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True): # pyrefly: ignore
+    for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True):  # pyrefly: ignore
         color = dark_color if (value <= theta) else light_color
         annot = f"{{:{fmt}}}".format(value)
         ax.text(x, y, annot, ha="center", va="center", color=color, fontsize=fontsize)

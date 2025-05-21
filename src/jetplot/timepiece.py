@@ -10,6 +10,8 @@ __all__ = ["hrtime", "Stopwatch", "profile"]
 
 
 class Stopwatch:
+    """Simple timer utility for measuring code execution time."""
+
     def __init__(self, name: str = "") -> None:
         self.name = name
         self.start = time.perf_counter()
