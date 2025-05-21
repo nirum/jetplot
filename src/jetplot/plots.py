@@ -1,18 +1,17 @@
 """Common plots."""
 
+from collections.abc import Iterable, Sequence
+from typing import Any
+
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.patches import Ellipse
 from matplotlib.transforms import Affine2D
 from matplotlib.typing import ColorType
-from matplotlib.figure import Figure
-from matplotlib.axes import Axes
-from collections.abc import Sequence
 from numpy.typing import NDArray
 from scipy.stats import gaussian_kde
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
-from typing import Any, Iterable, Sequence
 
 from .chart_utils import figwrapper, nospines, plotwrapper
 from .colors import cmap_colors, neutral
@@ -95,9 +94,11 @@ def violinplot(
 
     return ax
 
-  
+
 @plotwrapper
-def hist(*args: Any, histtype="stepfilled", alpha=0.85, density=True, **kwargs: Any) -> Any:
+def hist(
+    *args: Any, histtype="stepfilled", alpha=0.85, density=True, **kwargs: Any
+) -> Any:
     """Wrapper for matplotlib.hist function."""
     ax = kwargs.pop("ax")
     kwargs.pop("fig")
@@ -147,7 +148,9 @@ def hist2d(
 def errorplot(
     x: NDArray[np.floating],
     y: NDArray[np.floating],
-    yerr: NDArray[np.floating] | float | tuple[NDArray[np.floating], NDArray[np.floating]],
+    yerr: NDArray[np.floating]
+    | float
+    | tuple[NDArray[np.floating], NDArray[np.floating]],
     method: str = "patch",
     color: ColorType = "#222222",
     xscale: str = "linear",

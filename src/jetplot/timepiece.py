@@ -1,10 +1,11 @@
 """Utilities for dealing with time."""
 
 import time
+from collections.abc import Callable
 from functools import wraps
+from typing import Any
 
 import numpy as np
-from typing import Any, Callable
 
 __all__ = ["hrtime", "Stopwatch", "profile"]
 
@@ -85,7 +86,6 @@ def hrtime(t: float) -> str:
         timestr = f"{t * 1e9:g} ns"
 
     return timestr
-
 
 
 def profile(func: Callable[..., Any]) -> Callable[..., Any]:

@@ -52,6 +52,7 @@ def test_noticks():
 
     plt.close(fig)
 
+
 def test_get_bounds_spines():
     fig, ax = plt.subplots()
     ax.plot([0, 1], [0, 1])

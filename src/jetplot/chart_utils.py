@@ -1,5 +1,6 @@
 """Plotting utils."""
 
+from collections.abc import Callable
 from functools import partial, wraps
 from typing import Any, Literal
 

@@ -1,8 +1,8 @@
 """Image visualization tools."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from functools import partial
-from typing import Any, Callable, Iterable
+from typing import Any
 
 import numpy as np
 from matplotlib import pyplot as plt
