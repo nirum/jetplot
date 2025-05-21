@@ -2,10 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://github.com/nirum/jetplot/</loc>
-         <lastmod>2025-05-18</lastmod>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/LICENSE/</loc>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/api/</loc>
+         <lastmod>2025-05-21</lastmod>
     </url>
     <url>
          <loc>https://github.com/nirum/jetplot/description/</loc>
-         <lastmod>2025-05-18</lastmod>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/api/chart_utils/</loc>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/api/colors/</loc>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/api/images/</loc>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/api/plots/</loc>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/api/signals/</loc>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/api/style/</loc>
+         <lastmod>2025-05-21</lastmod>
+    </url>
+    <url>
+         <loc>https://github.com/nirum/jetplot/api/timepiece/</loc>
+         <lastmod>2025-05-21</lastmod>
     </url>
 </urlset>
