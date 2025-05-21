@@ -17,6 +17,7 @@ def test_img_corr_mode():
     assert len(fig.axes) == 2
     plt.close(fig)
 
+
 def test_cmat_labels_and_colorbar():
     data = np.array([[0.0, 1.0], [1.0, 0.0]])
     fig, ax = plt.subplots()

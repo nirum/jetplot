@@ -1,7 +1,9 @@
 """Utilities for dealing with time."""
 
 import time
+from collections.abc import Callable
 from functools import wraps
+from typing import Any
 
 import numpy as np
 
@@ -37,7 +39,7 @@ class Stopwatch:
         print(f"{self.name} Finished! \u2714\nTotal elapsed time: {total}")
 
 
-def hrtime(t: float):
+def hrtime(t: float) -> str:
     """Converts a time in seconds to a reasonable human readable time.
 
     Args:
@@ -86,7 +88,7 @@ def hrtime(t: float):
     return timestr
 
 
-def profile(func):
+def profile(func: Callable[..., Any]) -> Callable[..., Any]:
     """Timing (profile) decorator for a function."""
     calls = list()
 

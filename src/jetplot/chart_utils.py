@@ -1,5 +1,6 @@
 """Plotting utils."""
 
+from collections.abc import Callable
 from functools import partial, wraps
 from typing import Any, Literal
 
@@ -20,7 +21,7 @@ __all__ = [
 ]
 
 
-def figwrapper(fun):
+def figwrapper(fun: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator that adds figure handles to the kwargs of a function."""
 
     @wraps(fun)
@@ -33,7 +34,7 @@ def figwrapper(fun):
     return wrapper
 
 
-def plotwrapper(fun):
+def plotwrapper(fun: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator that adds figure and axes handles to the kwargs of a function."""
 
     @wraps(fun)
@@ -52,7 +53,7 @@ def plotwrapper(fun):
     return wrapper
 
 
-def axwrapper(fun):
+def axwrapper(fun: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator that adds an axes handle to kwargs."""
 
     @wraps(fun)
@@ -70,7 +71,7 @@ def axwrapper(fun):
 
 
 @axwrapper
-def noticks(**kwargs):
+def noticks(**kwargs: Any) -> None:
     """
     Clears tick marks (useful for images)
     """
@@ -81,7 +82,13 @@ def noticks(**kwargs):
 
 
 @axwrapper
-def nospines(left=False, bottom=False, top=True, right=True, **kwargs):
+def nospines(
+    left: bool = False,
+    bottom: bool = False,
+    top: bool = True,
+    right: bool = True,
+    **kwargs: Any,
+) -> plt.Axes:
     """
     Hides the specified axis spines (by default, right and top spines)
     """
@@ -160,7 +167,12 @@ def get_bounds(axis: Literal["x", "y"], ax: Axes | None = None) -> tuple[float, 
 
 
 @axwrapper
-def breathe(xlims=None, ylims=None, padding_percent=0.05, **kwargs):
+def breathe(
+    xlims: tuple[float, float] | None = None,
+    ylims: tuple[float, float] | None = None,
+    padding_percent: float = 0.05,
+    **kwargs: Any,
+) -> plt.Axes:
     """Adds space between axes and plot."""
     ax = kwargs["ax"]
 
@@ -203,7 +215,7 @@ def yclamp(
     y0: float | None = None,
     y1: float | None = None,
     dt: float | None = None,
-    **kwargs,
+    **kwargs: Any,
 ) -> Axes:
     """Clamp the y-axis to evenly spaced tick marks."""
     ax = kwargs["ax"]
@@ -228,7 +240,7 @@ def xclamp(
     x0: float | None = None,
     x1: float | None = None,
     dt: float | None = None,
-    **kwargs,
+    **kwargs: Any,
 ) -> Axes:
     """Clamp the x-axis to evenly spaced tick marks."""
     ax = kwargs["ax"]

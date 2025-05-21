@@ -1,12 +1,14 @@
 """Common plots."""
 
+from collections.abc import Iterable, Sequence
+from typing import Any, cast
+
 import numpy as np
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from matplotlib.patches import Ellipse
 from matplotlib.transforms import Affine2D
 from matplotlib.typing import ColorType
-from matplotlib.figure import Figure
-from matplotlib.axes import Axes
-from collections.abc import Sequence
 from numpy.typing import NDArray
 from scipy.stats import gaussian_kde
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
@@ -30,14 +32,14 @@ __all__ = [
 @plotwrapper
 def violinplot(
     data: NDArray[np.floating],
-    xs,
-    fc=neutral[3],
-    ec=neutral[9],
-    mc=neutral[1],
-    showmedians=True,
-    showmeans=False,
-    showquartiles=True,
-    **kwargs,
+    xs: Sequence[float] | float,
+    fc: ColorType = neutral[3],
+    ec: ColorType = neutral[9],
+    mc: ColorType = neutral[1],
+    showmedians: bool = True,
+    showmeans: bool = False,
+    showquartiles: bool = True,
+    **kwargs: Any,
 ) -> Axes:
     """Violin plot with customizable elements."""
     _ = kwargs.pop("fig")
@@ -94,7 +96,9 @@ def violinplot(
 
 
 @plotwrapper
-def hist(*args, histtype="stepfilled", alpha=0.85, density=True, **kwargs):
+def hist(
+    *args: Any, histtype="stepfilled", alpha=0.85, density=True, **kwargs: Any
+) -> Any:
     """Wrapper for matplotlib.hist function."""
     ax = kwargs.pop("ax")
     kwargs.pop("fig")
@@ -104,13 +108,13 @@ def hist(*args, histtype="stepfilled", alpha=0.85, density=True, **kwargs):
 
 @plotwrapper
 def hist2d(
-    x: np.ndarray,
-    y: np.ndarray,
-    bins: int | None = None,
-    limits: np.ndarray | None = None,
+    x: NDArray[np.floating],
+    y: NDArray[np.floating],
+    bins: int | Sequence[float] | None = None,
+    limits: NDArray[np.floating] | Sequence[Sequence[float]] | None = None,
     cmap: str = "hot",
-    **kwargs,
-):
+    **kwargs: Any,
+) -> None:
     """
     Visualizes a 2D histogram by binning data.
 
@@ -142,26 +146,28 @@ def hist2d(
 
 @plotwrapper
 def errorplot(
-    x,
-    y,
-    yerr,
-    method="patch",
+    x: NDArray[np.floating],
+    y: NDArray[np.floating],
+    yerr: NDArray[np.floating]
+    | float
+    | tuple[NDArray[np.floating], NDArray[np.floating]],
+    method: str = "patch",
     color: ColorType = "#222222",
-    xscale="linear",
-    fmt="-",
+    xscale: str = "linear",
+    fmt: str = "-",
     err_color: ColorType = "#cccccc",
-    alpha_fill=1.0,
-    clip_on=True,
-    **kwargs,
-):
+    alpha_fill: float = 1.0,
+    clip_on: bool = True,
+    **kwargs: Any,
+) -> None:
     """Plot a line with error bars."""
     ax = kwargs["ax"]
 
-    if np.isscalar(yerr) or len(yerr) == len(y):
-        ymin = y - yerr
-        ymax = y + yerr
+    if np.isscalar(yerr) or len(yerr) == len(y):  # pyrefly: ignore
+        ymin = y - yerr  # pyrefly: ignore
+        ymax = y + yerr  # pyrefly: ignore
     elif len(yerr) == 2:
-        ymin, ymax = yerr
+        ymin, ymax = yerr  # pyrefly: ignore
     else:
         raise ValueError("Invalid yerr value: ", yerr)
 
@@ -169,7 +175,9 @@ def errorplot(
         ax.plot(x, y, fmt, color=color, linewidth=4, clip_on=clip_on)
         ax.plot(x, ymax, "_", ms=20, color=err_color, clip_on=clip_on)
         ax.plot(x, ymin, "_", ms=20, color=err_color, clip_on=clip_on)
-        for i, xi in enumerate(x):
+
+        # plot error bars
+        for i, xi in enumerate(x):  # pyrefly: ignore
             ax.plot(
                 np.array([xi, xi]),
                 np.array([ymin[i], ymax[i]]),
@@ -200,16 +208,16 @@ def errorplot(
 
 @plotwrapper
 def bar(
-    labels,
-    data,
-    color="#888888",
-    width=0.7,
-    offset=0.0,
-    err=None,
-    capsize=5,
-    capthick=2,
-    **kwargs,
-):
+    labels: Sequence[str],
+    data: Sequence[float],
+    color: ColorType = "#888888",
+    width: float = 0.7,
+    offset: float = 0.0,
+    err: Sequence[float] | None = None,
+    capsize: float = 5,
+    capthick: float = 2,
+    **kwargs: Any,
+) -> Axes:
     """Bar chart.
 
     Args:
@@ -224,7 +232,7 @@ def bar(
     n = len(data)
     x = np.arange(n) + width
     if err is not None:
-        err = np.vstack((np.zeros_like(err), err))
+        err = np.vstack((np.zeros_like(err), err))  # pyrefly: ignore
 
     ax.bar(x, data, width, color=color)
 
@@ -277,10 +285,19 @@ def lines(
 
 
 @plotwrapper
-def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **kwargs):
+def waterfall(
+    x: NDArray[np.floating],
+    ys: Iterable[NDArray[np.floating]],
+    dy: float = 1.0,
+    pad: float = 0.1,
+    color: ColorType = "#444444",
+    ec: ColorType = "#cccccc",
+    ew: float = 2.0,
+    **kwargs: Any,
+) -> None:
     """Waterfall plot."""
     ax = kwargs["ax"]
-    total = len(ys)
+    total = cast(int, len(ys))
 
     for index, y in enumerate(ys):
         zorder = total - index
@@ -295,18 +312,18 @@ def waterfall(x, ys, dy=1.0, pad=0.1, color="#444444", ec="#cccccc", ew=2.0, **k
 @figwrapper
 def ridgeline(
     t: NDArray[np.floating],
-    xs: Sequence[NDArray[np.floating]],
-    colors: Sequence[ColorType],
+    xs: Iterable[NDArray[np.floating]],
+    colors: Iterable[ColorType],
     edgecolor: ColorType = "#ffffff",
     ymax: float = 0.6,
-    **kwargs,
+    **kwargs: Any,
 ) -> tuple[Figure, list[Axes]]:
     """Stacked density plots reminiscent of a ridgeline plot."""
     fig = kwargs["fig"]
     axs = []
 
     for k, (x, c) in enumerate(zip(xs, colors, strict=False)):
-        ax = fig.add_subplot(len(xs), 1, k + 1)
+        ax = fig.add_subplot(cast(int, len(xs)), 1, k + 1)
         y = gaussian_kde(x).evaluate(t)
         ax.fill_between(t, y, color=c, clip_on=False)
         ax.plot(t, y, color=edgecolor, clip_on=False)
@@ -327,7 +344,7 @@ def ridgeline(
 
 
 @plotwrapper
-def circle(radius=1.0, **kwargs):
+def circle(radius: float = 1.0, **kwargs: Any) -> None:
     """Plots a unit circle."""
     ax = kwargs["ax"]
     theta = np.linspace(0, 2 * np.pi, 1001)
@@ -335,7 +352,14 @@ def circle(radius=1.0, **kwargs):
 
 
 @plotwrapper
-def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
+def ellipse(
+    x: NDArray[np.floating],
+    y: NDArray[np.floating],
+    n_std: float = 3.0,
+    facecolor: str = "none",
+    estimator: str = "empirical",
+    **kwargs: Any,
+) -> Ellipse:
     """
     Create a plot of the covariance confidence ellipse of *x* and *y*.
 
@@ -354,7 +378,7 @@ def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
     -------
     matplotlib.patches.Ellipse
     """
-    ax = kwargs.get("ax")
+    ax = cast(Axes, kwargs.get("ax"))
 
     if x.size != y.size:
         raise ValueError("x and y must be the same size")
@@ -381,11 +405,11 @@ def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
     # the square root of the variance and multiplying
     # with the given number of standard deviations.
     scale_x = np.sqrt(cov[0, 0]) * n_std
-    mean_x = np.mean(x)
+    mean_x = np.mean(x)  # pyrefly: ignore
 
     # calculating the standard deviation of y ...
     scale_y = np.sqrt(cov[1, 1]) * n_std
-    mean_y = np.mean(y)
+    mean_y = np.mean(y)  # pyrefly: ignore
 
     transform = (
         Affine2D()
@@ -394,5 +418,5 @@ def ellipse(x, y, n_std=3.0, facecolor="none", estimator="empirical", **kwargs):
         .translate(float(mean_x), float(mean_y))
     )
 
-    ellipse.set_transform(transform + ax.transData)
+    ellipse.set_transform(transform + ax.transData)  # pyrefly: ignore
     return ax.add_patch(ellipse)

@@ -1,10 +1,13 @@
 """Image visualization tools."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from functools import partial
+from typing import Any, cast
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.image import AxesImage
 from matplotlib.ticker import FixedLocator
 
 from . import colors as c
@@ -15,16 +18,16 @@ __all__ = ["img", "imv", "fsurface", "cmat"]
 
 @plotwrapper
 def img(
-    data,
-    mode="div",
-    cmap=None,
-    aspect="equal",
-    vmin=None,
-    vmax=None,
-    cbar=True,
-    interpolation="none",
-    **kwargs,
-):
+    data: np.ndarray,
+    mode: str = "div",
+    cmap: str | None = None,
+    aspect: str = "equal",
+    vmin: float | None = None,
+    vmax: float | None = None,
+    cbar: bool = True,
+    interpolation: str = "none",
+    **kwargs: Any,
+) -> AxesImage:
     """Visualize a matrix as an image.
 
     Args:
@@ -86,7 +89,7 @@ def fsurface(
     yrng: tuple[float, float] | None = None,
     n: int = 100,
     nargs: int = 2,
-    **kwargs,
+    **kwargs: Any,
 ) -> None:
     """Plot a 2‑D function as a filled surface."""
     xrng = (-1, 1) if xrng is None else xrng
@@ -112,22 +115,22 @@ def fsurface(
 
 @plotwrapper
 def cmat(
-    arr,
-    labels=None,
-    annot=True,
-    cmap="gist_heat_r",
-    cbar=False,
-    fmt="0.0%",
-    dark_color="#222222",
-    light_color="#dddddd",
-    grid_color=c.gray[9],
-    theta=0.5,
-    label_fontsize=10.0,
-    fontsize=10.0,
-    vmin=0.0,
-    vmax=1.0,
-    **kwargs,
-):
+    arr: np.ndarray,
+    labels: Iterable[str] | None = None,
+    annot: bool = True,
+    cmap: str = "gist_heat_r",
+    cbar: bool = False,
+    fmt: str = "0.0%",
+    dark_color: str = "#222222",
+    light_color: str = "#dddddd",
+    grid_color: str = cast(str, c.gray[9]),
+    theta: float = 0.5,
+    label_fontsize: float = 10.0,
+    fontsize: float = 10.0,
+    vmin: float = 0.0,
+    vmax: float = 1.0,
+    **kwargs: Any,
+) -> tuple[AxesImage, Axes]:
     """Plot confusion matrix."""
     num_rows, num_cols = arr.shape
 
@@ -138,8 +141,8 @@ def cmat(
 
     for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True):  # pyrefly: ignore
         color = dark_color if (value <= theta) else light_color
-        annot = f"{{:{fmt}}}".format(value)
-        ax.text(x, y, annot, ha="center", va="center", color=color, fontsize=fontsize)
+        label = f"{{:{fmt}}}".format(value)
+        ax.text(x, y, label, ha="center", va="center", color=color, fontsize=fontsize)
 
     if labels is not None:
         ax.set_xticks(np.arange(num_cols))

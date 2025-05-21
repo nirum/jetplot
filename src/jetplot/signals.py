@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Protocol, SupportsIndex
+from typing import Any, Protocol, SupportsIndex
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -13,7 +13,7 @@ __all__ = ["smooth", "canoncorr", "participation_ratio", "stable_rank", "normali
 FloatArray = NDArray[np.floating]
 
 
-def smooth(x, sigma=1.0, axis=0):
+def smooth(x: ArrayLike, sigma: float = 1.0, axis: int = 0) -> NDArray[np.floating]:
     """Smooths a 1D signal with a gaussian filter.
 
     Args:
@@ -26,10 +26,13 @@ def smooth(x, sigma=1.0, axis=0):
     return gaussian_filter1d(x, sigma, axis=axis)
 
 
-def stable_rank(X):
+def stable_rank(X: NDArray[np.floating[Any]]) -> float:
     """Computes the stable rank of a matrix"""
     assert X.ndim == 2, "X must be a matrix"
+
+    # pyrefly: ignore
     svals_sq = np.linalg.svd(X, compute_uv=False, full_matrices=False) ** 2
+
     return svals_sq.sum() / svals_sq.max()
 
 
