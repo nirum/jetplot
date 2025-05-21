@@ -17,3 +17,6 @@ typecheck:
 
 test:
   uv run pytest --cov=jetplot --cov-report=term
+
+loop:
+  find {src,tests} -name "*.py" | entr -c just test

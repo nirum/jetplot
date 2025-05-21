@@ -2,7 +2,7 @@
 
 from collections.abc import Callable, Iterable
 from functools import partial
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -123,7 +123,7 @@ def cmat(
     fmt: str = "0.0%",
     dark_color: str = "#222222",
     light_color: str = "#dddddd",
-    grid_color: str = c.gray[9],
+    grid_color: str = cast(str, c.gray[9]),
     theta: float = 0.5,
     label_fontsize: float = 10.0,
     fontsize: float = 10.0,
@@ -141,8 +141,8 @@ def cmat(
 
     for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True):  # pyrefly: ignore
         color = dark_color if (value <= theta) else light_color
-        annot = f"{{:{fmt}}}".format(value)
-        ax.text(x, y, annot, ha="center", va="center", color=color, fontsize=fontsize)
+        label = f"{{:{fmt}}}".format(value)
+        ax.text(x, y, label, ha="center", va="center", color=color, fontsize=fontsize)
 
     if labels is not None:
         ax.set_xticks(np.arange(num_cols))

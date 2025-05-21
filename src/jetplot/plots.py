@@ -1,7 +1,7 @@
 """Common plots."""
 
 from collections.abc import Iterable, Sequence
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -163,11 +163,11 @@ def errorplot(
     """Plot a line with error bars."""
     ax = kwargs["ax"]
 
-    if np.isscalar(yerr) or len(yerr) == len(y):
-        ymin = y - yerr
-        ymax = y + yerr
+    if np.isscalar(yerr) or len(yerr) == len(y):  # pyrefly: ignore
+        ymin = y - yerr  # pyrefly: ignore
+        ymax = y + yerr  # pyrefly: ignore
     elif len(yerr) == 2:
-        ymin, ymax = yerr
+        ymin, ymax = yerr  # pyrefly: ignore
     else:
         raise ValueError("Invalid yerr value: ", yerr)
 
@@ -175,7 +175,9 @@ def errorplot(
         ax.plot(x, y, fmt, color=color, linewidth=4, clip_on=clip_on)
         ax.plot(x, ymax, "_", ms=20, color=err_color, clip_on=clip_on)
         ax.plot(x, ymin, "_", ms=20, color=err_color, clip_on=clip_on)
-        for i, xi in enumerate(x):
+
+        # plot error bars
+        for i, xi in enumerate(x):  # pyrefly: ignore
             ax.plot(
                 np.array([xi, xi]),
                 np.array([ymin[i], ymax[i]]),
@@ -230,7 +232,7 @@ def bar(
     n = len(data)
     x = np.arange(n) + width
     if err is not None:
-        err = np.vstack((np.zeros_like(err), err))
+        err = np.vstack((np.zeros_like(err), err))  # pyrefly: ignore
 
     ax.bar(x, data, width, color=color)
 
@@ -295,7 +297,7 @@ def waterfall(
 ) -> None:
     """Waterfall plot."""
     ax = kwargs["ax"]
-    total = len(ys)
+    total = cast(int, len(ys))
 
     for index, y in enumerate(ys):
         zorder = total - index
@@ -321,7 +323,7 @@ def ridgeline(
     axs = []
 
     for k, (x, c) in enumerate(zip(xs, colors, strict=False)):
-        ax = fig.add_subplot(len(xs), 1, k + 1)
+        ax = fig.add_subplot(cast(int, len(xs)), 1, k + 1)
         y = gaussian_kde(x).evaluate(t)
         ax.fill_between(t, y, color=c, clip_on=False)
         ax.plot(t, y, color=edgecolor, clip_on=False)
@@ -376,7 +378,7 @@ def ellipse(
     -------
     matplotlib.patches.Ellipse
     """
-    ax = kwargs.get("ax")
+    ax = cast(Axes, kwargs.get("ax"))
 
     if x.size != y.size:
         raise ValueError("x and y must be the same size")
@@ -403,11 +405,11 @@ def ellipse(
     # the square root of the variance and multiplying
     # with the given number of standard deviations.
     scale_x = np.sqrt(cov[0, 0]) * n_std
-    mean_x = np.mean(x)
+    mean_x = np.mean(x)  # pyrefly: ignore
 
     # calculating the standard deviation of y ...
     scale_y = np.sqrt(cov[1, 1]) * n_std
-    mean_y = np.mean(y)
+    mean_y = np.mean(y)  # pyrefly: ignore
 
     transform = (
         Affine2D()
@@ -416,5 +418,5 @@ def ellipse(
         .translate(float(mean_x), float(mean_y))
     )
 
-    ellipse.set_transform(transform + ax.transData)
+    ellipse.set_transform(transform + ax.transData)  # pyrefly: ignore
     return ax.add_patch(ellipse)
