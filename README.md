@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/nirum/jetplot/actions/workflows/ci.yml/badge.svg)](https://github.com/nirum/jetplot/actions/workflows/ci.yml)
 [![Typecheck](https://github.com/nirum/jetplot/actions/workflows/typecheck.yml/badge.svg)](https://github.com/nirum/jetplot/actions/workflows/typecheck.yml)
+![PyPI - Version](https://img.shields.io/pypi/v/jetplot)
 
 ## About
 
