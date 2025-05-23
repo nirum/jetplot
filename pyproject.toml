@@ -17,7 +17,7 @@ authors = [
 ]
 description = "jetplot is collection of miscellaneous utils for Matplotlib."
 readme = "README.md"
-license = {file = "LICENSE.md"}
+license = "MIT"
 
 [project.urls]
 Homepage = "https://github.com/nirum/jetplot"
