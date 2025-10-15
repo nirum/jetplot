@@ -297,9 +297,12 @@ def waterfall(
 ) -> None:
     """Waterfall plot."""
     ax = kwargs["ax"]
-    total = cast(int, len(ys))
+    ys_list = list(ys)
+    if not ys_list:
+        raise ValueError("ys must contain at least one series.")
+    total = len(ys_list)
 
-    for index, y in enumerate(ys):
+    for index, y in enumerate(ys_list):
         zorder = total - index
         y = y * dy + index
         ax.plot(x, y + pad, color=ec, clip_on=False, lw=ew, zorder=zorder)
@@ -320,10 +323,18 @@ def ridgeline(
 ) -> tuple[Figure, list[Axes]]:
     """Stacked density plots reminiscent of a ridgeline plot."""
     fig = kwargs["fig"]
+    xs_list = list(xs)
+    color_list = list(colors)
+
+    if not xs_list:
+        raise ValueError("xs must contain at least one series.")
+    if len(xs_list) != len(color_list):
+        raise ValueError("xs and colors must have the same length.")
+
     axs = []
 
-    for k, (x, c) in enumerate(zip(xs, colors, strict=False)):
-        ax = fig.add_subplot(cast(int, len(xs)), 1, k + 1)
+    for k, (x, c) in enumerate(zip(xs_list, color_list, strict=True)):
+        ax = fig.add_subplot(len(xs_list), 1, k + 1)
         y = gaussian_kde(x).evaluate(t)
         ax.fill_between(t, y, color=c, clip_on=False)
         ax.plot(t, y, color=edgecolor, clip_on=False)

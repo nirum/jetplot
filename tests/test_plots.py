@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 from matplotlib import pyplot as plt
 
 from jetplot import plots
@@ -75,6 +76,17 @@ def test_waterfall():
     plt.close(fig)
 
 
+def test_waterfall_accepts_generators():
+    x = np.arange(5)
+    ys = (np.linspace(0, 1, 5) for _ in range(3))
+
+    fig, ax = plt.subplots()
+    plots.waterfall(x, ys, fig=fig, ax=ax)
+
+    assert len(ax.collections) >= 3
+    plt.close(fig)
+
+
 def test_violinplot():
     data = np.random.randn(100)
     fig, ax = plt.subplots()
@@ -82,3 +94,25 @@ def test_violinplot():
     # Expect at least one polygon from violin body
     assert len(ax.collections) > 0
     plt.close(fig)
+
+
+def test_ridgeline_accepts_generators():
+    rng = np.random.default_rng(0)
+    t = np.linspace(-3, 3, 25)
+    xs = (rng.standard_normal(100) for _ in range(3))
+    colors = (color for color in plots.neutral[:3])
+
+    fig, axs = plots.ridgeline(t, xs=xs, colors=colors)
+    assert len(axs) == 3
+    plt.close(fig)
+
+
+def test_ridgeline_mismatched_lengths_raise():
+    t = np.linspace(-3, 3, 10)
+    xs = [np.linspace(0, 1, 5)]
+    colors = (color for color in plots.neutral[:2])
+
+    with pytest.raises(ValueError):
+        plots.ridgeline(t, xs=xs, colors=colors)
+
+    plt.close("all")
