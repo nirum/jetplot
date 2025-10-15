@@ -295,7 +295,20 @@ def waterfall(
     ew: float = 2.0,
     **kwargs: Any,
 ) -> None:
-    """Waterfall plot."""
+    """Waterfall plot for stacked sequences.
+
+    Args:
+        x: Common x-axis samples shared by every series.
+        ys: Iterable of y-series. Generators are supported and are consumed once.
+        dy: Vertical scaling applied to each successive series.
+        pad: Offset applied so the outline sits slightly above the fill.
+        color: Fill color for each series.
+        ec: Edge color for the outline.
+        ew: Edge line width.
+
+    Raises:
+        ValueError: If ``ys`` yields no series.
+    """
     ax = kwargs["ax"]
     ys_list = list(ys)
     if not ys_list:
@@ -321,7 +334,18 @@ def ridgeline(
     ymax: float = 0.6,
     **kwargs: Any,
 ) -> tuple[Figure, list[Axes]]:
-    """Stacked density plots reminiscent of a ridgeline plot."""
+    """Stacked density plots reminiscent of a ridgeline plot.
+
+    Args:
+        t: Grid used when evaluating the kernel density estimate.
+        xs: Iterable of 1-D samples. Accepts generators but consumes them eagerly.
+        colors: Iterable of colors, one for each series in ``xs``.
+        edgecolor: Line color used for the outline.
+        ymax: Upper y-limit for each subplot.
+
+    Raises:
+        ValueError: If ``xs`` is empty or the number of colors does not match.
+    """
     fig = kwargs["fig"]
     xs_list = list(xs)
     color_list = list(colors)
@@ -389,7 +413,8 @@ def ellipse(
     -------
     matplotlib.patches.Ellipse
     """
-    ax = cast(Axes, kwargs.get("ax"))
+    ax = cast(Axes, kwargs.pop("ax", None))
+    kwargs.pop("fig", None)
 
     if x.size != y.size:
         raise ValueError("x and y must be the same size")

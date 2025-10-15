@@ -31,12 +31,21 @@ def img(
     """Visualize a matrix as an image.
 
     Args:
-      img: array_like, The array to visualize.
-      mode: string, One of 'div' for a diverging image, 'seq' for
-        sequential, 'cov' for covariance matrices, or 'corr' for
-        correlation matrices (default: 'div').
-      cmap: string, Colormap to use.
-      aspect: string, Either 'equal' or 'auto'
+        data: Array to visualize.
+        mode: One of ``"div"``, ``"seq"``, ``"cov"``, or ``"corr"``.
+        cmap: Matplotlib colormap name. Mode defaults are used when ``None``.
+        aspect: Either ``"equal"`` or ``"auto"``.
+        vmin: Lower bound for normalization.
+        vmax: Upper bound for normalization.
+        cbar: Whether to draw a colorbar attached to the provided axes.
+        interpolation: Interpolation strategy passed to ``imshow``.
+
+    Raises:
+        ValueError: If ``mode`` is not recognized.
+
+    Notes:
+        When ``cbar`` is ``True``, the colorbar is added to the supplied axes/figure
+        so multi-axes layouts keep their layout intact.
     """
     # work with a copy of the original image data
     img = np.squeeze(data.copy())
@@ -133,7 +142,27 @@ def cmat(
     vmax: float = 1.0,
     **kwargs: Any,
 ) -> tuple[AxesImage, Axes]:
-    """Plot confusion matrix."""
+    """Plot a confusion matrix with optional annotations.
+
+    Args:
+        arr: Square matrix of scores in [0, 1].
+        labels: Optional axis labels. Must match matrix dimensions.
+        annot: Whether to draw text annotations for each cell.
+        cmap: Colormap used for the heatmap.
+        cbar: Whether to include a colorbar.
+        fmt: Format string applied to annotation labels.
+        dark_color: Text color used when ``value <= theta``.
+        light_color: Text color used when ``value > theta``.
+        grid_color: Grid line color.
+        theta: Threshold for choosing between ``dark_color`` and ``light_color``.
+        label_fontsize: Tick label font size.
+        fontsize: Annotation font size.
+        vmin: Lower bound for normalization.
+        vmax: Upper bound for normalization.
+
+    Raises:
+        ValueError: If labels are provided but do not match the matrix dimensions.
+    """
     num_rows, num_cols = arr.shape
 
     label_list: list[str] | None = None
