@@ -134,21 +134,30 @@ def cmat(
     """Plot confusion matrix."""
     num_rows, num_cols = arr.shape
 
+    label_list: list[str] | None = None
+    if labels is not None:
+        label_list = list(labels)
+        if len(label_list) != num_cols or num_rows != num_cols:
+            raise ValueError(
+                "Labels must match confusion matrix dimensions and matrix must be square."
+            )
+
     ax = kwargs.pop("ax")
     cb = imv(arr, ax=ax, vmin=vmin, vmax=vmax, cmap=cmap, cbar=cbar)
 
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows), indexing="xy")
 
-    for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True):  # pyrefly: ignore
-        color = dark_color if (value <= theta) else light_color
-        label = f"{{:{fmt}}}".format(value)
-        ax.text(x, y, label, ha="center", va="center", color=color, fontsize=fontsize)
+    if annot:
+        for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True):  # pyrefly: ignore
+            color = dark_color if (value <= theta) else light_color
+            label = f"{{:{fmt}}}".format(value)
+            ax.text(x, y, label, ha="center", va="center", color=color, fontsize=fontsize)
 
-    if labels is not None:
+    if label_list is not None:
         ax.set_xticks(np.arange(num_cols))
-        ax.set_xticklabels(labels, rotation=90, fontsize=label_fontsize)
+        ax.set_xticklabels(label_list, rotation=90, fontsize=label_fontsize)
         ax.set_yticks(np.arange(num_rows))
-        ax.set_yticklabels(labels, fontsize=label_fontsize)
+        ax.set_yticklabels(label_list, fontsize=label_fontsize)
 
     ax.xaxis.set_minor_locator(FixedLocator((np.arange(num_cols) - 0.5).tolist()))
 
