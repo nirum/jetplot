@@ -19,6 +19,21 @@ def test_img_corr_mode():
     plt.close(fig)
 
 
+def test_img_colorbar_attached_to_given_axes():
+    data = np.eye(3)
+    fig, (ax_left, ax_right) = plt.subplots(1, 2)
+    im_left = images.img(data, fig=fig, ax=ax_left)
+    images.img(data, cbar=False, fig=fig, ax=ax_right)
+
+    assert im_left in ax_left.images
+    # Expect one additional axes (colorbar) attached to the same figure
+    colorbar_axes = [ax for ax in fig.axes if ax not in {ax_left, ax_right}]
+    assert len(colorbar_axes) == 1
+    assert colorbar_axes[0].figure is fig
+
+    plt.close(fig)
+
+
 def test_cmat_labels_and_colorbar():
     data = np.array([[0.0, 1.0], [1.0, 0.0]])
     fig, ax = plt.subplots()

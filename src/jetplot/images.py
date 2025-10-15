@@ -68,16 +68,18 @@ def img(
         raise ValueError("Unrecognized mode: '" + mode + "'")
 
     # make the image
-    im = kwargs["ax"].imshow(
+    ax = kwargs["ax"]
+    fig = kwargs.get("fig", ax.get_figure())
+    im = ax.imshow(
         img, cmap=cmap, interpolation=interpolation, vmin=vmin, vmax=vmax, aspect=aspect
     )
 
     # colorbar
     if cbar:
-        plt.colorbar(im)
+        fig.colorbar(im, ax=ax)
 
     # clear ticks
-    noticks(ax=kwargs["ax"])
+    noticks(ax=ax)
 
     return im
 
