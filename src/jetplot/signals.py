@@ -23,7 +23,8 @@ def smooth(x: ArrayLike, sigma: float = 1.0, axis: int = 0) -> NDArray[np.floati
     Returns:
     xs: array_like, A smoothed version of the input signal
     """
-    return gaussian_filter1d(x, sigma, axis=axis)
+    arr = np.asarray(x)
+    return gaussian_filter1d(arr, sigma, axis=axis)
 
 
 def stable_rank(X: NDArray[np.floating[Any]]) -> float:

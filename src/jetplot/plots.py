@@ -163,13 +163,19 @@ def errorplot(
     """Plot a line with error bars."""
     ax = kwargs["ax"]
 
-    if np.isscalar(yerr) or len(yerr) == len(y):  # pyrefly: ignore
+    if np.isscalar(yerr):
         ymin = y - yerr  # pyrefly: ignore
         ymax = y + yerr  # pyrefly: ignore
-    elif len(yerr) == 2:
+    elif isinstance(yerr, tuple):
+        if len(yerr) != 2:
+            raise ValueError("Invalid yerr tuple length: ", yerr)
         ymin, ymax = yerr  # pyrefly: ignore
     else:
-        raise ValueError("Invalid yerr value: ", yerr)
+        yerr_array = np.asarray(yerr)
+        if yerr_array.shape != y.shape:
+            raise ValueError("Invalid yerr value: ", yerr)
+        ymin = y - yerr_array
+        ymax = y + yerr_array
 
     if method == "line":
         ax.plot(x, y, fmt, color=color, linewidth=4, clip_on=clip_on)
@@ -458,4 +464,4 @@ def ellipse(
     )
 
     ellipse.set_transform(transform + ax.transData)  # pyrefly: ignore
-    return ax.add_patch(ellipse)
+    return cast(Ellipse, ax.add_patch(ellipse))
