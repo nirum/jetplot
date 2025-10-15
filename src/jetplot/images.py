@@ -8,6 +8,7 @@ import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.image import AxesImage
 from matplotlib.ticker import FixedLocator
+from matplotlib.figure import Figure
 
 from . import colors as c
 from .chart_utils import noticks, plotwrapper
@@ -77,7 +78,8 @@ def img(
 
     # make the image
     ax = kwargs["ax"]
-    fig = kwargs.get("fig", ax.get_figure())
+    fig_candidate = kwargs.get("fig")
+    fig = cast(Figure, fig_candidate if fig_candidate is not None else ax.get_figure())
     im = ax.imshow(
         img, cmap=cmap, interpolation=interpolation, vmin=vmin, vmax=vmax, aspect=aspect
     )
