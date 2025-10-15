@@ -5,7 +5,6 @@ from functools import partial
 from typing import Any, cast
 
 import numpy as np
-from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.image import AxesImage
 from matplotlib.ticker import FixedLocator
