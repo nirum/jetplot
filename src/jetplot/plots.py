@@ -338,31 +338,34 @@ def ridgeline(
 
     Args:
         t: Grid used when evaluating the kernel density estimate.
-        xs: Iterable of 1-D samples. Accepts generators but consumes them eagerly.
-        colors: Iterable of colors, one for each series in ``xs``.
+        xs: Iterable of 1-D samples. Accepts generators and consumes them once.
+        colors: Iterable of colors. Must provide at least as many entries as ``xs``.
         edgecolor: Line color used for the outline.
         ymax: Upper y-limit for each subplot.
 
     Raises:
-        ValueError: If ``xs`` is empty or the number of colors does not match.
+        ValueError: If ``xs`` is empty or ``colors`` provides too few values.
     """
     fig = kwargs["fig"]
     xs_list = list(xs)
-    color_list = list(colors)
+    colors_iter = iter(colors)
 
     if not xs_list:
         raise ValueError("xs must contain at least one series.")
-    if len(xs_list) != len(color_list):
-        raise ValueError("xs and colors must have the same length.")
 
     axs = []
 
-    for k, (x, c) in enumerate(zip(xs_list, color_list, strict=True)):
+    for k, x in enumerate(xs_list):
+        try:
+            palette_color = next(colors_iter)
+        except StopIteration as exc:
+            raise ValueError("colors must provide at least as many items as xs.") from exc
+
         ax = fig.add_subplot(len(xs_list), 1, k + 1)
         y = gaussian_kde(x).evaluate(t)
-        ax.fill_between(t, y, color=c, clip_on=False)
+        ax.fill_between(t, y, color=palette_color, clip_on=False)
         ax.plot(t, y, color=edgecolor, clip_on=False)
-        ax.axhline(0.0, lw=2, color=c, clip_on=False)
+        ax.axhline(0.0, lw=2, color=palette_color, clip_on=False)
 
         ax.set_xlim(t[0], t[-1])
         ax.set_xticks([])

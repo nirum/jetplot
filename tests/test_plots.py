@@ -110,13 +110,23 @@ def test_ridgeline_accepts_generators():
 
 def test_ridgeline_mismatched_lengths_raise():
     t = np.linspace(-3, 3, 10)
-    xs = [np.linspace(0, 1, 5)]
-    colors = (color for color in plots.neutral[:2])
+    xs = [np.linspace(0, 1, 5), np.linspace(0, 2, 5)]
+    colors = (color for color in plots.neutral[:1])
 
     with pytest.raises(ValueError):
         plots.ridgeline(t, xs=xs, colors=colors)
 
     plt.close("all")
+
+
+def test_ridgeline_allows_extra_colors():
+    rng = np.random.default_rng(2)
+    t = np.linspace(-3, 3, 25)
+    xs = [rng.standard_normal(100) for _ in range(3)]
+
+    fig, axs = plots.ridgeline(t, xs=xs, colors=plots.neutral)
+    assert len(axs) == 3
+    plt.close(fig)
 
 
 def test_ellipse_returns_patch():
