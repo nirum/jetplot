@@ -28,7 +28,8 @@ def smooth(x: ArrayLike, sigma: float = 1.0, axis: int = 0) -> NDArray[np.floati
 
 def stable_rank(X: NDArray[np.floating[Any]]) -> float:
     """Computes the stable rank of a matrix"""
-    assert X.ndim == 2, "X must be a matrix"
+    if X.ndim != 2:
+        raise ValueError("X must be a matrix")
 
     # pyrefly: ignore
     svals_sq = np.linalg.svd(X, compute_uv=False, full_matrices=False) ** 2
@@ -100,4 +101,16 @@ def normalize(
     Returns:
         Xn: Arrays that have been normalized using to the given function.
     """
-    return np.asarray(X) / norm(X, axis=axis, keepdims=True)
+    arr = np.asarray(X, dtype=float)
+    denom = norm(arr, axis=axis, keepdims=True)
+    zero_mask = denom == 0
+
+    # Avoid divide-by-zero warnings and keep zeros in place by dividing only where safe.
+    safe_denom = np.where(zero_mask, 1.0, denom)
+    normalized = np.zeros_like(arr, dtype=float)
+    np.divide(arr, safe_denom, out=normalized, where=~zero_mask)
+
+    if np.any(zero_mask):
+        normalized = np.where(zero_mask, 0.0, normalized)
+
+    return normalized

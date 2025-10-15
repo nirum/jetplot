@@ -1,6 +1,7 @@
 """Tests for the signals module."""
 
 import numpy as np
+import pytest
 
 from jetplot import signals
 
@@ -96,3 +97,21 @@ def test_normalize():
     expected = np.stack([x / np.linalg.norm(x) for x in X.T]).T
     computed = signals.normalize(X, axis=0)
     assert np.allclose(expected, computed)
+
+
+def test_stable_rank_invalid_shape():
+    with pytest.raises(ValueError):
+        signals.stable_rank(np.ones(3))
+
+
+def test_normalize_handles_zero_vectors():
+    X = np.array([[0.0, 0.0, 0.0], [3.0, 0.0, 4.0]])
+    normalized = signals.normalize(X)
+
+    assert np.allclose(normalized[0], 0.0)
+    assert np.allclose(normalized[1], np.array([0.6, 0.0, 0.8]))
+
+    X = np.array([[0.0, 1.0], [0.0, 0.0]])
+    normalized_cols = signals.normalize(X, axis=0)
+    assert np.allclose(normalized_cols[:, 0], 0.0)
+    assert np.allclose(normalized_cols[:, 1], np.array([1.0, 0.0]))
