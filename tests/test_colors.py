@@ -1,5 +1,6 @@
 """Tests the colors module."""
 
+from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.colors import to_rgb
 from matplotlib.figure import Figure
@@ -27,6 +28,17 @@ def test_palette():
     assert isinstance(fig, Figure)
     for ax in axs:
         assert isinstance(ax, Axes)
+    plt.close(fig)
+
+
+def test_palette_single_color_plot():
+    pal = colors.Palette(["#123456"])
+    fig, axs = pal.plot()
+
+    assert len(axs) == 1
+    assert axs[0].get_facecolor()[:3] == to_rgb("#123456")
+
+    plt.close(fig)
 
 
 def test_rainbow():
