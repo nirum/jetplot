@@ -8,7 +8,6 @@ import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.image import AxesImage
 from matplotlib.ticker import FixedLocator
-from matplotlib.figure import Figure
 
 from . import colors as c
 from .chart_utils import noticks, plotwrapper
@@ -178,10 +177,11 @@ def cmat(
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows), indexing="xy")
 
     if annot:
-        # pyrefly: ignore
-        for x, y, value in zip(
-            xs.flat, ys.flat, arr.flat, strict=True  # pyrefly: ignore
-
+        for x, y, value in zip(  # pyrefly: ignore
+            xs.flat,  # pyrefly: ignore
+            ys.flat,
+            arr.flat,
+            strict=True,  # pyrefly: ignore
         ):
             color = dark_color if (value <= theta) else light_color
             label = f"{{:{fmt}}}".format(value)
