@@ -77,9 +77,7 @@ def img(
         raise ValueError("Unrecognized mode: '" + mode + "'")
 
     # make the image
-    ax = kwargs["ax"]
-    fig_candidate = kwargs.get("fig")
-    fig = cast(Figure, fig_candidate if fig_candidate is not None else ax.get_figure())
+    fig, ax = kwargs["fig"], kwargs["ax"]
     im = ax.imshow(
         img, cmap=cmap, interpolation=interpolation, vmin=vmin, vmax=vmax, aspect=aspect
     )

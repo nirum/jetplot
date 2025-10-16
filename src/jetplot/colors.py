@@ -30,19 +30,14 @@ class Palette(list[ColorType]):
 
     def plot(self, figsize: tuple[int, int] = (5, 1)) -> tuple[Figure, list[Axes]]:
         """Visualize the colors in the palette."""
-        if not self:
-            raise ValueError("Palette has no colors to plot.")
-
         fig, axs = plt.subplots(1, len(self), figsize=figsize)
-        axs_array = np.atleast_1d(axs)
-        axis_list = [cast(Axes, ax) for ax in axs_array.flat]
 
-        for c, ax in zip(self, axis_list, strict=True):
+        for c, ax in zip(self, axs, strict=True):
             ax.set_facecolor(c)
             ax.set_aspect("equal")
             noticks(ax=ax)
 
-        return fig, axis_list
+        return fig, axs
 
 
 def cubehelix(
