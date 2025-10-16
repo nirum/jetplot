@@ -365,7 +365,9 @@ def ridgeline(
         try:
             palette_color = next(colors_iter)
         except StopIteration as exc:
-            raise ValueError("colors must provide at least as many items as xs.") from exc
+            raise ValueError(
+                "colors must provide at least as many items as xs."
+            ) from exc
 
         ax = fig.add_subplot(len(xs_list), 1, k + 1)
         y = gaussian_kde(x).evaluate(t)

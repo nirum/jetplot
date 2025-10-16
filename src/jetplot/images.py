@@ -178,10 +178,16 @@ def cmat(
     xs, ys = np.meshgrid(np.arange(num_cols), np.arange(num_rows), indexing="xy")
 
     if annot:
-        for x, y, value in zip(xs.flat, ys.flat, arr.flat, strict=True):  # pyrefly: ignore
+        # pyrefly: ignore
+        for x, y, value in zip(
+            xs.flat, ys.flat, arr.flat, strict=True  # pyrefly: ignore
+
+        ):
             color = dark_color if (value <= theta) else light_color
             label = f"{{:{fmt}}}".format(value)
-            ax.text(x, y, label, ha="center", va="center", color=color, fontsize=fontsize)
+            ax.text(
+                x, y, label, ha="center", va="center", color=color, fontsize=fontsize
+            )
 
     if label_list is not None:
         ax.set_xticks(np.arange(num_cols))

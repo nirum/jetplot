@@ -32,7 +32,11 @@ def test_palette():
 
 
 def test_palette_single_color_plot():
-    pal = colors.Palette(["#123456"])
+    pal = colors.Palette(
+        [
+            "#123456",
+        ]
+    )
     fig, axs = pal.plot()
 
     assert len(axs) == 1
