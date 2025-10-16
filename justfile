@@ -1,4 +1,4 @@
-default: test
+default: format lint test typecheck
 
 build:
   uv build
@@ -11,6 +11,9 @@ docs:
 
 format:
   uv run ruff format
+
+lint:
+  uv run ruff check
 
 typecheck:
   uv run pyrefly check
