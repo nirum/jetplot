@@ -1,5 +1,7 @@
 import numpy as np
+import pytest
 from matplotlib import pyplot as plt
+from matplotlib.patches import Ellipse
 
 from jetplot import plots
 
@@ -75,10 +77,76 @@ def test_waterfall():
     plt.close(fig)
 
 
+def test_waterfall_accepts_generators():
+    x = np.arange(5)
+    ys = (np.linspace(0, 1, 5) for _ in range(3))
+
+    fig, ax = plt.subplots()
+    plots.waterfall(x, ys, fig=fig, ax=ax)
+
+    assert len(ax.collections) >= 3
+    plt.close(fig)
+
+
 def test_violinplot():
     data = np.random.randn(100)
     fig, ax = plt.subplots()
     plots.violinplot(data, xs=1, fig=fig, ax=ax)
     # Expect at least one polygon from violin body
     assert len(ax.collections) > 0
+    plt.close(fig)
+
+
+def test_ridgeline_accepts_generators():
+    rng = np.random.default_rng(0)
+    t = np.linspace(-3, 3, 25)
+    xs = (rng.standard_normal(100) for _ in range(3))
+    colors = (color for color in plots.neutral[:3])
+
+    fig, axs = plots.ridgeline(t, xs=xs, colors=colors)
+    assert len(axs) == 3
+    plt.close(fig)
+
+
+def test_ridgeline_mismatched_lengths_raise():
+    t = np.linspace(-3, 3, 10)
+    xs = [np.linspace(0, 1, 5), np.linspace(0, 2, 5)]
+    colors = (color for color in plots.neutral[:1])
+
+    with pytest.raises(ValueError):
+        plots.ridgeline(t, xs=xs, colors=colors)
+
+    plt.close("all")
+
+
+def test_ridgeline_allows_extra_colors():
+    rng = np.random.default_rng(2)
+    t = np.linspace(-3, 3, 25)
+    xs = [rng.standard_normal(100) for _ in range(3)]
+
+    fig, axs = plots.ridgeline(t, xs=xs, colors=plots.neutral)
+    assert len(axs) == 3
+    plt.close(fig)
+
+
+def test_ellipse_returns_patch():
+    rng = np.random.default_rng(1)
+    x = rng.standard_normal(200)
+    y = x + 0.1 * rng.standard_normal(200)
+
+    fig, ax = plt.subplots()
+    patch = plots.ellipse(x, y, fig=fig, ax=ax)
+
+    assert isinstance(patch, Ellipse)
+    assert patch in ax.patches
+    plt.close(fig)
+
+
+def test_ellipse_length_mismatch_raises():
+    x = np.arange(5)
+    y = np.arange(4)
+
+    fig, ax = plt.subplots()
+    with pytest.raises(ValueError):
+        plots.ellipse(x, y, fig=fig, ax=ax)
     plt.close(fig)

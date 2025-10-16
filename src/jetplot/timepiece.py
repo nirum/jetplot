@@ -29,14 +29,14 @@ class Stopwatch:
         return elapsed
 
     def checkpoint(self, name: str = "") -> None:
-        print(f"{self.name} {name} took {hrtime(self.elapsed)}".strip())
+        print(f"{self.name} {name} took {hrtime(self.elapsed)}".strip(), flush=True)
 
     def __enter__(self) -> "Stopwatch":
         return self
 
     def __exit__(self, *_: object) -> None:
         total = hrtime(time.perf_counter() - self.absolute_start)
-        print(f"{self.name} Finished! \u2714\nTotal elapsed time: {total}")
+        print(f"{self.name} Finished! \u2714\nTotal elapsed time: {total}", flush=True)
 
 
 def hrtime(t: float) -> str:

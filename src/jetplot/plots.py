@@ -163,13 +163,19 @@ def errorplot(
     """Plot a line with error bars."""
     ax = kwargs["ax"]
 
-    if np.isscalar(yerr) or len(yerr) == len(y):  # pyrefly: ignore
+    if np.isscalar(yerr):
         ymin = y - yerr  # pyrefly: ignore
         ymax = y + yerr  # pyrefly: ignore
-    elif len(yerr) == 2:
+    elif isinstance(yerr, tuple):
+        if len(yerr) != 2:
+            raise ValueError("Invalid yerr tuple length: ", yerr)
         ymin, ymax = yerr  # pyrefly: ignore
     else:
-        raise ValueError("Invalid yerr value: ", yerr)
+        yerr_array = np.asarray(yerr)
+        if yerr_array.shape != y.shape:
+            raise ValueError("Invalid yerr value: ", yerr)
+        ymin = y - yerr_array
+        ymax = y + yerr_array
 
     if method == "line":
         ax.plot(x, y, fmt, color=color, linewidth=4, clip_on=clip_on)
@@ -295,11 +301,27 @@ def waterfall(
     ew: float = 2.0,
     **kwargs: Any,
 ) -> None:
-    """Waterfall plot."""
-    ax = kwargs["ax"]
-    total = cast(int, len(ys))
+    """Waterfall plot for stacked sequences.
 
-    for index, y in enumerate(ys):
+    Args:
+        x: Common x-axis samples shared by every series.
+        ys: Iterable of y-series. Generators are supported and are consumed once.
+        dy: Vertical scaling applied to each successive series.
+        pad: Offset applied so the outline sits slightly above the fill.
+        color: Fill color for each series.
+        ec: Edge color for the outline.
+        ew: Edge line width.
+
+    Raises:
+        ValueError: If ``ys`` yields no series.
+    """
+    ax = kwargs["ax"]
+    ys_list = list(ys)
+    if not ys_list:
+        raise ValueError("ys must contain at least one series.")
+    total = len(ys_list)
+
+    for index, y in enumerate(ys_list):
         zorder = total - index
         y = y * dy + index
         ax.plot(x, y + pad, color=ec, clip_on=False, lw=ew, zorder=zorder)
@@ -318,16 +340,40 @@ def ridgeline(
     ymax: float = 0.6,
     **kwargs: Any,
 ) -> tuple[Figure, list[Axes]]:
-    """Stacked density plots reminiscent of a ridgeline plot."""
+    """Stacked density plots reminiscent of a ridgeline plot.
+
+    Args:
+        t: Grid used when evaluating the kernel density estimate.
+        xs: Iterable of 1-D samples. Accepts generators and consumes them once.
+        colors: Iterable of colors. Must provide at least as many entries as ``xs``.
+        edgecolor: Line color used for the outline.
+        ymax: Upper y-limit for each subplot.
+
+    Raises:
+        ValueError: If ``xs`` is empty or ``colors`` provides too few values.
+    """
     fig = kwargs["fig"]
+    xs_list = list(xs)
+    colors_iter = iter(colors)
+
+    if not xs_list:
+        raise ValueError("xs must contain at least one series.")
+
     axs = []
 
-    for k, (x, c) in enumerate(zip(xs, colors, strict=False)):
-        ax = fig.add_subplot(cast(int, len(xs)), 1, k + 1)
+    for k, x in enumerate(xs_list):
+        try:
+            palette_color = next(colors_iter)
+        except StopIteration as exc:
+            raise ValueError(
+                "colors must provide at least as many items as xs."
+            ) from exc
+
+        ax = fig.add_subplot(len(xs_list), 1, k + 1)
         y = gaussian_kde(x).evaluate(t)
-        ax.fill_between(t, y, color=c, clip_on=False)
+        ax.fill_between(t, y, color=palette_color, clip_on=False)
         ax.plot(t, y, color=edgecolor, clip_on=False)
-        ax.axhline(0.0, lw=2, color=c, clip_on=False)
+        ax.axhline(0.0, lw=2, color=palette_color, clip_on=False)
 
         ax.set_xlim(t[0], t[-1])
         ax.set_xticks([])
@@ -378,7 +424,8 @@ def ellipse(
     -------
     matplotlib.patches.Ellipse
     """
-    ax = cast(Axes, kwargs.get("ax"))
+    ax = cast(Axes, kwargs.pop("ax", None))
+    kwargs.pop("fig", None)
 
     if x.size != y.size:
         raise ValueError("x and y must be the same size")
@@ -419,4 +466,4 @@ def ellipse(
     )
 
     ellipse.set_transform(transform + ax.transData)  # pyrefly: ignore
-    return ax.add_patch(ellipse)
+    return cast(Ellipse, ax.add_patch(ellipse))
